@@ -13,12 +13,12 @@
 // Variable declerations
 struct sockaddr_in UDP_AddrFrom;
 struct sockaddr_in UDP_AddrTo;
-
+struct Broadcast_Packet UDP_DataIn;
 
 // Function declerations
 int udp_InitSocket(int* p_Socket);
 int udp_BroadcastString(int* p_Socket, char* p_String);
-void udp_InquirePackets(int* p_Socket, char* p_Buffer);
+void udp_InquirePackets(int* p_Socket);
 void udp_CloseSocket(int* p_Socket);
 
 #endif /*UPD_H_*/

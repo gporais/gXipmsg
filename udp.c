@@ -54,16 +54,20 @@ int udp_BroadcastString(int* p_Socket, char* p_String)
 	return 0;
 }
 
-void udp_InquirePackets(int* p_Socket, char* p_Buffer)
+void udp_InquirePackets(int* p_Socket)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
+	char p_Buffer[PACKET_MAXLEN];
 	
 	while(recvfromTimeOutUDP(*p_Socket, 0, 500) > 0)
-	{
+	{		
 		// Ok the data is ready, call recvfrom() to get it then
-	    recvfrom(*p_Socket, p_Buffer, 1000, 0, (struct sockaddr*)&UDP_AddrFrom, &m_AddrLen);
+	    recvfrom(*p_Socket, p_Buffer, PACKET_MAXLEN, 0, (struct sockaddr*)&UDP_AddrFrom, &m_AddrLen);
 	    printf("recieved from IP address %s: ", inet_ntoa(UDP_AddrFrom.sin_addr));
 		printf("%s\n", p_Buffer);
+		pack_UnpackBroadcast(p_Buffer, &UDP_DataIn);
+		
+		printf("%i:%i:%s:%s:%i:%s\n", UDP_DataIn.m_Ver, UDP_DataIn.m_Time, UDP_DataIn.p_username, UDP_DataIn.p_hostname, UDP_DataIn.m_Flags, UDP_DataIn.p_handlename);			
 	}	
 }
 

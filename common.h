@@ -42,36 +42,18 @@
 #include <time.h>
 #include <unistd.h>
 
+#define	NAME_MAXLEN			50
+#define	PACKET_MAXLEN		200
 
+struct Broadcast_Packet {
+	int m_Ver;
+	int m_Time;
+	int m_Flags;
+	char p_username[NAME_MAXLEN];
+	char p_hostname[NAME_MAXLEN];
+	char p_handlename[NAME_MAXLEN];
+};
+	
 
-//#include "ipmsg_types.h"
-//#include "ipmsg.h"
-//#include "gXipmsg.h"
-//#include "udp.h"
-//#include "message.h"
-//#include "userdb.h"
-//#include "hostinfo.h"
-//#include "msginfo.h"
-//#include "logfile.h"
-//#include "menu.h"
-//#include "fileattach.h"
-//#include "tcp.h"
-//#include "netcommon.h"
-//#include "fuzai.h"
-//#include "copying.h"
-//#include "uicommon.h"
-//#include "sound.h"
-//#include "systray.h"
-//#include "downloads.h"
-//#include "codeset.h"
-//#include "protocol.h"
-//#include "msgout.h"
-//#include "private.h"
-//#include "compat.h"
-//#include "util.h"
-//#include "base64.h"
-//#include "cryptcommon.h"
-//#include "dbusif.h"
-//#include "screensaver.h"
 
 #endif /*COMMON_H_*/

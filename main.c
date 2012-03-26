@@ -6,7 +6,7 @@ static int gXipmsg_main (int argc, char* argv[])
 	
 	
 	// Get local hostname
-	if((gethostname(GXIM_Local_Hostname, GXIM_NAME_MAXLEN)) == -1)
+	if((gethostname(GXIM_Local_Hostname, NAME_MAXLEN)) == -1)
 	{
 		printf("error: gethostname()");
 		exit(1);
@@ -33,9 +33,9 @@ static int gXipmsg_main (int argc, char* argv[])
 		exit(1);
 	}
 	
-	printf("send entry");
-	udp_BroadcastString(&GXIM_UDP_Socket, pack_Broadcast(GXIM_IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
-	udp_BroadcastString(&GXIM_UDP_Socket, pack_Broadcast(GXIM_IPMSG_BR_ENTRY, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	printf("send entry\n");
+	udp_BroadcastString(&GXIM_UDP_Socket, pack_PackBroadcast(GXIM_IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	udp_BroadcastString(&GXIM_UDP_Socket, pack_PackBroadcast(GXIM_IPMSG_BR_ENTRY, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
 		
 
 	
@@ -56,11 +56,11 @@ int main(int argc, char* argv[])
 
 void gxipmg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data)
 {		
-	printf("send exit");
-	udp_BroadcastString(&GXIM_UDP_Socket, pack_Broadcast(GXIM_IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
-	udp_BroadcastString(&GXIM_UDP_Socket, pack_Broadcast(GXIM_IPMSG_BR_EXIT, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
-	udp_BroadcastString(&GXIM_UDP_Socket, pack_Broadcast(GXIM_IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
-	udp_BroadcastString(&GXIM_UDP_Socket, pack_Broadcast(GXIM_IPMSG_BR_EXIT, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	printf("send exit\n");
+	udp_BroadcastString(&GXIM_UDP_Socket, pack_PackBroadcast(GXIM_IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	udp_BroadcastString(&GXIM_UDP_Socket, pack_PackBroadcast(GXIM_IPMSG_BR_EXIT, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	udp_BroadcastString(&GXIM_UDP_Socket, pack_PackBroadcast(GXIM_IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	udp_BroadcastString(&GXIM_UDP_Socket, pack_PackBroadcast(GXIM_IPMSG_BR_EXIT, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
 		
 	udp_CloseSocket(&GXIM_UDP_Socket);	
 	exit(1);
@@ -68,9 +68,8 @@ void gxipmg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_
 
 void gxipmg_CheckData(XtPointer xp_Client_data, XtIntervalId* id)
 {
-	char buff[1000];
-	printf("check data");
-	udp_InquirePackets(&GXIM_UDP_Socket, buff);
+	printf("check data\n");
+	udp_InquirePackets(&GXIM_UDP_Socket);
 	
 	sendForm_SetupTimeout(&GXIM_App, gxipmg_CheckData);
 }
