@@ -5,7 +5,7 @@
 #include "common.h"
 
 // Constants
-#define	PACK_PACKET_MAXLEN			1000
+#define	PACK_PACKET_MAXLEN			500
 #define PACK_IPMSG_VERSION			1
 
 

@@ -58,7 +58,7 @@ void udp_InquirePackets(int* p_Socket, char* p_Buffer)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
 	
-	while(recvfromTimeOutUDP(*p_Socket, 1, 0) > 0)
+	while(recvfromTimeOutUDP(*p_Socket, 0, 500) > 0)
 	{
 		// Ok the data is ready, call recvfrom() to get it then
 	    recvfrom(*p_Socket, p_Buffer, 1000, 0, (struct sockaddr*)&UDP_AddrFrom, &m_AddrLen);
