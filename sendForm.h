@@ -8,7 +8,23 @@
 
 
 // Variable declerations
-Widget SENDFORM_Btn_Refresh;
+Widget SENDFORM_Form_Upper;
+Widget SENDFORM_Frame_Member;
+Widget SENDFORM_LblG_Count;
+Widget SENDFORM_LblG_Member;
+Widget SENDFORM_BtnG_Refresh;
+Widget SENDFORM_List_Users;
+
+Widget SENDFORM_Pane_Vertical;
+
+Widget SENDFORM_Form_Lower;
+Widget SENDFORM_BtnG_Attach;
+Widget SENDFORM_Text_Message;
+Widget SENDFORM_BtnG_Send;
+
+int SENDFORM_Index;
+Arg	SENDFORM_Args[20];
+
 Atom SENDFORM_DelWin_protocol;
 
 // Function declerations
