@@ -5,10 +5,7 @@
 #include "common.h"
 
 // Constants
-#define GXIM_IPMSG_NOOPERATION		0x00000000UL
-#define GXIM_IPMSG_BR_ENTRY			0x00000001UL
-#define GXIM_IPMSG_BR_EXIT			0x00000002UL
-#define GXIM_IPMSG_ANSENTRY			0x00000003UL
+
 
 // Variable declerations
 int GXIM_UDP_Socket;

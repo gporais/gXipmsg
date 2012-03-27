@@ -42,6 +42,11 @@
 #include <time.h>
 #include <unistd.h>
 
+#define IPMSG_NOOPERATION		0x00000000UL
+#define IPMSG_BR_ENTRY			0x00000001UL
+#define IPMSG_BR_EXIT			0x00000002UL
+#define IPMSG_ANSENTRY			0x00000003UL
+
 #define	NAME_MAXLEN			50
 #define	PACKET_MAXLEN		200
 

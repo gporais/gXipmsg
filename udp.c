@@ -1,7 +1,7 @@
 // created by: geo (March 2012)
 #include "udp.h"
 
-int udp_InitSocket(int* p_Socket)
+int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Handlename)
 {
 	int broadcast = 1;
 	
@@ -35,17 +35,40 @@ int udp_InitSocket(int* p_Socket)
 	UDP_AddrTo.sin_family = UDP_DEFAULT_FAMILY;
 	UDP_AddrTo.sin_port = htons(UDP_DEFAULT_PORT);
 	UDP_AddrTo.sin_addr.s_addr = inet_addr(UDP_BROADCAST_IPADDR);
+		
+	UDP_LocalSocket = p_Socket;
+	UDP_LocalUsername = p_Username;
+	UDP_LocalHostname = p_Hostname;	
+	UDP_LocalHandlename = p_Handlename;
 	
+	udp_BroadcastEntry();
+		
 	return 0;
 }
 
-int udp_BroadcastString(int* p_Socket, char* p_String)
+void udp_BroadcastEntry(void)
+{
+	printf("send entry\n");
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_ENTRY, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
+}
+
+void udp_BroadcastExit(void)
+{
+	printf("send exit\n");
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_EXIT, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_EXIT, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
+}
+
+int udp_BroadcastString(char* p_String)
 {
 	// Set IP of socket address to to broadcast
 	UDP_AddrTo.sin_addr.s_addr = inet_addr(UDP_BROADCAST_IPADDR);
 	
 	// Send string to address to
-	if((sendto(*p_Socket, p_String, strlen(p_String), 0, (struct sockaddr*)&UDP_AddrTo, sizeof(UDP_AddrTo))) == -1)
+	if((sendto(*UDP_LocalSocket, p_String, strlen(p_String), 0, (struct sockaddr*)&UDP_AddrTo, sizeof(UDP_AddrTo))) == -1)
 	{
 		printf("error: sendto()");
 		return -1;
@@ -54,27 +77,27 @@ int udp_BroadcastString(int* p_Socket, char* p_String)
 	return 0;
 }
 
-void udp_InquirePackets(int* p_Socket)
+void udp_InquirePackets(void)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
 	char p_Buffer[PACKET_MAXLEN];
 	
-	while(recvfromTimeOutUDP(*p_Socket, 0, 500) > 0)
+	while(recvfromTimeOutUDP(*UDP_LocalSocket, 0, 500) > 0)
 	{		
 		// Ok the data is ready, call recvfrom() to get it then
-	    recvfrom(*p_Socket, p_Buffer, PACKET_MAXLEN, 0, (struct sockaddr*)&UDP_AddrFrom, &m_AddrLen);
+	    recvfrom(*UDP_LocalSocket, p_Buffer, PACKET_MAXLEN, 0, (struct sockaddr*)&UDP_AddrFrom, &m_AddrLen);
 	    printf("recieved from IP address %s: ", inet_ntoa(UDP_AddrFrom.sin_addr));
 		printf("%s\n", p_Buffer);
-		pack_UnpackBroadcast(p_Buffer, &UDP_DataIn);
+		pack_UnpackBroadcast(p_Buffer, &UDP_DataFrom);
 		
-		printf("%i:%i:%s:%s:%i:%s\n", UDP_DataIn.IP_Ver, UDP_DataIn.UNIX_Time, UDP_DataIn.Username, UDP_DataIn.Hostname, UDP_DataIn.IP_Flags, UDP_DataIn.Handlename);			
+		printf("%i:%i:%s:%s:%i:%s\n", UDP_DataFrom.IP_Ver, UDP_DataFrom.UNIX_Time, UDP_DataFrom.Username, UDP_DataFrom.Hostname, UDP_DataFrom.IP_Flags, UDP_DataFrom.Handlename);			
 	}	
 }
 
-void udp_CloseSocket(int* p_Socket)
+void udp_CloseSocket(void)
 {
 	// Close socket
-	close(*p_Socket);
+	close(*UDP_LocalSocket);
 }
 
 // A sample of the select() return value
