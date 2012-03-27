@@ -14,4 +14,4 @@ sendForm.o : sendForm.c sendForm.h
 	cc -c sendForm.c
 	
 clean:
-	rm -f *.s *.o *.exe
+	rm -f *.s *.o *.exe *.stackdump
