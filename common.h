@@ -54,6 +54,7 @@ struct Broadcast_Packet {
 	int IP_Ver;
 	int UNIX_Time;
 	int IP_Flags;
+	char IP_Address[16];
 	char Username[NAME_MAXLEN];
 	char Hostname[NAME_MAXLEN];
 	char Handlename[NAME_MAXLEN];

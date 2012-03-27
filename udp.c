@@ -66,7 +66,7 @@ int udp_BroadcastString(char* p_String)
 {
 	// Set IP of socket address to to broadcast
 	UDP_AddrTo.sin_addr.s_addr = inet_addr(UDP_BROADCAST_IPADDR);
-	
+	printf("broadcast %s\n", p_String);
 	// Send string to address to
 	if((sendto(*UDP_LocalSocket, p_String, strlen(p_String), 0, (struct sockaddr*)&UDP_AddrTo, sizeof(UDP_AddrTo))) == -1)
 	{
@@ -80,7 +80,7 @@ int udp_BroadcastString(char* p_String)
 void udp_InquirePackets(void)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
-	char p_Buffer[PACKET_MAXLEN];
+	
 	
 	while(recvfromTimeOutUDP(*UDP_LocalSocket, 0, 500) > 0)
 	{		
@@ -89,8 +89,20 @@ void udp_InquirePackets(void)
 	    printf("recieved from IP address %s: ", inet_ntoa(UDP_AddrFrom.sin_addr));
 		printf("%s\n", p_Buffer);
 		pack_UnpackBroadcast(p_Buffer, &UDP_DataFrom);
+		strcpy(UDP_DataFrom.IP_Address, inet_ntoa(UDP_AddrFrom.sin_addr));
 		
-		printf("%i:%i:%s:%s:%i:%s\n", UDP_DataFrom.IP_Ver, UDP_DataFrom.UNIX_Time, UDP_DataFrom.Username, UDP_DataFrom.Hostname, UDP_DataFrom.IP_Flags, UDP_DataFrom.Handlename);			
+		switch(UDP_DataFrom.IP_Flags & 0x0000000FUL)
+		{
+			case IPMSG_BR_ENTRY:
+				printf("broadcast myself\n");
+				udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_ANSENTRY, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
+				break;
+				
+			case IPMSG_ANSENTRY:
+//				printf("ansentry from IP address %s: ", UDP_DataFrom.IP_Address);
+//				printf("%i:%i:%s:%s:%i:%s\n", UDP_DataFrom.IP_Ver, UDP_DataFrom.UNIX_Time, UDP_DataFrom.Username, UDP_DataFrom.Hostname, UDP_DataFrom.IP_Flags, UDP_DataFrom.Handlename);
+				break;
+		}
 	}	
 }
 

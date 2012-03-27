@@ -19,7 +19,7 @@ int* UDP_LocalSocket;
 char* UDP_LocalHostname;
 char* UDP_LocalUsername;
 char* UDP_LocalHandlename;
-
+char p_Buffer[PACKET_MAXLEN];
 
 // Function declerations
 int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Handlename);
