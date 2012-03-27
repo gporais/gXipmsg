@@ -33,4 +33,7 @@ void sendForm_SetupClose(Widget* w_TopLevel, XtCallbackProc xcp_CloseProc);
 void sendForm_SetupTimeout(XtAppContext* xac_App, XtTimerCallbackProc xcp_TOProc);
 void sendForm_Run(XtAppContext* xac_App);
 
+void sendForm_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
+void sendForm_AddList(char* p_strItem);
+
 #endif /*SENDFORM_H_*/

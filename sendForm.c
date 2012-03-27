@@ -3,10 +3,6 @@
 
 void sendForm_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* argv[])
 {
-	char* str_item = "hello rose";
-	XmString xstr_item;
-	 
-	 
 	XtSetLanguageProc (NULL, NULL, NULL);
 	*w_TopLevel = XtVaOpenApplication (xac_App, "gXipmsg", NULL, 0, &argc, argv, NULL,sessionShellWidgetClass, NULL);
 	
@@ -64,6 +60,7 @@ void sendForm_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* ar
 	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNrightWidget, SENDFORM_Frame_Member); SENDFORM_Index++;	
 	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNtopOffset, 5); SENDFORM_Index++;
 	SENDFORM_BtnG_Refresh = XmCreatePushButtonGadget (SENDFORM_Form_Upper, "Refresh", SENDFORM_Args, SENDFORM_Index);
+	XtAddCallback (SENDFORM_BtnG_Refresh, XmNactivateCallback, sendForm_RefreshCallBack, NULL);
 	XtManageChild (SENDFORM_BtnG_Refresh);	
 	
 	// Create lower form
@@ -109,13 +106,7 @@ void sendForm_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* ar
 	XtManageChild (SENDFORM_Pane_Vertical);
 	XtRealizeWidget (*w_TopLevel);    
 	
-	xstr_item = XmStringCreateLocalized (str_item);
-	XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, 1);
-	XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, 2);
-	XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, 3);
-	XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, 4);
-	XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, 5);
-	XtFree ((char *) xstr_item);
+	
 }
 
 void sendForm_SetupClose(Widget* w_TopLevel, XtCallbackProc xcp_CloseProc)
@@ -138,5 +129,20 @@ void sendForm_SetupTimeout(XtAppContext* xac_App, XtTimerCallbackProc xcp_TOProc
 void sendForm_Run(XtAppContext* xac_App)
 {
 	XtAppMainLoop (*xac_App);
+}
+
+void sendForm_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	XmListDeleteAllItems(SENDFORM_List_Users);
+	udp_BroadcastEntry();
+}
+
+void sendForm_AddList(char* p_strItem)
+{
+	XmString xstr_item;
+	
+	xstr_item = XmStringCreateLocalized (p_strItem);
+	XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, 1);	
+	XtFree ((char *) xstr_item);
 }
 
