@@ -18,6 +18,6 @@ char* pack_PackBroadcast(int m_Flags, char* p_username, char* p_hostname, char* 
 
 void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPacket)
 {
-	sscanf(p_Packet, "%i:%i:%[^':']:%[^':']:%i:%[^':']", &p_RestoredPacket->m_Ver, &p_RestoredPacket->m_Time, p_RestoredPacket->p_username, p_RestoredPacket->p_hostname, &p_RestoredPacket->m_Flags, p_RestoredPacket->p_handlename);		
+	sscanf(p_Packet, "%i:%i:%[^':']:%[^':']:%i:%[^':']", &p_RestoredPacket->IP_Ver, &p_RestoredPacket->UNIX_Time, p_RestoredPacket->Username, p_RestoredPacket->Hostname, &p_RestoredPacket->IP_Flags, p_RestoredPacket->Handlename);		
 }
 

@@ -67,7 +67,7 @@ void udp_InquirePackets(int* p_Socket)
 		printf("%s\n", p_Buffer);
 		pack_UnpackBroadcast(p_Buffer, &UDP_DataIn);
 		
-		printf("%i:%i:%s:%s:%i:%s\n", UDP_DataIn.m_Ver, UDP_DataIn.m_Time, UDP_DataIn.p_username, UDP_DataIn.p_hostname, UDP_DataIn.m_Flags, UDP_DataIn.p_handlename);			
+		printf("%i:%i:%s:%s:%i:%s\n", UDP_DataIn.IP_Ver, UDP_DataIn.UNIX_Time, UDP_DataIn.Username, UDP_DataIn.Hostname, UDP_DataIn.IP_Flags, UDP_DataIn.Handlename);			
 	}	
 }
 

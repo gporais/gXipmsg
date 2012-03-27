@@ -46,12 +46,12 @@
 #define	PACKET_MAXLEN		200
 
 struct Broadcast_Packet {
-	int m_Ver;
-	int m_Time;
-	int m_Flags;
-	char p_username[NAME_MAXLEN];
-	char p_hostname[NAME_MAXLEN];
-	char p_handlename[NAME_MAXLEN];
+	int IP_Ver;
+	int UNIX_Time;
+	int IP_Flags;
+	char Username[NAME_MAXLEN];
+	char Hostname[NAME_MAXLEN];
+	char Handlename[NAME_MAXLEN];
 };
 	
 
