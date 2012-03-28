@@ -34,6 +34,6 @@ void sendForm_SetupTimeout(XtAppContext* xac_App, XtTimerCallbackProc xcp_TOProc
 void sendForm_Run(XtAppContext* xac_App);
 
 void sendForm_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
-void sendForm_AddList(char* p_strItem);
+void sendForm_AddList(struct Broadcast_Packet* p_Item);
 
 #endif /*SENDFORM_H_*/

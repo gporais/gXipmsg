@@ -97,7 +97,7 @@ void udp_InquirePackets(void)
 			case IPMSG_ANSENTRY:
 //				printf("ansentry from IP address %s: ", UDP_DataFrom.IP_Address);
 //				printf("%i:%i:%s:%s:%i:%s\n", UDP_DataFrom.IP_Ver, UDP_DataFrom.UNIX_Time, UDP_DataFrom.Username, UDP_DataFrom.Hostname, UDP_DataFrom.IP_Flags, UDP_DataFrom.Handlename);
-				sendForm_AddList(UDP_DataFrom.Handlename);
+				sendForm_AddList(&UDP_DataFrom);
 				break;
 		}
 	}	

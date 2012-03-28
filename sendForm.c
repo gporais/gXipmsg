@@ -137,11 +137,11 @@ void sendForm_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer ca
 	udp_BroadcastEntry();
 }
 
-void sendForm_AddList(char* p_strItem)
+void sendForm_AddList(struct Broadcast_Packet* p_Item)
 {
 	XmString xstr_item;
 	
-	xstr_item = XmStringCreateLocalized (p_strItem);
+	xstr_item = XmStringCreateLocalized (p_Item->Handlename);
 	XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, 1);	
 	XtFree ((char *) xstr_item);
 }
