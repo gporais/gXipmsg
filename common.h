@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <fcntl.h>
 
+#include <Xm/MainW.h>
 #include <Xm/PushBG.h>
 #include <Xm/LabelG.h>
 

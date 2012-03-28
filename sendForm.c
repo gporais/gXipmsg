@@ -22,8 +22,11 @@ void sendForm_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* ar
 	SENDFORM_Frame_Member = XmCreateFrame (SENDFORM_Form_Upper, "MemberFrame", SENDFORM_Args, SENDFORM_Index);
 	
 	// Create count label
-	SENDFORM_LblG_Count = XmCreateLabelGadget (SENDFORM_Frame_Member, "0", NULL, 0);	
-	XtManageChild (SENDFORM_LblG_Count);
+	SENDFORM_Index = 0;
+	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNchildType, XmFRAME_WORKAREA_CHILD); SENDFORM_Index++;
+	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNchildVerticalAlignment, XmALIGNMENT_CENTER); SENDFORM_Index++;
+	SENDFORM_LblG_Count = XmCreateLabelGadget (SENDFORM_Frame_Member, "0", SENDFORM_Args, SENDFORM_Index);	
+	XtManageChild (SENDFORM_LblG_Count);	
 	
 	// Create member label
 	SENDFORM_Index = 0;
@@ -131,18 +134,76 @@ void sendForm_Run(XtAppContext* xac_App)
 	XtAppMainLoop (*xac_App);
 }
 
+void sendForm_UpdateCount(int m_Count)
+{
+	char str_Dest[4];	
+	XmString xstr_Dest;
+	
+	sprintf(str_Dest, "%i", m_Count);
+			
+	xstr_Dest = XmStringCreateLocalized (str_Dest);		
+	XtVaSetValues (SENDFORM_LblG_Count, XmNlabelString, xstr_Dest, NULL);
+	
+	
+	strcpy(str_Dest, "Member");
+		
+	xstr_Dest = XmStringCreateLocalized (str_Dest);	
+	XtVaSetValues (SENDFORM_LblG_Member, XmNlabelString, xstr_Dest, NULL);		
+			
+	XmStringFree(xstr_Dest);
+}
+
 void sendForm_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
+	sendForm_UpdateCount(0);
 	XmListDeleteAllItems(SENDFORM_List_Users);
 	udp_BroadcastEntry();
 }
 
-void sendForm_AddList(struct Broadcast_Packet* p_Item)
+void sendForm_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 {
 	XmString xstr_item;
+	XmStringTable xstr_list;
+	int mFound = 0;
+	int mIdx = 0;
+	int mCount;	
+	char str_Item[50]; 
+		
+	sprintf(str_Item, "%s@%s (%s)", p_Item->Handlename, p_Item->Hostname, p_Item->IP_Address);
 	
-	xstr_item = XmStringCreateLocalized (p_Item->Handlename);
-	XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, 1);	
-	XtFree ((char *) xstr_item);
+  	// Get the current entries (and number of entries) from the List
+	XtVaGetValues (SENDFORM_List_Users, XmNitemCount, &mCount,	XmNitems, &xstr_list, NULL);
+		
+	xstr_item = XmStringCreateLocalized (str_Item);
+		
+	while(mCount>mIdx)
+	{		
+		if(XmStringCompare(xstr_item, xstr_list[mIdx]))
+		{
+			mFound = 1;
+			break;
+		}	
+		mIdx++;
+	}	
+	
+	if(m_Option == 1)
+	{
+		if(mFound == 0)
+		{
+			XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, mCount+1);
+			mCount++;
+		}
+	}
+	else
+	{
+		if(mFound == 1)
+		{
+			XmListDeletePos(SENDFORM_List_Users, mIdx+1);
+			mCount--;
+		}
+	}
+	
+	XmStringFree (xstr_item);
+	sendForm_UpdateCount(mCount);
 }
 
