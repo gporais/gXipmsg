@@ -5,7 +5,7 @@
 #include "common.h"
 
 // Constants
-#define PACK_IPMSG_VERSION			1
+#define PACK_IPMSG_VERSION			"1"
 
 
 // Variable declerations

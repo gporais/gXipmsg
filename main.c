@@ -3,7 +3,7 @@
 
 static int gXipmsg_main (int argc, char* argv[])
 {	
-	
+	printf("Motif version: %i", (int)xmUseVersion);
 	
 	// Get local hostname
 	if((gethostname(GXIM_Local_Hostname, NAME_MAXLEN)) == -1)
@@ -58,6 +58,6 @@ void gxipmg_CheckData(XtPointer xp_Client_data, XtIntervalId* id)
 {
 	udp_InquirePackets();
 	
-	sendForm_SetupTimeout(&GXIM_App, gxipmg_CheckData);
+	sendForm_SetupTimeout(&GXIM_App, gxipmg_CheckData);	
 }
 

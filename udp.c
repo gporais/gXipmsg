@@ -79,15 +79,14 @@ void udp_InquirePackets(void)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
 	
-	
 	while(recvfromTimeOutUDP(*UDP_LocalSocket, 0, 500) > 0)
 	{		
 		// Ok the data is ready, call recvfrom() to get it then
-	    recvfrom(*UDP_LocalSocket, p_Buffer, PACKET_MAXLEN, 0, (struct sockaddr*)&UDP_AddrFrom, &m_AddrLen);
+	    recvfrom(*UDP_LocalSocket, UDP_Buffer, PACKET_MAXLEN, 0, (struct sockaddr*)&UDP_AddrFrom, &m_AddrLen);
+	    
+	    pack_UnpackBroadcast(UDP_Buffer, &UDP_DataFrom);
+	    strcpy(UDP_DataFrom.IP_Address, inet_ntoa(UDP_AddrFrom.sin_addr));
 
-	    pack_UnpackBroadcast(p_Buffer, &UDP_DataFrom);
-		strcpy(UDP_DataFrom.IP_Address, inet_ntoa(UDP_AddrFrom.sin_addr));
-		
 		switch(UDP_DataFrom.IP_Flags & 0x0000000FUL)
 		{
 			case IPMSG_BR_ENTRY:
@@ -96,8 +95,6 @@ void udp_InquirePackets(void)
 				break;
 				
 			case IPMSG_ANSENTRY:
-//				printf("ansentry from IP address %s: ", UDP_DataFrom.IP_Address);
-//				printf("%i:%i:%s:%s:%i:%s\n", UDP_DataFrom.IP_Ver, UDP_DataFrom.UNIX_Time, UDP_DataFrom.Username, UDP_DataFrom.Hostname, UDP_DataFrom.IP_Flags, UDP_DataFrom.Handlename);
 				sendForm_AddRemoveItem(&UDP_DataFrom, 1);
 				break;
 				
@@ -105,7 +102,7 @@ void udp_InquirePackets(void)
 				sendForm_AddRemoveItem(&UDP_DataFrom, 0);
 				break;
 		}
-	}	
+	}
 }
 
 void udp_CloseSocket(void)

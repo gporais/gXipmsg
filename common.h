@@ -8,7 +8,6 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#include <Xm/MainW.h>
 #include <Xm/PushBG.h>
 #include <Xm/LabelG.h>
 
@@ -52,7 +51,7 @@
 #define	PACKET_MAXLEN		200
 
 struct Broadcast_Packet {
-	int IP_Ver;
+	char IP_Ver[NAME_MAXLEN];
 	int UNIX_Time;
 	int IP_Flags;
 	char IP_Address[16];
