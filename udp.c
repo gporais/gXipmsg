@@ -75,9 +75,25 @@ int udp_BroadcastString(char* p_String)
 	return 0;
 }
 
+int udp_SendToString(char* p_String)
+{
+	// Set IP of socket address to to broadcast
+	UDP_AddrTo.sin_addr.s_addr = inet_addr("192.168.0.12");
+	
+	// Send string to address to
+	if((sendto(*UDP_LocalSocket, p_String, strlen(p_String)+1, 0, (struct sockaddr*)&UDP_AddrTo, sizeof(UDP_AddrTo))) == -1)
+	{
+		printf("error: sendto()");
+		return -1;
+	}
+	
+	return 0;
+}
+
 void udp_InquirePackets(void)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
+	char str_Reply[12];
 	
 	while(recvfromTimeOutUDP(*UDP_LocalSocket, 0, 500) > 0)
 	{		
@@ -87,8 +103,11 @@ void udp_InquirePackets(void)
 	    pack_UnpackBroadcast(UDP_Buffer, &UDP_DataFrom);
 	    strcpy(UDP_DataFrom.IP_Address, inet_ntoa(UDP_AddrFrom.sin_addr));
 
-		switch(UDP_DataFrom.IP_Flags & 0x0000000FUL)
+		switch(UDP_DataFrom.IP_Flags & 0x000000FFUL)
 		{
+			case IPMSG_NOOPERATION:
+				break;
+				
 			case IPMSG_BR_ENTRY:
 				udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_ANSENTRY, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
 				sendForm_AddRemoveItem(&UDP_DataFrom, 1);
@@ -98,9 +117,17 @@ void udp_InquirePackets(void)
 				sendForm_AddRemoveItem(&UDP_DataFrom, 1);
 				break;
 				
-			case IPMSG_BR_EXIT:
+			case IPMSG_BR_EXIT:				
 				sendForm_AddRemoveItem(&UDP_DataFrom, 0);
 				break;
+				
+			case IPMSG_SENDMSG:
+				sprintf(str_Reply, "%i", UDP_DataFrom.UNIX_Time);
+				udp_SendToString((char*)pack_PackBroadcast(IPMSG_RECVMSG, UDP_LocalUsername, UDP_LocalHostname, str_Reply));
+				break;
+				
+			default:
+				printf("unknown: %s\n", UDP_Buffer);
 		}
 	}
 }

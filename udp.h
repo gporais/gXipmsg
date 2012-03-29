@@ -24,6 +24,7 @@ char UDP_Buffer[PACKET_MAXLEN];
 // Function declerations
 int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Handlename);
 int udp_BroadcastString(char* p_String);
+int udp_SendToString(char* p_String);
 void udp_InquirePackets(void);
 void udp_CloseSocket(void);
 

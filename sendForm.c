@@ -85,6 +85,7 @@ void sendForm_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* ar
 	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNbottomAttachment, XmATTACH_FORM); SENDFORM_Index++;													
 	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNbottomOffset, 5); SENDFORM_Index++;
 	SENDFORM_BtnG_Send = XmCreatePushButtonGadget (SENDFORM_Form_Lower, "Send", SENDFORM_Args, SENDFORM_Index);
+	XtAddCallback (SENDFORM_BtnG_Send, XmNactivateCallback, sendForm_SendCallBack, NULL);
 	XtManageChild (SENDFORM_BtnG_Send);
 	
 	// Creatr text message
@@ -160,6 +161,11 @@ void sendForm_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer ca
 	udp_BroadcastEntry();
 }
 
+void sendForm_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	udp_SendToString("1:1234:root:O2:288:test");						
+}
+
 void sendForm_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 {
 	XmString xstr_item;
@@ -215,6 +221,7 @@ void sendForm_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 	{
 		if(mFound == 1)
 		{
+			printf("remove");
 			XmListDeletePos(SENDFORM_List_Users, mIdx+1);
 			mCount--;
 		}
