@@ -168,6 +168,7 @@ void sendForm_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 	int mIdx = 0;
 	int mCount;	
 	char str_Item[50]; 
+	char* text;
 		
 	sprintf(str_Item, "%s@%s (%s)", p_Item->Handlename, p_Item->Hostname, p_Item->IP_Address);
 	
@@ -190,7 +191,23 @@ void sendForm_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 	{
 		if(mFound == 0)
 		{
-			XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, mCount+1);
+			mIdx = 0;
+			while(mCount>mIdx)
+			{
+				text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+			
+				if (strcmp (text, str_Item) > 0)
+				{
+					// str_Item comes before item
+					XtFree(text);
+					break;
+				}
+				
+				XtFree(text);
+				mIdx++;
+			}
+			
+			XmListAddItemUnselected (SENDFORM_List_Users, xstr_item, mIdx+1);
 			mCount++;
 		}
 	}
