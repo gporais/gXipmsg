@@ -75,10 +75,10 @@ int udp_BroadcastString(char* p_String)
 	return 0;
 }
 
-int udp_SendToString(char* p_String)
+int udp_SendToString(char* p_IPAddress, char* p_String)
 {
 	// Set IP of socket address to to broadcast
-	UDP_AddrTo.sin_addr.s_addr = inet_addr("192.168.0.12");
+	UDP_AddrTo.sin_addr.s_addr = inet_addr(p_IPAddress);
 	
 	// Send string to address to
 	if((sendto(*UDP_LocalSocket, p_String, strlen(p_String)+1, 0, (struct sockaddr*)&UDP_AddrTo, sizeof(UDP_AddrTo))) == -1)
@@ -122,8 +122,9 @@ void udp_InquirePackets(void)
 				break;
 				
 			case IPMSG_SENDMSG:
+				// Confirm send
 				sprintf(str_Reply, "%i", UDP_DataFrom.UNIX_Time);
-				udp_SendToString((char*)pack_PackBroadcast(IPMSG_RECVMSG, UDP_LocalUsername, UDP_LocalHostname, str_Reply));
+				udp_SendToString(UDP_DataFrom.IP_Address, (char*)pack_PackBroadcast(IPMSG_RECVMSG, UDP_LocalUsername, UDP_LocalHostname, str_Reply));
 				break;
 				
 			default:
