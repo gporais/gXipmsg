@@ -125,7 +125,7 @@ void udp_InquirePackets(void)
 				break;
 				
 			case IPMSG_SENDMSG:
-				printf("recieve: %s\n", UDP_DataFrom.Handlename);
+				printf("recieved msg: %s\n", UDP_DataFrom.Handlename);
 				// Confirm send
 				sprintf(str_Reply, "%i", UDP_DataFrom.UNIX_Time);
 				udp_SendToString(UDP_DataFrom.IP_Address, str_Reply, IPMSG_RECVMSG);

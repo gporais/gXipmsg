@@ -3,8 +3,6 @@
 
 static int gXipmsg_main (int argc, char* argv[])
 {	
-	printf("Motif version: %i", (int)xmUseVersion);
-	
 	// Get local hostname
 	if((gethostname(GXIM_Local_Hostname, NAME_MAXLEN)) == -1)
 	{

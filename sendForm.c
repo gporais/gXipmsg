@@ -100,7 +100,13 @@ void sendForm_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* ar
 	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNtopOffset, 5); SENDFORM_Index++;
 	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNrightOffset, 5); SENDFORM_Index++;
 	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNbottomOffset, 5); SENDFORM_Index++;
-	SENDFORM_Text_Message = XmCreateText (SENDFORM_Form_Lower, "Message", SENDFORM_Args, SENDFORM_Index);
+	
+	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNrows, 10); SENDFORM_Index++;
+	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNcolumns, 50); SENDFORM_Index++;
+	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNscrollHorizontal, False); SENDFORM_Index++;
+	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNwordWrap, True); SENDFORM_Index++;
+	XtSetArg (SENDFORM_Args[SENDFORM_Index], XmNeditMode, XmMULTI_LINE_EDIT); SENDFORM_Index++;
+	SENDFORM_Text_Message = XmCreateScrolledText(SENDFORM_Form_Lower, "Message", SENDFORM_Args, SENDFORM_Index);
 	XtManageChild (SENDFORM_Text_Message);
 	
 	
@@ -167,9 +173,7 @@ void sendForm_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_
 	int mIdx = 0;
 	int mCount;	
 	char* text;
-	char str_h1[NAME_MAXLEN];
-	char str_h2[NAME_MAXLEN];
-	char str_IP[16];
+	char* str_IP;
 	
   	// Get the selected items (and number of selected) from the List
 	XtVaGetValues (SENDFORM_List_Users, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
@@ -177,12 +181,19 @@ void sendForm_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_
 	while(mCount>mIdx)
 	{
 		text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
-		sscanf(text, "%[^'@']@%[^'('](%[^')'])", str_h1, str_h2, str_IP);	
+		str_IP = strtok(text, "(");
+		str_IP = strtok(NULL, ")");		
 		XtFree(text);
-				
-		udp_SendToString(str_IP,"test", IPMSG_SENDMSG);	
+		
+		if (text = XmTextGetString (SENDFORM_Text_Message)) {
+			udp_SendToString(str_IP,text, IPMSG_SENDMSG);	
+			XtFree(text);			
+		}
+			
 		mIdx++;
-	}						
+	}
+	
+	XmTextSetString (SENDFORM_Text_Message, NULL); /* clear message area */
 }
 
 void sendForm_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
