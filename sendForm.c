@@ -163,7 +163,26 @@ void sendForm_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer ca
 
 void sendForm_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	udp_SendToString("1:1234:root:O2:288:test");						
+	XmStringTable xstr_list;
+	int mIdx = 0;
+	int mCount;	
+	char* text;
+	char str_h1[NAME_MAXLEN];
+	char str_h2[NAME_MAXLEN];
+	char str_IP[16];
+	
+  	// Get the selected items (and number of selected) from the List
+	XtVaGetValues (SENDFORM_List_Users, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
+	
+	while(mCount>mIdx)
+	{
+		text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+		sscanf(text, "%[^'@']@%[^'('](%[^')'])", str_h1, str_h2, str_IP);	
+		XtFree(text);
+				
+		udp_SendToString(str_IP,"test", IPMSG_SENDMSG);	
+		mIdx++;
+	}						
 }
 
 void sendForm_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
@@ -221,7 +240,6 @@ void sendForm_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 	{
 		if(mFound == 1)
 		{
-			printf("remove");
 			XmListDeletePos(SENDFORM_List_Users, mIdx+1);
 			mCount--;
 		}
