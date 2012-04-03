@@ -1,5 +1,5 @@
-gXipmsg : main.o udp.o pack.o sendForm.o
-	cc -o gXipmsg main.o udp.o pack.o sendForm.o -lXm -lXt -lSM -lICE -lX11
+gXipmsg : main.o udp.o pack.o sendForm.o recvDialog.o
+	cc -o gXipmsg main.o udp.o pack.o sendForm.o recvDialog.o -lXm -lXt -lSM -lICE -lX11
              
 main.o : main.c gXipmsg.h
 	cc -c main.c
@@ -12,6 +12,9 @@ pack.o : pack.c pack.h
 
 sendForm.o : sendForm.c sendForm.h 
 	cc -c sendForm.c
-	
+
+recvDialog.o : recvDialog.c recvDialog.h 
+	cc -c recvDialog.c
+
 clean : 
 	rm -f *.s *.o *.exe *.stackdump

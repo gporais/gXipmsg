@@ -93,10 +93,11 @@ int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags)
 	return 0;
 }
 
-void udp_InquirePackets(void)
+void udp_InquirePackets(Widget* w_TopLevel)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
 	char str_Reply[12];
+	
 	
 	while(recvfromTimeOutUDP(*UDP_LocalSocket, 0, 500) > 0)
 	{		
@@ -109,7 +110,7 @@ void udp_InquirePackets(void)
 		switch(UDP_DataFrom.IP_Flags & 0x000000FFUL)
 		{
 			case IPMSG_NOOPERATION:
-				break;
+				break;			
 				
 			case IPMSG_BR_ENTRY:
 				udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_ANSENTRY, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
@@ -125,10 +126,15 @@ void udp_InquirePackets(void)
 				break;
 				
 			case IPMSG_SENDMSG:
-				printf("recieved msg: %s\n", UDP_DataFrom.Handlename);
+				// Pop message
+				recvDialog_PrintMsg(w_TopLevel, UDP_DataFrom.Handlename);				
+				
 				// Confirm send
 				sprintf(str_Reply, "%i", UDP_DataFrom.UNIX_Time);
 				udp_SendToString(UDP_DataFrom.IP_Address, str_Reply, IPMSG_RECVMSG);
+				break;
+				
+			case IPMSG_RECVMSG:
 				break;
 				
 			default:

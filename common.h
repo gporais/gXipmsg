@@ -11,6 +11,8 @@
 #include <Xm/PushBG.h>
 #include <Xm/LabelG.h>
 
+#include <Xm/MessageB.h>
+
 #include <Xm/Frame.h>
 #include <Xm/Form.h>
 #include <Xm/List.h>
