@@ -2,11 +2,24 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
-#include <arpa/inet.h>
 #include <ctype.h>
-#include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#include <unistd.h>
+#include <sys/time.h> /* setitimer() */
+
+/* includes below are order dependent */
+#include <sys/param.h> /* htons() */
+#include <sys/types.h> /* socket() */
+#include <sys/socket.h> /* socket() */
+#include <netinet/in.h> /* inet_addr() INADDR_ANY */
+#include <arpa/inet.h> /* inet_addr() */
+#include <netdb.h> /* gethostbyname() */
+#include <pwd.h>
 
 #include <Xm/PushBG.h>
 #include <Xm/LabelG.h>
@@ -20,29 +33,7 @@
 #include <Xm/Text.h>
 #include <Xm/Protocols.h>
 
-#include <iconv.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
-#include <pwd.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/file.h>
-#include <sys/ioctl.h> 
-#include <sys/mman.h>
-#include <sys/param.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <syslog.h>
-#include <time.h>
-#include <unistd.h>
+
 
 #define IPMSG_NOOPERATION		0x00000000UL
 #define IPMSG_BR_ENTRY			0x00000001UL
