@@ -10,11 +10,11 @@
 
 // Variable declerations
 char PACK_Full_Packet[PACKET_MAXLEN];
-int PACK_Packet_No;
+long PACK_Packet_No;
 unsigned long PACK_Flags;
 
 // Function declerations
-char* pack_PackBroadcast(int m_Flags, char* p_username, char* p_hostname, char* p_handlename);
+char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostname, char* p_handlename);
 void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPacket);
 
 #endif /*PACK_H_*/

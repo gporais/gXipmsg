@@ -12,7 +12,8 @@
 
 // Variable declerations
 struct sockaddr_in UDP_AddrFrom;
-struct sockaddr_in UDP_AddrTo;
+struct sockaddr_in UDP_AddrBroadTo;
+struct sockaddr_in UDP_AddrSendTo;
 struct Broadcast_Packet UDP_DataFrom;
 
 int* UDP_LocalSocket;

@@ -32,9 +32,11 @@ int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 	}
 	
 	// Create socket address to
-	UDP_AddrTo.sin_family = UDP_DEFAULT_FAMILY;
-	UDP_AddrTo.sin_port = htons(UDP_DEFAULT_PORT);
-	UDP_AddrTo.sin_addr.s_addr = inet_addr(UDP_BROADCAST_IPADDR);
+	UDP_AddrBroadTo.sin_family = UDP_DEFAULT_FAMILY;
+	UDP_AddrBroadTo.sin_port = htons(UDP_DEFAULT_PORT);	
+	
+	UDP_AddrSendTo.sin_family = UDP_DEFAULT_FAMILY;
+	UDP_AddrSendTo.sin_port = htons(UDP_DEFAULT_PORT);	
 		
 	UDP_LocalSocket = p_Socket;
 	UDP_LocalUsername = p_Username;
@@ -62,11 +64,20 @@ void udp_BroadcastExit(void)
 
 int udp_BroadcastString(char* p_String)
 {
+	int broadcast = 1;
+		
+	// Enable broadcast option 
+	if((setsockopt(*UDP_LocalSocket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))) == -1)
+	{
+		printf("error: setsockopt()");
+		return -1;
+	}
+		
 	// Set IP of socket address to to broadcast
-	UDP_AddrTo.sin_addr.s_addr = inet_addr(UDP_BROADCAST_IPADDR);
+	UDP_AddrBroadTo.sin_addr.s_addr = inet_addr(UDP_BROADCAST_IPADDR);
 	
 	// Send string to address to
-	if((sendto(*UDP_LocalSocket, p_String, strlen(p_String)+1, 0, (struct sockaddr*)&UDP_AddrTo, sizeof(UDP_AddrTo))) == -1)
+	if((sendto(*UDP_LocalSocket, p_String, strlen(p_String)+1, 0, (struct sockaddr*)&UDP_AddrBroadTo, sizeof(UDP_AddrBroadTo))) == -1)
 	{
 		printf("error: sendto()");
 		return -1;
@@ -78,13 +89,20 @@ int udp_BroadcastString(char* p_String)
 int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags)
 {
 	char* p_Buffer = (char*)pack_PackBroadcast(m_Flags, UDP_LocalUsername, UDP_LocalHostname, p_String);
+	int broadcast = 0;
+			
+	// Disable broadcast option 
+	if((setsockopt(*UDP_LocalSocket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))) == -1)
+	{
+		printf("error: setsockopt()");
+		return -1;
+	}
 	
 	// Set IP of socket address to to broadcast
-	UDP_AddrTo.sin_addr.s_addr = inet_addr(p_IPAddress);
-	
+	UDP_AddrSendTo.sin_addr.s_addr = inet_addr(p_IPAddress);	
 		
 	// Send string to address to
-	if((sendto(*UDP_LocalSocket, p_Buffer, strlen(p_Buffer)+1, 0, (struct sockaddr*)&UDP_AddrTo, sizeof(UDP_AddrTo))) == -1)
+	if((sendto(*UDP_LocalSocket, p_Buffer, strlen(p_Buffer)+1, 0, (struct sockaddr*)&UDP_AddrSendTo, sizeof(UDP_AddrSendTo))) == -1)
 	{
 		printf("error: sendto()");
 		return -1;
@@ -107,7 +125,7 @@ void udp_InquirePackets(Widget* w_TopLevel)
 	    pack_UnpackBroadcast(UDP_Buffer, &UDP_DataFrom);
 	    strcpy(UDP_DataFrom.IP_Address, inet_ntoa(UDP_AddrFrom.sin_addr));
 
-		switch(UDP_DataFrom.IP_Flags & 0x000000FFUL)
+	    switch(UDP_DataFrom.IP_Flags & 0x000000FFUL)
 		{
 			case IPMSG_NOOPERATION:
 				break;			
@@ -127,14 +145,15 @@ void udp_InquirePackets(Widget* w_TopLevel)
 				
 			case IPMSG_SENDMSG:
 				// Pop message
-				recvDialog_PrintMsg(w_TopLevel, UDP_DataFrom.Handlename);				
-				
+				recvDialog_PrintMsg(w_TopLevel, UDP_DataFrom.Handlename);	
+								
 				// Confirm send
 				sprintf(str_Reply, "%i", UDP_DataFrom.UNIX_Time);
 				udp_SendToString(UDP_DataFrom.IP_Address, str_Reply, IPMSG_RECVMSG);
 				break;
 				
 			case IPMSG_RECVMSG:
+				printf("IPMSG_RECVMSG\n");
 				break;
 				
 			default:
