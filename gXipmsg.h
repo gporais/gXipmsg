@@ -10,9 +10,9 @@
 // Variable declerations
 int GXIM_UDP_Socket;
 
-char GXIM_Local_Hostname[NAME_MAXLEN];
-char GXIM_Local_Username[NAME_MAXLEN];
-char GXIM_Local_Handlename[NAME_MAXLEN];
+char GXIM_Local_Hostname[HOSTNAME_MAXLEN];
+char GXIM_Local_Username[USERNAME_MAXLEN];
+char GXIM_Local_Handlename[HANDLENAME_MAXLEN];
 
 struct passwd* GXIM_Passwd;
 

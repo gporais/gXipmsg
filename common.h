@@ -64,17 +64,25 @@
 
 
 
-#define	NAME_MAXLEN			50
-#define	PACKET_MAXLEN		200
+#define	IPVER_MAXLEN			2
+#define	UNIXTIME_MAXLEN			12
+#define	IPFLAGS_MAXLEN			12
+#define	IPADDRESS_MAXLEN		16
+#define	USERNAME_MAXLEN			50
+#define	HOSTNAME_MAXLEN			50
+#define	HANDLENAME_MAXLEN		50
+#define	MESSAGE_MAXLEN			500
+
+#define	PACKET_MAXLEN			IPVER_MAXLEN+UNIXTIME_MAXLEN+IPFLAGS_MAXLEN+IPADDRESS_MAXLEN+USERNAME_MAXLEN+HOSTNAME_MAXLEN+MESSAGE_MAXLEN
 
 struct Broadcast_Packet {
-	char IP_Ver[NAME_MAXLEN];
+	char IP_Ver[IPVER_MAXLEN];
 	long UNIX_Time;
 	unsigned long IP_Flags;
-	char IP_Address[16];
-	char Username[NAME_MAXLEN];
-	char Hostname[NAME_MAXLEN];
-	char Handlename[NAME_MAXLEN];
+	char IP_Address[IPADDRESS_MAXLEN];
+	char Username[USERNAME_MAXLEN];
+	char Hostname[HOSTNAME_MAXLEN];
+	char Handlename[MESSAGE_MAXLEN];
 };
 	
 

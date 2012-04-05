@@ -4,7 +4,7 @@
 static int gXipmsg_main (int argc, char* argv[])
 {	
 	// Get local hostname
-	if((gethostname(GXIM_Local_Hostname, NAME_MAXLEN)) == -1)
+	if((gethostname(GXIM_Local_Hostname, HOSTNAME_MAXLEN)) == -1)
 	{
 		printf("error: gethostname()");
 		exit(1);
