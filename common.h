@@ -67,9 +67,9 @@
 #define	PACKET_MAXLEN			IPVER_MAXLEN+UNIXTIME_MAXLEN+IPFLAGS_MAXLEN+IPADDRESS_MAXLEN+USERNAME_MAXLEN+HOSTNAME_MAXLEN+MESSAGE_MAXLEN
 
 struct Broadcast_Packet {
-	char IP_Ver[IPVER_MAXLEN];
-	long UNIX_Time;
+	unsigned long UNIX_Time;
 	unsigned long IP_Flags;
+	char IP_Ver[IPVER_MAXLEN];
 	char IP_Address[IPADDRESS_MAXLEN];
 	char Username[USERNAME_MAXLEN];
 	char Hostname[HOSTNAME_MAXLEN];

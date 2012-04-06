@@ -143,7 +143,7 @@ void sendForm_Run(XtAppContext* xac_App)
 
 void sendForm_UpdateCount(int m_Count)
 {
-	char str_Dest[4];	
+	char str_Dest[8];	
 	XmString xstr_Dest;
 	
 	sprintf(str_Dest, "%i", m_Count);

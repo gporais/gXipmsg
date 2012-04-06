@@ -10,7 +10,7 @@ char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostna
 	PACK_Packet_No = time(NULL);	
 	
 	// Compose the full packet
-	sprintf(PACK_Full_Packet, "%s:%ld:%s:%s:%lu:%s", PACK_IPMSG_VERSION, PACK_Packet_No, p_username, p_hostname, PACK_Flags, p_handlename);
+	sprintf(PACK_Full_Packet, "%s:%lu:%s:%s:%lu:%s", PACK_IPMSG_VERSION, PACK_Packet_No, p_username, p_hostname, PACK_Flags, p_handlename);
 	
 	return PACK_Full_Packet;
 }

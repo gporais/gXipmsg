@@ -10,7 +10,7 @@
 
 // Variable declerations
 char PACK_Full_Packet[PACKET_MAXLEN];
-long PACK_Packet_No;
+unsigned long PACK_Packet_No;
 unsigned long PACK_Flags;
 
 // Function declerations
