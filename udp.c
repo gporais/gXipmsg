@@ -148,7 +148,7 @@ void udp_InquirePackets(Widget* w_TopLevel)
 				recvDialog_PrintMsg(w_TopLevel, UDP_DataFrom.Handlename);	
 								
 				// Confirm send
-				sprintf(str_Reply, "%i", UDP_DataFrom.UNIX_Time);
+				sprintf(str_Reply, "%lu", UDP_DataFrom.UNIX_Time);
 				udp_SendToString(UDP_DataFrom.IP_Address, str_Reply, IPMSG_RECVMSG);
 				break;
 				
