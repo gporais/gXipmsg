@@ -17,4 +17,4 @@ recvDialog.o : recvDialog.c recvDialog.h
 	cc -g -c recvDialog.c
 
 clean : 
-	rm -f *.s *.o *.exe *.stackdump
+	rm -f gXipmsg *.s *.o *.exe *.stackdump
