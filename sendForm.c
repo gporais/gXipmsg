@@ -206,7 +206,14 @@ void sendForm_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 	char str_Item[50]; 
 	char* text;
 		
-	sprintf(str_Item, "%s@%s (%s)", p_Item->Handlename, p_Item->Hostname, p_Item->IP_Address);
+	if(strlen(p_Item->Handlename) == 0)
+	{
+		sprintf(str_Item, "%s@%s (%s)", p_Item->Username, p_Item->Hostname, p_Item->IP_Address);
+	}
+	else
+	{
+		sprintf(str_Item, "%s@%s (%s)", p_Item->Handlename, p_Item->Hostname, p_Item->IP_Address);
+	}
 	
   	// Get the current entries (and number of entries) from the List
 	XtVaGetValues (SENDFORM_List_Users, XmNitemCount, &mCount,	XmNitems, &xstr_list, NULL);
