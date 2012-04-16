@@ -182,14 +182,13 @@ void sendForm_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_
 	{
 		text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
 		str_IP = strtok(text, "(");
-		str_IP = strtok(NULL, ")");		
-		XtFree(text);
+		str_IP = strtok(NULL, ")");
 		
 		if (text = XmTextGetString (SENDFORM_Text_Message)) {
-			udp_SendToString(str_IP,text, IPMSG_SENDMSG);	
-			XtFree(text);			
+			udp_SendToString(str_IP,text, IPMSG_SENDMSG);		
 		}
-			
+		
+		XtFree(text);
 		mIdx++;
 	}
 	
