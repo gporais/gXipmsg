@@ -33,6 +33,7 @@
 #include <Xm/Text.h>
 #include <Xm/Protocols.h>
 
+#include <Xm/MwmUtil.h>
 
 
 #define IPMSG_NOOPERATION		0x00000000UL

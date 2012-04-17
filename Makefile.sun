@@ -1,5 +1,5 @@
-gXipmsg : main.o udp.o pack.o sendForm.o recvDialog.o
-	cc -g -o gXipmsg main.o udp.o pack.o sendForm.o recvDialog.o -lXm -lXt -lSM -lICE -lX11 -lsocket -lnsl
+gXipmsg : main.o udp.o pack.o appIcon.o sendForm.o recvDialog.o
+	cc -g -o gXipmsg main.o udp.o pack.o appIcon.o sendForm.o recvDialog.o -lXm -lXt -lSM -lICE -lX11 -lsocket -lnsl
              
 main.o : main.c gXipmsg.h
 	cc -g -c main.c
@@ -9,6 +9,9 @@ udp.o : udp.c udp.h
 	
 pack.o : pack.c pack.h 
 	cc -g -c pack.c	
+	
+appIcon.o : appIcon.c appIcon.h 
+	cc -g -c appIcon.c
 
 sendForm.o : sendForm.c sendForm.h 
 	cc -g -c sendForm.c

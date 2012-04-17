@@ -116,15 +116,15 @@ void udp_InquirePackets(Widget* w_TopLevel)
 				
 			case IPMSG_BR_ENTRY:
 				udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_ANSENTRY, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
-				sendForm_AddRemoveItem(&UDP_DataFrom, 1);
+				appIcon_AddRemoveItem(&UDP_DataFrom, 1);
 				break;
 				
 			case IPMSG_ANSENTRY:
-				sendForm_AddRemoveItem(&UDP_DataFrom, 1);
+				appIcon_AddRemoveItem(&UDP_DataFrom, 1);
 				break;
 				
 			case IPMSG_BR_EXIT:				
-				sendForm_AddRemoveItem(&UDP_DataFrom, 0);
+				appIcon_AddRemoveItem(&UDP_DataFrom, 0);
 				break;
 				
 			case IPMSG_SENDMSG:

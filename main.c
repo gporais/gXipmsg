@@ -31,10 +31,10 @@ static int gXipmsg_main (int argc, char* argv[])
 		exit(1);
 	}
 	
-	sendForm_Init(&GXIM_App, &GXIM_TopLevel, argc, argv);
-	sendForm_SetupClose(&GXIM_TopLevel, gxipmg_AtExit);
-	sendForm_SetupTimeout(&GXIM_App, gxipmg_CheckData);
-	sendForm_Run(&GXIM_App);
+	appIcon_Init(&GXIM_App, &GXIM_TopLevel, argc, argv);
+	appIcon_SetupClose(&GXIM_TopLevel, gxipmg_AtExit);
+	appIcon_SetupTimeout(&GXIM_App, gxipmg_CheckData);
+	appIcon_Run(&GXIM_App);
 			
 
 	return 0;
@@ -56,6 +56,6 @@ void gxipmg_CheckData(XtPointer xp_Client_data, XtIntervalId* id)
 {
 	udp_InquirePackets(&GXIM_TopLevel);
 	
-	sendForm_SetupTimeout(&GXIM_App, gxipmg_CheckData);	
+	appIcon_SetupTimeout(&GXIM_App, gxipmg_CheckData);	
 }
 
