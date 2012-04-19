@@ -8,7 +8,9 @@
 
 
 // Variable declerations
-Widget APPICON_BtnG_Icon, APPICON_Form;
+Widget APPICON_Form;
+Widget APPICON_BtnG_Icon;
+Widget APPICON_List_Users;
 
 Pixmap pixmap;
 Pixel fg, bg;

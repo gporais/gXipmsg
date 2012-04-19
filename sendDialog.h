@@ -22,10 +22,12 @@ Widget SENDDIALOG_Text_Message;
 Widget SENDDIALOG_BtnG_Send;
 
 // Function declerations
-void sendDialog_Create(Widget* w_Parent);
+void sendDialog_Create(Widget* w_Parent, Widget* w_List);
 void sendDialog_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
-void sendDialog_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option);
+
+
+void sendDialog_AddUser(XmString* xmstr_User, int m_Idx);
 void sendDialog_UpdateCount(int m_Count);
 
 

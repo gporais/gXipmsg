@@ -1,8 +1,16 @@
 // created by: geo (March 2012)
 #include "sendDialog.h"
 
-void sendDialog_Create(Widget* w_Parent)
+void sendDialog_Create(Widget* w_Parent, Widget* w_List)
 {
+	int m_Count;
+	char* str_Count;	
+	XmString xstr_Count;	
+	XmStringTable xstr_list;	
+	
+	// Get the current entries (and number of entries) from the List
+	XtVaGetValues (*w_List, XmNitemCount, &m_Count,	XmNitems, &xstr_list, NULL);	
+		
 	// Create dialog
 	n = 0;
 	XtSetArg (args[n], XmNtitle, "Send Message"); n++;
@@ -25,11 +33,16 @@ void sendDialog_Create(Widget* w_Parent)
 	SENDDIALOG_Frame_Member = XmCreateFrame (SENDDIALOG_Form_Upper, "MemberFrame", args, n);
 	
 	// Create count label
+	sprintf(str_Count, "%i", m_Count);
+	xstr_Count = XmStringCreateLocalized (str_Count);
+	
 	n = 0;
 	XtSetArg (args[n], XmNchildType, XmFRAME_WORKAREA_CHILD); n++;
 	XtSetArg (args[n], XmNchildVerticalAlignment, XmALIGNMENT_CENTER); n++;
-	SENDDIALOG_LblG_Count = XmCreateLabelGadget (SENDDIALOG_Frame_Member, "0", args, n);	
-	XtManageChild (SENDDIALOG_LblG_Count);	
+	XtSetArg (args[n], XmNlabelString, xstr_Count); n++;
+	SENDDIALOG_LblG_Count = XmCreateLabelGadget (SENDDIALOG_Frame_Member, "Count", args, n);	
+	XtManageChild (SENDDIALOG_LblG_Count);
+	XmStringFree(xstr_Count);
 	
 	// Create member label
 	n = 0;
@@ -53,6 +66,8 @@ void sendDialog_Create(Widget* w_Parent)
 	XtSetArg (args[n], XmNrightWidget, SENDDIALOG_Frame_Member); n++;
 	XtSetArg (args[n], XmNrightOffset, 5); n++;
 	XtSetArg (args[n], XmNselectionPolicy, XmEXTENDED_SELECT); n++;
+	XtSetArg (args[n], XmNitemCount, m_Count); n++;
+	XtSetArg (args[n], XmNitems, xstr_list); n++;
 	SENDDIALOG_List_Users = XmCreateScrolledList (SENDDIALOG_Form_Upper, "Users", args, n);
 	XtManageChild (SENDDIALOG_List_Users);
 	
@@ -177,74 +192,9 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 	XmTextSetString (SENDDIALOG_Text_Message, NULL); /* clear message area */
 }
 
-void sendDialog_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
+
+void sendDialog_AddUser(XmString* xmstr_User, int m_Idx)
 {
-	XmString xstr_item;
-	XmStringTable xstr_list;
-	int mFound = 0;
-	int mIdx = 0;
-	int mCount;	
-	char str_Item[50]; 
-	char* text;
-		
-	if(strlen(p_Item->Handlename) == 0)
-	{
-		sprintf(str_Item, "%s@%s (%s)", p_Item->Username, p_Item->Hostname, p_Item->IP_Address);
-	}
-	else
-	{
-		sprintf(str_Item, "%s@%s (%s)", p_Item->Handlename, p_Item->Hostname, p_Item->IP_Address);
-	}
-	
-  	// Get the current entries (and number of entries) from the List
-	XtVaGetValues (SENDDIALOG_List_Users, XmNitemCount, &mCount,	XmNitems, &xstr_list, NULL);
-		
-	xstr_item = XmStringCreateLocalized (str_Item);
-		
-	while(mCount>mIdx)
-	{		
-		if(XmStringCompare(xstr_item, xstr_list[mIdx]))
-		{
-			mFound = 1;
-			break;
-		}	
-		mIdx++;
-	}	
-	
-	if(m_Option == 1)
-	{
-		if(mFound == 0)
-		{
-			mIdx = 0;
-			while(mCount>mIdx)
-			{
-				text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
-			
-				if (strcmp (text, str_Item) > 0)
-				{
-					// str_Item comes before item
-					XtFree(text);
-					break;
-				}
-				
-				XtFree(text);
-				mIdx++;
-			}
-			
-			XmListAddItemUnselected (SENDDIALOG_List_Users, xstr_item, mIdx+1);
-			mCount++;
-		}
-	}
-	else
-	{
-		if(mFound == 1)
-		{
-			XmListDeletePos(SENDDIALOG_List_Users, mIdx+1);
-			mCount--;
-		}
-	}
-	
-	XmStringFree (xstr_item);
-	sendDialog_UpdateCount(mCount);
+	XmListAddItemUnselected (SENDDIALOG_List_Users, *xmstr_User, m_Idx);
 }
 
