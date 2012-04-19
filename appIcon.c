@@ -13,19 +13,19 @@ void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* arg
 	pixmap = XmGetPixmap (XtScreen (APPICON_Form), "ipmsg.xpm", fg, bg);
 		
 	// Create icon button
-	APPICON_Index = 0;
-	XtSetArg (APPICON_Args[APPICON_Index], XmNlabelType, XmPIXMAP); APPICON_Index++;
-	XtSetArg (APPICON_Args[APPICON_Index], XmNlabelPixmap, pixmap); APPICON_Index++;	
-	APPICON_Btn_Icon = XmCreatePushButtonGadget(APPICON_Form, "ipmsg.xpm", APPICON_Args, APPICON_Index);
-
-//	XtAddCallback (APPICON_BtnG_Send, XmNactivateCallback, appIcon_SendCallBack, NULL);
-	XtManageChild (APPICON_Btn_Icon);	
+	n = 0;
+	XtSetArg (args[n], XmNlabelType, XmPIXMAP); n++;
+	XtSetArg (args[n], XmNlabelPixmap, pixmap); n++;
+	APPICON_BtnG_Icon = XmCreatePushButtonGadget(APPICON_Form, "ipmsg.xpm", args, n);
+	XtAddCallback (APPICON_BtnG_Icon, XmNactivateCallback, appIcon_IconCallBack, NULL);
+	XtManageChild (APPICON_BtnG_Icon);	
 
 	XtManageChild (APPICON_Form);
 	
 	XtVaSetValues (*w_TopLevel,
-		       XmNmwmDecorations,
-		       MWM_DECOR_TITLE,		       
+		       XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU,	
+		       XmNmwmFunctions, MWM_FUNC_CLOSE,
+		       XmNtitle, "gXip",
 		       NULL);	
 	
 	// Materialize major widgets
@@ -55,6 +55,12 @@ void appIcon_SetupTimeout(XtAppContext* xac_App, XtTimerCallbackProc xcp_TOProc)
 void appIcon_Run(XtAppContext* xac_App)
 {
 	XtAppMainLoop (*xac_App);
+}
+
+
+void appIcon_IconCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	sendDialog_Create(&widget);
 }
 
 
