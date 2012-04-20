@@ -8,6 +8,9 @@ void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* arg
 
 	APPICON_Form = XmCreateForm (*w_TopLevel, "ipmsgForm", NULL, 0);
 	
+	// Create list holder
+	APPICON_List_Users = XmCreateScrolledList (APPICON_Form, "List", NULL, 0);
+	
 	XtVaGetValues (APPICON_Form, XmNforeground, &fg, XmNbackground, &bg, NULL);
 	
 	pixmap = XmGetPixmap (XtScreen (APPICON_Form), "ipmsg.xpm", fg, bg);
@@ -20,20 +23,16 @@ void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* arg
 	XtAddCallback (APPICON_BtnG_Icon, XmNactivateCallback, appIcon_IconCallBack, NULL);
 	XtManageChild (APPICON_BtnG_Icon);	
 	
-	APPICON_List_Users = XmCreateScrolledList (APPICON_Form, "List", NULL, 0);
-	XtManageChild (APPICON_List_Users);
-	
 	XtManageChild (APPICON_Form);
 	
 	XtVaSetValues (*w_TopLevel,
 		       XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU,	
-		       XmNmwmFunctions, MWM_FUNC_CLOSE,
+		       XmNmwmFunctions, MWM_FUNC_CLOSE | MWM_FUNC_MOVE,
 		       XmNtitle, "gXip",
 		       NULL);	
 	
 	// Materialize major widgets
-	XtRealizeWidget (*w_TopLevel); 	
-	XtUnmanageChild (APPICON_List_Users);
+	XtRealizeWidget (*w_TopLevel);
 }
 
 
