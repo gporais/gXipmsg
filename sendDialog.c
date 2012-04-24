@@ -3,8 +3,21 @@
 
 void sendDialog_Create(Widget* w_Parent, Widget* w_List)
 {
+	Widget SENDDIALOG_Dialog;
+	Widget SENDDIALOG_Form_Upper;
+	Widget SENDDIALOG_Frame_Member;
+	Widget SENDDIALOG_LblG_Count;
+	Widget SENDDIALOG_LblG_Member;
+	Widget SENDDIALOG_BtnG_Refresh;
+	Widget SENDDIALOG_List_Users;
+	Widget SENDDIALOG_Pane_Vertical;
+	Widget SENDDIALOG_Form_Lower;
+	Widget SENDDIALOG_BtnG_Attach;
+	Widget SENDDIALOG_Text_Message;
+	Widget SENDDIALOG_BtnG_Send;
+	
 	int m_Count;
-	char* str_Count;	
+	char str_Count[3];	
 	XmString xstr_Count;	
 	XmStringTable xstr_list;	
 	
@@ -140,61 +153,61 @@ void sendDialog_Create(Widget* w_Parent, Widget* w_List)
 
 void sendDialog_UpdateCount(int m_Count)
 {
-	char str_Dest[8];	
-	XmString xstr_Dest;
-	
-	sprintf(str_Dest, "%i", m_Count);
-			
-	xstr_Dest = XmStringCreateLocalized (str_Dest);		
-	XtVaSetValues (SENDDIALOG_LblG_Count, XmNlabelString, xstr_Dest, NULL);
-	
-	
-	strcpy(str_Dest, "Member");
-		
-	xstr_Dest = XmStringCreateLocalized (str_Dest);	
-	XtVaSetValues (SENDDIALOG_LblG_Member, XmNlabelString, xstr_Dest, NULL);		
-			
-	XmStringFree(xstr_Dest);
+//	char str_Dest[8];	
+//	XmString xstr_Dest;
+//	
+//	sprintf(str_Dest, "%i", m_Count);
+//			
+//	xstr_Dest = XmStringCreateLocalized (str_Dest);		
+//	XtVaSetValues (SENDDIALOG_LblG_Count, XmNlabelString, xstr_Dest, NULL);
+//	
+//	
+//	strcpy(str_Dest, "Member");
+//		
+//	xstr_Dest = XmStringCreateLocalized (str_Dest);	
+//	XtVaSetValues (SENDDIALOG_LblG_Member, XmNlabelString, xstr_Dest, NULL);		
+//			
+//	XmStringFree(xstr_Dest);
 }
 
 void sendDialog_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	sendDialog_UpdateCount(0);
-	XmListDeleteAllItems(SENDDIALOG_List_Users);
-	udp_BroadcastEntry();
+//	sendDialog_UpdateCount(0);
+//	XmListDeleteAllItems(SENDDIALOG_List_Users);
+//	udp_BroadcastEntry();
 }
 
 void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	XmStringTable xstr_list;
-	int mIdx = 0;
-	int mCount;	
-	char* text;
-	char* str_IP;
-	
-  	// Get the selected items (and number of selected) from the List
-	XtVaGetValues (SENDDIALOG_List_Users, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
-	
-	while(mCount>mIdx)
-	{
-		text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
-		str_IP = strtok(text, "(");
-		str_IP = strtok(NULL, ")");
-		
-		if (text = XmTextGetString (SENDDIALOG_Text_Message)) {
-			udp_SendToString(str_IP,text, IPMSG_SENDMSG);		
-		}
-		
-		XtFree(text);
-		mIdx++;
-	}
-	
-	XmTextSetString (SENDDIALOG_Text_Message, NULL); /* clear message area */
+//	XmStringTable xstr_list;
+//	int mIdx = 0;
+//	int mCount;	
+//	char* text;
+//	char* str_IP;
+//	
+//  	// Get the selected items (and number of selected) from the List
+//	XtVaGetValues (SENDDIALOG_List_Users, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
+//	
+//	while(mCount>mIdx)
+//	{
+//		text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+//		str_IP = strtok(text, "(");
+//		str_IP = strtok(NULL, ")");
+//		
+//		if (text = XmTextGetString (SENDDIALOG_Text_Message)) {
+//			udp_SendToString(str_IP,text, IPMSG_SENDMSG);		
+//		}
+//		
+//		XtFree(text);
+//		mIdx++;
+//	}
+//	
+//	XmTextSetString (SENDDIALOG_Text_Message, NULL); /* clear message area */
 }
 
 
 void sendDialog_AddUser(XmString* xmstr_User, int m_Idx)
 {
-	XmListAddItemUnselected (SENDDIALOG_List_Users, *xmstr_User, m_Idx);
+//	XmListAddItemUnselected (SENDDIALOG_List_Users, *xmstr_User, m_Idx);
 }
 

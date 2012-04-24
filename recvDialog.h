@@ -11,6 +11,6 @@
 
 
 // Function declerations
-void recvDialog_PrintMsg(Widget* w_TopLevel, char* ptr_Msg);
+void recvDialog_Create(Widget* w_Parent, char* ptr_Msg);
 
 #endif /*RECVDIALOG_H_*/
