@@ -99,10 +99,13 @@ void udp_InquirePackets(Widget* w_TopLevel)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
 	char str_Reply[12];
-	
+	char UDP_Buffer[PACKET_MAXLEN];
 	
 	while(recvfromTimeOutUDP(*UDP_LocalSocket, 0, 500) > 0)
-	{		
+	{	
+		//Clear buffer
+		memset(UDP_Buffer,'\0',PACKET_MAXLEN);
+		
 		// Ok the data is ready, call recvfrom() to get it then
 	    recvfrom(*UDP_LocalSocket, UDP_Buffer, PACKET_MAXLEN, 0, (struct sockaddr*)&UDP_AddrFrom, &m_AddrLen);
 	    
@@ -143,7 +146,7 @@ void udp_InquirePackets(Widget* w_TopLevel)
 			default:
 				printf("unknown: %s\n", UDP_Buffer);
 		}
-	}
+	}	
 }
 
 void udp_CloseSocket(void)
