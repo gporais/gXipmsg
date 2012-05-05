@@ -9,7 +9,7 @@
 
 
 // Variable declerations
-
+Position x, y;
 
 int n;
 Arg args[20];
