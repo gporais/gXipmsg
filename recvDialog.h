@@ -8,7 +8,8 @@
 
 
 // Variable declerations
-
+int n;
+Arg args[20];
 
 // Function declerations
 void recvDialog_Create(Widget* w_Parent, char* ptr_Msg);

@@ -4,16 +4,22 @@
 
 #include "common.h"
 
+
 // Constants
 
 
 // Variable declerations
 
 
+int n;
+Arg args[20];
+
 // Function declerations
-void sendDialog_Create(Widget* w_Parent, Widget* w_List);
-void sendDialog_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
+void sendDialog_Create(XtPointer xt_List);
 void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
+
+
+void sendDialog_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 
 
 void sendDialog_AddUser(XmString* xmstr_User, int m_Idx);
