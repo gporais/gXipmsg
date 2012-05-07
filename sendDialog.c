@@ -1,8 +1,6 @@
 // created by: geo (March 2012)
 #include "sendDialog.h"
 
-
-
 void sendDialog_Create(XtPointer xt_List)
 {
 	Widget* w_List = (Widget*)xt_List;
@@ -32,13 +30,14 @@ void sendDialog_Create(XtPointer xt_List)
 	SENDDIALOG_ClientData[0] = XtVaCreatePopupShell("send_diag", 
 			topLevelShellWidgetClass, XtParent (*w_List),
 			XmNtitle, "Send Message",
-			XmNdeleteResponse, XmDESTROY,
+			XmNdeleteResponse, XmDESTROY,			
 			XmNx, x,
 			XmNy, y,
 			NULL);	
 	
 	x += 20;
 	y += 20;	
+
 		
 	// Create paned window
 	SENDDIALOG_Pane_Vertical = XmCreatePanedWindow (SENDDIALOG_ClientData[0], "Vertical", NULL, 0);
@@ -65,7 +64,10 @@ void sendDialog_Create(XtPointer xt_List)
 	XtSetArg (args[n], XmNlabelString, xstr_Count); n++;
 	SENDDIALOG_LblG_Count = XmCreateLabelGadget (SENDDIALOG_Frame_Member, "Count", args, n);	
 	XtManageChild (SENDDIALOG_LblG_Count);
-	XmStringFree(xstr_Count);
+//	XmStringFree(xstr_Count);
+	
+	sprintf(str_Count, "%i", 9);
+	xstr_Count = XmStringCreateLocalized (str_Count);
 	
 	// Create member label
 	n = 0;
@@ -104,7 +106,7 @@ void sendDialog_Create(XtPointer xt_List)
 	XtSetArg (args[n], XmNrightWidget, SENDDIALOG_Frame_Member); n++;	
 	XtSetArg (args[n], XmNtopOffset, 5); n++;
 	SENDDIALOG_BtnG_Refresh = XmCreatePushButtonGadget (SENDDIALOG_Form_Upper, "Refresh", args, n);
-	XtAddCallback (SENDDIALOG_BtnG_Refresh, XmNactivateCallback, sendDialog_RefreshCallBack, SENDDIALOG_ClientData[0]);
+	XtAddCallback (SENDDIALOG_BtnG_Refresh, XmNactivateCallback, sendDialog_RefreshCallBack, (XtPointer)SENDDIALOG_ClientData[0]);
 	XtManageChild (SENDDIALOG_BtnG_Refresh);	
 	
 	// Create lower form
@@ -122,16 +124,28 @@ void sendDialog_Create(XtPointer xt_List)
 	XtManageChild (SENDDIALOG_BtnG_Attach);
 	
 	
+	// Create send button
+	n = 0;
+	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
+	XtSetArg (args[n], XmNbottomOffset, 5); n++;
+	SENDDIALOG_BtnG_Send = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Send", args, n);
+		
+	XtAddCallback (SENDDIALOG_BtnG_Send, XmNactivateCallback, sendDialog_SendCallBack, (XtPointer)SENDDIALOG_ClientData);
+	XtManageChild (SENDDIALOG_BtnG_Send);
+	
 	
 	// Creatr text message
 	n = 0;
 	XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM); n++; 												
 	XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM); n++;	
 	XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET); n++; 
-	XtSetArg (args[n], XmNtopWidget, SENDDIALOG_BtnG_Attach); n++;
+	XtSetArg (args[n], XmNtopWidget, SENDDIALOG_BtnG_Attach); n++;	
+	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_WIDGET); n++; 
+	XtSetArg (args[n], XmNbottomWidget, SENDDIALOG_BtnG_Send); n++;
 	XtSetArg (args[n], XmNleftOffset, 5); n++;
 	XtSetArg (args[n], XmNtopOffset, 5); n++;
 	XtSetArg (args[n], XmNrightOffset, 5); n++;
+	XtSetArg (args[n], XmNtopOffset, 5); n++;
 	
 	XtSetArg (args[n], XmNrows, 10); n++;
 	XtSetArg (args[n], XmNcolumns, 50); n++;
@@ -141,25 +155,13 @@ void sendDialog_Create(XtPointer xt_List)
 	SENDDIALOG_ClientData[2] = XmCreateScrolledText(SENDDIALOG_Form_Lower, "Message", args, n);
 	XtManageChild (SENDDIALOG_ClientData[2]);
 	
-	// Create send button
-	n = 0;
-	XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET); n++; 
-	XtSetArg (args[n], XmNtopWidget, SENDDIALOG_ClientData[2]); n++;
-	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
-	XtSetArg (args[n], XmNtopOffset, 5); n++;
-	XtSetArg (args[n], XmNbottomOffset, 5); n++;
-	SENDDIALOG_BtnG_Send = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Send", args, n);
-		
-	XtAddCallback (SENDDIALOG_BtnG_Send, XmNactivateCallback, sendDialog_SendCallBack, (XtPointer)SENDDIALOG_ClientData);
-	XtManageChild (SENDDIALOG_BtnG_Send);
-	
 	
 	// Materialize major widgets
 	XtManageChild (SENDDIALOG_Form_Upper);
 	XtManageChild (SENDDIALOG_Form_Lower);
 	XtManageChild (SENDDIALOG_Pane_Vertical);	
 
-	XtPopup (SENDDIALOG_ClientData[0], XtGrabNone);	
+	XtManageChild (SENDDIALOG_ClientData[0]);
 }
 
 
@@ -185,10 +187,19 @@ void sendDialog_UpdateCount(int m_Count)
 
 void sendDialog_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget* SENDDIALOG_Dialog = (Widget*)client_data;
+	Widget SENDDIALOG_Dialog = (Widget)client_data;
+//	char str_Dest[8];	
+//	XmString xstr_Dest;
+//	int m_Count = 9;
+//	
+//	sprintf(str_Dest, "%i", m_Count);
+//	
+//	xstr_Dest = XmStringCreateLocalized (str_Dest);
+//	XtVaSetValues (SENDDIALOG_LblG_Count, XmNlabelString, xstr_Dest, NULL);
+//	
+//	XmStringFree(xstr_Dest);
 	
-	
-	XtPopup (*SENDDIALOG_Dialog, XtGrabNone);
+	XtPopup (SENDDIALOG_Dialog, XtGrabNone);
 //	sendDialog_UpdateCount(0);
 //	XmListDeleteAllItems(SENDDIALOG_List_Users);
 	udp_BroadcastEntry();
