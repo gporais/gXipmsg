@@ -1,6 +1,7 @@
 // created by: geo (March 2012)
 #include "gXipmsg.h"
 
+
 static int gXipmsg_main (int argc, char* argv[])
 {	
 	// Get local hostname
