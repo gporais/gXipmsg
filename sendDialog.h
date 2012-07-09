@@ -9,10 +9,7 @@
 
 
 // Variable declerations
-Position x, y;
 
-int n;
-Arg args[20];
 
 // Function declerations
 void sendDialog_Create(XtPointer xt_List);

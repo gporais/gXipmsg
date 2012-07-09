@@ -16,10 +16,10 @@ void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* arg
 	pixmap = XmGetPixmap (XtScreen (APPICON_Form), "ipmsg.xpm", fg, bg);
 		
 	// Create icon button
-	APPICON_BtnG_Icon = XtVaCreateWidget ("ipmsg.xpm", 
-			xmPushButtonGadgetClass, APPICON_Form,
-			XmNlabelType, XmPIXMAP,
-			XmNlabelPixmap, pixmap, NULL);	
+	n = 0;
+	XtSetArg (args[n], XmNlabelType, XmPIXMAP); n++; 
+	XtSetArg (args[n], XmNlabelPixmap, pixmap); n++;
+	APPICON_BtnG_Icon = XmCreatePushButtonGadget (APPICON_Form, "ipmsg.xpm", args, n);	
 	XtAddCallback (APPICON_BtnG_Icon, XmNactivateCallback, appIcon_IconCallBack, APPICON_List_Users);
 	XtManageChild (APPICON_BtnG_Icon);	
 	

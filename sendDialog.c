@@ -27,16 +27,15 @@ void sendDialog_Create(XtPointer xt_List)
 	XtVaGetValues (*w_List, XmNitemCount, &m_Count,	XmNitems, &xstr_list, NULL);	
 		
 	// Create dialog
-	SENDDIALOG_ClientData[0] = XtVaCreatePopupShell("send_diag", 
-			topLevelShellWidgetClass, XtParent (*w_List),
-			XmNtitle, "Send Message",
-			XmNdeleteResponse, XmDESTROY,			
-			XmNx, x,
-			XmNy, y,
-			NULL);	
+	n = 0;
+	XtSetArg (args[n], XmNtitle, "Send Message"); n++;
+	XtSetArg (args[n], XmNdeleteResponse, XmDESTROY); n++;
+	XtSetArg (args[n], XmNx, posX); n++;
+	XtSetArg (args[n], XmNy, posY); n++;
+	SENDDIALOG_ClientData[0] = (Widget) XmCreateDialogShell (XtParent (*w_List), "send_diag", args, n);
 	
-	x += 20;
-	y += 20;	
+	posX += 20;
+	posY += 20;	
 
 		
 	// Create paned window
