@@ -4,31 +4,81 @@
 
 void recvDialog_Create(Widget* w_Parent, char* ptr_Msg)
 {
-	Widget SENDDIALOG_Dialog;
-	Widget SENDDIALOG_Form;
-	Widget SENDDIALOG_Text_Message;
+	Widget RECVDIALOG_Dialog;
+	Widget RECVDIALOG_Form;
+	Widget RECVDIALOG_Frame;
+	Widget RECVDIALOG_LblG_FrameTitle;
+	Widget RECVDIALOG_LblG_FrameChild;	
+	Widget RECVDIALOG_Text_Message;
+	Widget RECVDIALOG_BtnG_Reply;
 
-
+	char str_Buff[] = {"phil\n20012"};	
+	XmString xstr_Buff;
 		
 	// Create dialog
 	n = 0;
 	XtSetArg (args[n], XmNtitle, "Recieve Message"); n++;
 	XtSetArg (args[n], XmNdeleteResponse, XmDESTROY); n++;
-	SENDDIALOG_Dialog = (Widget) XmCreateDialogShell (*w_Parent, "Dialog", args, n);
-		
-	// Create upper form
-	SENDDIALOG_Form = XmCreateForm (SENDDIALOG_Dialog, "Form", NULL, 0);
+//	XtSetArg (args[n], XmNx, posX); n++;
+//	XtSetArg (args[n], XmNy, posY); n++;
+	RECVDIALOG_Dialog = (Widget) XmCreateDialogShell (*w_Parent, "recv_diag", args, n);
 	
+//	posX += 20;
+//	posY += 20;
+		
+		
+	// Create form
+	RECVDIALOG_Form = XmCreateForm (RECVDIALOG_Dialog, "recv_form", NULL, 0);
+	
+	
+	// Create frame
+	n = 0;
+	XtSetArg (args[n], XmNshadowType, XmSHADOW_ETCHED_OUT); n++;
+	XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM); n++;
+	XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM); n++;
+	XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM); n++;
+	XtSetArg (args[n], XmNtopOffset, 5); n++;
+	XtSetArg (args[n], XmNleftOffset, 5); n++;
+	XtSetArg (args[n], XmNrightOffset, 5); n++;
+	RECVDIALOG_Frame = XmCreateFrame (RECVDIALOG_Form, "recv_frame", args, n);
+	
+	
+	// Create handle field
+	xstr_Buff = XmStringCreateLocalized (str_Buff);
+		
+	n = 0;
+	XtSetArg (args[n], XmNchildType, XmFRAME_WORKAREA_CHILD); n++;
+	XtSetArg (args[n], XmNlabelString, xstr_Buff); n++;
+	RECVDIALOG_LblG_FrameChild = XmCreateLabelGadget (RECVDIALOG_Frame, "recv_frame_child", args, n);
+	XtManageChild (RECVDIALOG_LblG_FrameChild);		
+	
+	
+	// Create frame title
+	n = 0;
+	XtSetArg (args[n], XmNchildType, XmFRAME_TITLE_CHILD); n++;
+	XtSetArg (args[n], XmNchildVerticalAlignment, XmALIGNMENT_CENTER); n++;
+	RECVDIALOG_LblG_FrameTitle = XmCreateLabelGadget (RECVDIALOG_Frame, "Message from", args, n);	
+	XtManageChild (RECVDIALOG_LblG_FrameTitle);	
+	
+	XtManageChild (RECVDIALOG_Frame);
+	
+	// Create reply button
+	n = 0;
+	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
+	XtSetArg (args[n], XmNbottomOffset, 5); n++;
+	RECVDIALOG_BtnG_Reply = XmCreatePushButtonGadget (RECVDIALOG_Form, "Reply", args, n);		
+//	XtAddCallback (SENDDIALOG_BtnG_Send, XmNactivateCallback, sendDialog_SendCallBack, (XtPointer)SENDDIALOG_ClientData);
+	XtManageChild (RECVDIALOG_BtnG_Reply);
 
 	
 	// Creatr text message
 	n = 0;
 	XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM); n++; 												
 	XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM); n++;	
-//	XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET); n++; 
-//	XtSetArg (args[n], XmNtopWidget, SENDDIALOG_BtnG_Attach); n++;
-//	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_WIDGET); n++; 
-//	XtSetArg (args[n], XmNbottomWidget, SENDDIALOG_BtnG_Send); n++;
+	XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET); n++; 
+	XtSetArg (args[n], XmNtopWidget, RECVDIALOG_Frame); n++;
+	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_WIDGET); n++;	
+	XtSetArg (args[n], XmNbottomWidget, RECVDIALOG_BtnG_Reply); n++;
 	XtSetArg (args[n], XmNleftOffset, 5); n++;
 	XtSetArg (args[n], XmNtopOffset, 5); n++;
 	XtSetArg (args[n], XmNrightOffset, 5); n++;
@@ -42,16 +92,10 @@ void recvDialog_Create(Widget* w_Parent, char* ptr_Msg)
 	XtSetArg (args[n], XmNeditable, False); n++;
 	XtSetArg (args[n], XmNcursorPositionVisible, False); n++;
 	XtSetArg (args[n], XmNvalue, ptr_Msg); n++;
-	SENDDIALOG_Text_Message = XmCreateScrolledText(SENDDIALOG_Form, "Message", args, n);
+	RECVDIALOG_Text_Message = XmCreateScrolledText(RECVDIALOG_Form, "Message", args, n);	
+	XtManageChild (RECVDIALOG_Text_Message);	
+		
+	XtManageChild (RECVDIALOG_Form);
 	
-	
-	XtManageChild (SENDDIALOG_Text_Message);
-	
-	
-	
-	XtManageChild (SENDDIALOG_Form);
-	
-	XtManageChild (SENDDIALOG_Dialog);
-	
-//	XmStringFree (text);
+	XtManageChild (RECVDIALOG_Dialog);
 }

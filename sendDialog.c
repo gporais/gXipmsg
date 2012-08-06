@@ -30,12 +30,12 @@ void sendDialog_Create(XtPointer xt_List)
 	n = 0;
 	XtSetArg (args[n], XmNtitle, "Send Message"); n++;
 	XtSetArg (args[n], XmNdeleteResponse, XmDESTROY); n++;
-	XtSetArg (args[n], XmNx, posX); n++;
-	XtSetArg (args[n], XmNy, posY); n++;
+//	XtSetArg (args[n], XmNx, posX); n++;
+//	XtSetArg (args[n], XmNy, posY); n++;
 	SENDDIALOG_ClientData[0] = (Widget) XmCreateDialogShell (XtParent (*w_List), "send_diag", args, n);
 	
-	posX += 20;
-	posY += 20;	
+//	posX += 20;
+//	posY += 20;	
 
 		
 	// Create paned window
@@ -63,10 +63,7 @@ void sendDialog_Create(XtPointer xt_List)
 	XtSetArg (args[n], XmNlabelString, xstr_Count); n++;
 	SENDDIALOG_LblG_Count = XmCreateLabelGadget (SENDDIALOG_Frame_Member, "Count", args, n);	
 	XtManageChild (SENDDIALOG_LblG_Count);
-//	XmStringFree(xstr_Count);
-	
-	sprintf(str_Count, "%i", 9);
-	xstr_Count = XmStringCreateLocalized (str_Count);
+
 	
 	// Create member label
 	n = 0;
