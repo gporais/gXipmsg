@@ -5,6 +5,7 @@
 void recvDialog_Create(Widget* w_Parent, char* ptr_Msg)
 {
 	Widget RECVDIALOG_Dialog;
+	Widget RECVDIALOG_Panel;
 	Widget RECVDIALOG_Form;
 	Widget RECVDIALOG_Frame;
 	Widget RECVDIALOG_LblG_FrameTitle;
@@ -19,16 +20,19 @@ void recvDialog_Create(Widget* w_Parent, char* ptr_Msg)
 	n = 0;
 	XtSetArg (args[n], XmNtitle, "Recieve Message"); n++;
 	XtSetArg (args[n], XmNdeleteResponse, XmDESTROY); n++;
-//	XtSetArg (args[n], XmNx, posX); n++;
-//	XtSetArg (args[n], XmNy, posY); n++;
+	XtSetArg (args[n], XmNdefaultPosition, False); n++;
+	XtSetArg (args[n], XmNx, posX); n++;
+	XtSetArg (args[n], XmNy, posY); n++;
 	RECVDIALOG_Dialog = (Widget) XmCreateDialogShell (*w_Parent, "recv_diag", args, n);
 	
-//	posX += 20;
-//	posY += 20;
+	posX += 20;
+	posY += 20;
 		
+	// Create paned window
+	RECVDIALOG_Panel = XmCreatePanedWindow (RECVDIALOG_Dialog, "recv_panel", NULL, 0);
 		
 	// Create form
-	RECVDIALOG_Form = XmCreateForm (RECVDIALOG_Dialog, "recv_form", NULL, 0);
+	RECVDIALOG_Form = XmCreateForm (RECVDIALOG_Panel, "recv_form", NULL, 0);
 	
 	
 	// Create frame
@@ -96,6 +100,6 @@ void recvDialog_Create(Widget* w_Parent, char* ptr_Msg)
 	XtManageChild (RECVDIALOG_Text_Message);	
 		
 	XtManageChild (RECVDIALOG_Form);
-	
+	XtManageChild (RECVDIALOG_Panel);
 	XtManageChild (RECVDIALOG_Dialog);
 }
