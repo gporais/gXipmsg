@@ -2,7 +2,7 @@
 #include "recvDialog.h"
 
 
-void recvDialog_Create(Widget* w_Parent, char* ptr_Msg)
+void recvDialog_Create(Widget* w_Parent, struct Broadcast_Packet* p_Item)
 {
 	Widget RECVDIALOG_Dialog;
 	Widget RECVDIALOG_Panel;
@@ -13,8 +13,10 @@ void recvDialog_Create(Widget* w_Parent, char* ptr_Msg)
 	Widget RECVDIALOG_Text_Message;
 	Widget RECVDIALOG_BtnG_Reply;
 
-	char str_Buff[] = {"phil\n20012"};	
+	char str_Buff[50];	
 	XmString xstr_Buff;
+
+	sprintf(str_Buff, "%s@%s (%s)\n%s", p_Item->Username, p_Item->Hostname, p_Item->IP_Address, asctime(gmtime((const time_t *)&p_Item->UNIX_Time)));
 		
 	// Create dialog
 	n = 0;
@@ -95,7 +97,7 @@ void recvDialog_Create(Widget* w_Parent, char* ptr_Msg)
 	XtSetArg (args[n], XmNeditMode, XmMULTI_LINE_EDIT); n++;
 	XtSetArg (args[n], XmNeditable, False); n++;
 	XtSetArg (args[n], XmNcursorPositionVisible, False); n++;
-	XtSetArg (args[n], XmNvalue, ptr_Msg); n++;
+	XtSetArg (args[n], XmNvalue, p_Item->Handlename); n++;
 	RECVDIALOG_Text_Message = XmCreateScrolledText(RECVDIALOG_Form, "Message", args, n);	
 	XtManageChild (RECVDIALOG_Text_Message);	
 		

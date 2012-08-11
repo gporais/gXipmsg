@@ -132,7 +132,7 @@ void udp_InquirePackets(Widget* w_TopLevel)
 				
 			case IPMSG_SENDMSG:
 				// Pop message
-				recvDialog_Create(w_TopLevel, UDP_DataFrom.Handlename);	
+				recvDialog_Create(w_TopLevel, &UDP_DataFrom);	
 								
 				// Confirm send
 				sprintf(str_Reply, "%lu", UDP_DataFrom.UNIX_Time);

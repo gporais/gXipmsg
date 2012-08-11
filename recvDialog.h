@@ -11,6 +11,6 @@
 
 
 // Function declerations
-void recvDialog_Create(Widget* w_Parent, char* ptr_Msg);
+void recvDialog_Create(Widget* w_Parent, struct Broadcast_Packet* p_Item);
 
 #endif /*RECVDIALOG_H_*/
