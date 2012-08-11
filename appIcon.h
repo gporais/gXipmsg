@@ -2,7 +2,7 @@
 #ifndef APPICON_H_
 #define APPICON_H_
 
-#include "common.h"
+#include "main.h"
 
 // Constants
 

@@ -2,7 +2,7 @@
 #ifndef RECVDIALOG_H_
 #define RECVDIALOG_H_
 
-#include "common.h"
+#include "main.h"
 
 // Constants
 

@@ -77,10 +77,9 @@ struct Broadcast_Packet {
 	char Handlename[MESSAGE_MAXLEN];
 };
 	
-Position posX, posY;
-
-int n;
-Arg args[20];
+extern Position posX, posY;
+extern int n;
+extern Arg args[20];
 
 
 

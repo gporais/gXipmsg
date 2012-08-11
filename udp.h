@@ -2,7 +2,7 @@
 #ifndef UPD_H_
 #define UPD_H_
 
-#include "common.h"
+#include "main.h"
 
 // Constants
 #define	UDP_DEFAULT_FAMILY		AF_INET

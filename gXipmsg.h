@@ -2,7 +2,7 @@
 #ifndef GXIPMSG_H_
 #define GXIPMSG_H_
 
-#include "common.h"
+#include "main.h"
 
 // Constants
 

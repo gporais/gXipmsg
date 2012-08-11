@@ -1,7 +1,7 @@
 gXipmsg : main.o udp.o pack.o appIcon.o sendDialog.o recvDialog.o
 	cc -g -o gXipmsg main.o udp.o pack.o appIcon.o sendDialog.o recvDialog.o -lXm -lXt -lSM -lICE -lX11 -lsocket -lnsl
              
-main.o : main.c gXipmsg.h
+main.o : main.c main.h gXipmsg.h
 	cc -g -c main.c
 	
 udp.o : udp.c udp.h 

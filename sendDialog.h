@@ -2,7 +2,7 @@
 #ifndef SENDDIALOG_H_
 #define SENDDIALOG_H_
 
-#include "common.h"
+#include "main.h"
 
 
 // Constants

@@ -2,7 +2,7 @@
 #ifndef PACK_H_
 #define PACK_H_
 
-#include "common.h"
+#include "main.h"
 
 // Constants
 #define PACK_IPMSG_VERSION			"1"
