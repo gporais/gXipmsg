@@ -137,3 +137,9 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 	XmStringFree (xstr_item);	
 }
 
+
+void appIcon_RecieveDialog(struct Broadcast_Packet* p_Item)
+{
+	recvDialog_Create(APPICON_List_Users, p_Item);
+}
+

@@ -2,8 +2,10 @@
 #include "recvDialog.h"
 
 
-void recvDialog_Create(Widget* w_Parent, struct Broadcast_Packet* p_Item)
+void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 {
+	Widget* w_List = (Widget*)xt_List;
+	
 	Widget RECVDIALOG_Dialog;
 	Widget RECVDIALOG_Panel;
 	Widget RECVDIALOG_Form;
@@ -25,7 +27,7 @@ void recvDialog_Create(Widget* w_Parent, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNdefaultPosition, False); n++;
 	XtSetArg (args[n], XmNx, posX); n++;
 	XtSetArg (args[n], XmNy, posY); n++;
-	RECVDIALOG_Dialog = (Widget) XmCreateDialogShell (*w_Parent, "recv_diag", args, n);
+	RECVDIALOG_Dialog = (Widget) XmCreateDialogShell (XtParent (*w_List), "recv_diag", args, n);
 	
 	posX += 20;
 	posY += 20;

@@ -25,5 +25,7 @@ void appIcon_Run(XtAppContext* xac_App);
 void appIcon_IconCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option);
 
+void appIcon_RecieveDialog(struct Broadcast_Packet* p_Item);
+
 
 #endif /*APPICON_H_*/

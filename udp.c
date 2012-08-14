@@ -95,7 +95,7 @@ int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags)
 	return 0;
 }
 
-void udp_InquirePackets(Widget* w_TopLevel)
+void udp_InquirePackets(void)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
 	char str_Reply[12];
@@ -132,7 +132,7 @@ void udp_InquirePackets(Widget* w_TopLevel)
 				
 			case IPMSG_SENDMSG:
 				// Pop message
-				recvDialog_Create(w_TopLevel, &UDP_DataFrom);	
+				appIcon_RecieveDialog(&UDP_DataFrom);
 								
 				// Confirm send
 				sprintf(str_Reply, "%lu", UDP_DataFrom.UNIX_Time);

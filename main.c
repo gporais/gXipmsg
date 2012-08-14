@@ -58,7 +58,7 @@ void gxipmg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_
 
 void gxipmg_CheckData(XtPointer xp_Client_data, XtIntervalId* id)
 {
-	udp_InquirePackets(&GXIM_TopLevel);
+	udp_InquirePackets();
 	
 	appIcon_SetupTimeout(&GXIM_App, gxipmg_CheckData);	
 }

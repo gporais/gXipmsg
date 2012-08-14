@@ -24,7 +24,7 @@ char* UDP_LocalHandlename;
 int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Handlename);
 int udp_BroadcastString(char* p_String);
 int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags);
-void udp_InquirePackets(Widget* w_TopLevel);
+void udp_InquirePackets(void);
 void udp_CloseSocket(void);
 
 void udp_BroadcastEntry(void);
