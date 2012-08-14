@@ -13,7 +13,7 @@ void recvDialog_Create(Widget* w_Parent, struct Broadcast_Packet* p_Item)
 	Widget RECVDIALOG_Text_Message;
 	Widget RECVDIALOG_BtnG_Reply;
 
-	char str_Buff[50];	
+	char str_Buff[150];	
 	XmString xstr_Buff;
 
 	sprintf(str_Buff, "%s@%s (%s)\n%s", p_Item->Username, p_Item->Hostname, p_Item->IP_Address, asctime(gmtime((const time_t *)&p_Item->UNIX_Time)));

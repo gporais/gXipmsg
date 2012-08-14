@@ -74,7 +74,7 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 	int mFound = 0;
 	int mIdx = 0;
 	int mCount;	
-	char str_Item[50]; 
+	char str_Item[150]; 
 	char* text;
 		
 	if(strlen(p_Item->Handlename) == 0)
