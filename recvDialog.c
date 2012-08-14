@@ -16,7 +16,7 @@ void recvDialog_Create(Widget* w_Parent, struct Broadcast_Packet* p_Item)
 	char str_Buff[150];	
 	XmString xstr_Buff;
 
-	sprintf(str_Buff, "%s@%s (%s)\n%s", p_Item->Username, p_Item->Hostname, p_Item->IP_Address, asctime(gmtime((const time_t *)&p_Item->UNIX_Time)));
+	sprintf(str_Buff, "%s@%s (%s)\n%s", p_Item->Username, p_Item->Hostname, p_Item->IP_Address, asctime(localtime ((const time_t *)&p_Item->UNIX_Time)));
 		
 	// Create dialog
 	n = 0;
