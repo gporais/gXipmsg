@@ -17,8 +17,33 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 
 	char str_Buff[150];	
 	XmString xstr_Buff;
+	
+	int mCount;
+	int mIdx = 0;
+	XmStringTable xstr_list;
+	char* text;
+	char* test;
+	
+	// Get the current entries (and number of entries) from the List
+	XtVaGetValues (*w_List, XmNitemCount, &mCount,	XmNitems, &xstr_list, NULL);
 
-	sprintf(str_Buff, "%s@%s (%s)\n%s", p_Item->Username, p_Item->Hostname, p_Item->IP_Address, asctime(localtime ((const time_t *)&p_Item->UNIX_Time)));
+	while(mCount>mIdx)
+	{		
+		text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+		
+		if ((test = strstr (text, p_Item->IP_Address)) != '\0')
+		{
+			// str_Item comes before item
+			sprintf(str_Buff, "%s\n%s", text, asctime(localtime ((const time_t *)&p_Item->UNIX_Time)));
+			XtFree(text);
+			break;
+		}		
+		
+		XtFree(text);						
+		mIdx++;
+	}	
+	
+	
 		
 	// Create dialog
 	n = 0;
@@ -106,4 +131,6 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtManageChild (RECVDIALOG_Form);
 	XtManageChild (RECVDIALOG_Panel);
 	XtManageChild (RECVDIALOG_Dialog);
+	
+	XmStringFree (xstr_Buff);
 }
