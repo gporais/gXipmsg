@@ -21,8 +21,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	int mCount;
 	int mIdx = 0;
 	XmStringTable xstr_list;
-	char* text;
-	char* test;
+	char* text;	
 	
 	// Get the current entries (and number of entries) from the List
 	XtVaGetValues (*w_List, XmNitemCount, &mCount,	XmNitems, &xstr_list, NULL);
@@ -31,7 +30,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	{		
 		text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
 		
-		if ((test = strstr (text, p_Item->IP_Address)) != '\0')
+		if (strstr(text, p_Item->IP_Address) != '\0')
 		{
 			// str_Item comes before item
 			sprintf(str_Buff, "%s\n%s", text, asctime(localtime ((const time_t *)&p_Item->UNIX_Time)));
