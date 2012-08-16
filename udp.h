@@ -30,4 +30,6 @@ void udp_CloseSocket(void);
 void udp_BroadcastEntry(void);
 void udp_BroadcastExit(void);
 
+int recvfromTimeOutUDP(int socket, long sec, long usec);
+
 #endif /*UPD_H_*/

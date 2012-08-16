@@ -1,6 +1,23 @@
 // created by: geo (March 2012)
 #include "sendDialog.h"
 
+void update (XtPointer client_data, XtIntervalId *id)
+{
+	TimeOutClientData *data = (TimeOutClientData *) client_data;
+	
+	data->id = XtAppAddTimeOut (data->app, 1000L, update, (XtPointer) data);
+	printf("update\n");
+}
+
+void destroy_it (Widget dialog, XtPointer client_data, XtPointer call_data)
+{
+	TimeOutClientData *data = (TimeOutClientData *) client_data;
+	
+	XtRemoveTimeOut (data->id);
+	
+	XtFree ((char *) data);
+}
+
 void sendDialog_Create(XtPointer xt_List, int mSelPos)
 {
 	Widget* w_List = (Widget*)xt_List;
@@ -22,6 +39,9 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XmString xstr_Count;	
 	XmStringTable xstr_list;	
 	
+	TimeOutClientData *data = XtNew (TimeOutClientData);
+	XtAppContext app = XtWidgetToApplicationContext (*w_List);
+	
 	// Get the current entries (and number of entries) from the List
 	XtVaGetValues (*w_List, XmNitemCount, &m_Count,	XmNitems, &xstr_list, NULL);	
 		
@@ -35,6 +55,7 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU | MWM_DECOR_RESIZEH); n++;
 	XtSetArg (args[n], XmNmwmFunctions, MWM_FUNC_CLOSE | MWM_FUNC_MOVE); n++;
 	SENDDIALOG_ClientData[0] = (Widget) XmCreateDialogShell (XtParent (*w_List), "send_diag", args, n);
+	XtAddCallback (SENDDIALOG_ClientData[0], XmNdestroyCallback, destroy_it, data);
 		
 	posX += 20;
 	posY += 20;
@@ -165,6 +186,13 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtManageChild (SENDDIALOG_Pane_Vertical);	
 
 	XtManageChild (SENDDIALOG_ClientData[0]);
+	
+	/* complete the timeout client data */
+	data->globalList = *w_List;
+	data->localList = SENDDIALOG_ClientData[1];
+	data->app = app;
+	/* Add the timeout for blinking effect */
+	data->id = XtAppAddTimeOut (app, 1000L, update, (XtPointer) data);
 }
 
 
