@@ -31,7 +31,9 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNdeleteResponse, XmDESTROY); n++;
 	XtSetArg (args[n], XmNdefaultPosition, False); n++;
 	XtSetArg (args[n], XmNx, posX); n++;
-	XtSetArg (args[n], XmNy, posY); n++;
+	XtSetArg (args[n], XmNy, posY); n++;	
+	XtSetArg (args[n], XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU | MWM_DECOR_RESIZEH); n++;
+	XtSetArg (args[n], XmNmwmFunctions, MWM_FUNC_CLOSE | MWM_FUNC_MOVE); n++;
 	SENDDIALOG_ClientData[0] = (Widget) XmCreateDialogShell (XtParent (*w_List), "send_diag", args, n);
 		
 	posX += 20;

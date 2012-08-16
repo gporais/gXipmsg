@@ -51,6 +51,8 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNdefaultPosition, False); n++;
 	XtSetArg (args[n], XmNx, posX); n++;
 	XtSetArg (args[n], XmNy, posY); n++;
+	XtSetArg (args[n], XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU | MWM_DECOR_RESIZEH); n++;
+	XtSetArg (args[n], XmNmwmFunctions, MWM_FUNC_CLOSE | MWM_FUNC_MOVE); n++;
 	RECVDIALOG_Dialog = (Widget) XmCreateDialogShell (XtParent (*w_List), "recv_diag", args, n);
 		
 	posX += 20;
