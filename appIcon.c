@@ -91,18 +91,20 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 		
 	xstr_item = XmStringCreateLocalized (str_Item);
 		
-	while(mCount>mIdx)
-	{		
-		if(XmStringCompare(xstr_item, xstr_list[mIdx]))
-		{
-			mFound = 1;
-			break;
-		}	
-		mIdx++;
-	}	
+	
 	
 	if(m_Option == 1)
 	{
+		while(mCount>mIdx)
+		{		
+			if(XmStringCompare(xstr_item, xstr_list[mIdx]))
+			{
+				mFound = 1;
+				break;
+			}	
+			mIdx++;
+		}	
+		
 		if(mFound == 0)
 		{
 			mIdx = 0;
@@ -127,6 +129,21 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 	}
 	else
 	{
+		while(mCount>mIdx)
+		{		
+			text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+					
+			if (strstr(text, p_Item->IP_Address) != '\0')
+			{
+				mFound = 1;
+				XtFree(text);
+				break;
+			}		
+			
+			XtFree(text);						
+			mIdx++;
+		}	
+		
 		if(mFound == 1)
 		{
 			XmListDeletePos(APPICON_List_Users, mIdx+1);
