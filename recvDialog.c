@@ -101,7 +101,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
 	XtSetArg (args[n], XmNbottomOffset, 5); n++;
 	RECVDIALOG_BtnG_Reply = XmCreatePushButtonGadget (RECVDIALOG_Form, "Reply", args, n);		
-	XtAddCallback (RECVDIALOG_BtnG_Reply, XmNactivateCallback, recvDialog_ReplyCallBack, RECVDIALOG_Dialog);
+	XtAddCallback (RECVDIALOG_BtnG_Reply, XmNactivateCallback, recvDialog_ReplyCallBack, (XtPointer)mIdx);
 	XtManageChild (RECVDIALOG_BtnG_Reply);
 
 	
@@ -139,17 +139,13 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 
 void recvDialog_ReplyCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget* SENDDIALOG_Dialog = (Widget*)client_data;
-	//Widget* SENDDIALOG_List_Users = (Widget*)client_data+1;
-	//Widget* SENDDIALOG_Text_Message = (Widget*)client_data+2;
-	
+	int mPos = (int)client_data;
 
-//	sendDialog_Create(client_data, 2);
-	
-	
-//	appIcon_ReplyDialog(1);
-	
-	XtDestroyWidget(*SENDDIALOG_Dialog);	
-	appIcon_ReplyDialog(1);	
+	Widget RECVDIALOG_Dialog = XtParent(widget);
+	RECVDIALOG_Dialog = XtParent(RECVDIALOG_Dialog);
+	RECVDIALOG_Dialog = XtParent(RECVDIALOG_Dialog);	
+
+	XtDestroyWidget(RECVDIALOG_Dialog);
+	appIcon_ReplyDialog(mPos);	
 }
 

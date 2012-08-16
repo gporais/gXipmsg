@@ -145,6 +145,6 @@ void appIcon_RecieveDialog(struct Broadcast_Packet* p_Item)
 
 void appIcon_ReplyDialog(int mPos)
 {
-	sendDialog_Create(APPICON_List_Users, mPos);
+	sendDialog_Create(APPICON_List_Users, mPos+1);
 }
 
