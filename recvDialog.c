@@ -14,7 +14,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	Widget RECVDIALOG_LblG_FrameChild;	
 	Widget RECVDIALOG_Text_Message;
 	Widget RECVDIALOG_BtnG_Reply;
-
+	
 	char str_Buff[150];	
 	XmString xstr_Buff;
 	
@@ -52,7 +52,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNx, posX); n++;
 	XtSetArg (args[n], XmNy, posY); n++;
 	RECVDIALOG_Dialog = (Widget) XmCreateDialogShell (XtParent (*w_List), "recv_diag", args, n);
-	
+		
 	posX += 20;
 	posY += 20;
 		
@@ -99,7 +99,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
 	XtSetArg (args[n], XmNbottomOffset, 5); n++;
 	RECVDIALOG_BtnG_Reply = XmCreatePushButtonGadget (RECVDIALOG_Form, "Reply", args, n);		
-//	XtAddCallback (SENDDIALOG_BtnG_Send, XmNactivateCallback, sendDialog_SendCallBack, (XtPointer)SENDDIALOG_ClientData);
+	XtAddCallback (RECVDIALOG_BtnG_Reply, XmNactivateCallback, recvDialog_ReplyCallBack, RECVDIALOG_Dialog);
 	XtManageChild (RECVDIALOG_BtnG_Reply);
 
 	
@@ -133,3 +133,21 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	
 	XmStringFree (xstr_Buff);
 }
+
+
+void recvDialog_ReplyCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	Widget* SENDDIALOG_Dialog = (Widget*)client_data;
+	//Widget* SENDDIALOG_List_Users = (Widget*)client_data+1;
+	//Widget* SENDDIALOG_Text_Message = (Widget*)client_data+2;
+	
+
+//	sendDialog_Create(client_data, 2);
+	
+	
+//	appIcon_ReplyDialog(1);
+	
+	XtDestroyWidget(*SENDDIALOG_Dialog);	
+	appIcon_ReplyDialog(1);	
+}
+

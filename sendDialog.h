@@ -12,7 +12,7 @@
 
 
 // Function declerations
-void sendDialog_Create(XtPointer xt_List);
+void sendDialog_Create(XtPointer xt_List, int mSelPos);
 void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 
 

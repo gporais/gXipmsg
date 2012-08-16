@@ -62,8 +62,8 @@ void appIcon_Run(XtAppContext* xac_App)
 
 
 void appIcon_IconCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
-{
-	sendDialog_Create(client_data);
+{	
+	sendDialog_Create(client_data, 0);	
 }
 
 
@@ -141,5 +141,10 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 void appIcon_RecieveDialog(struct Broadcast_Packet* p_Item)
 {
 	recvDialog_Create(APPICON_List_Users, p_Item);
+}
+
+void appIcon_ReplyDialog(int mPos)
+{
+	sendDialog_Create(APPICON_List_Users, mPos);
 }
 

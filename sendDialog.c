@@ -1,7 +1,7 @@
 // created by: geo (March 2012)
 #include "sendDialog.h"
 
-void sendDialog_Create(XtPointer xt_List)
+void sendDialog_Create(XtPointer xt_List, int mSelPos)
 {
 	Widget* w_List = (Widget*)xt_List;
 	
@@ -21,7 +21,6 @@ void sendDialog_Create(XtPointer xt_List)
 	char str_Count[3];	
 	XmString xstr_Count;	
 	XmStringTable xstr_list;	
-		
 	
 	// Get the current entries (and number of entries) from the List
 	XtVaGetValues (*w_List, XmNitemCount, &m_Count,	XmNitems, &xstr_list, NULL);	
@@ -34,7 +33,7 @@ void sendDialog_Create(XtPointer xt_List)
 	XtSetArg (args[n], XmNx, posX); n++;
 	XtSetArg (args[n], XmNy, posY); n++;
 	SENDDIALOG_ClientData[0] = (Widget) XmCreateDialogShell (XtParent (*w_List), "send_diag", args, n);
-	
+		
 	posX += 20;
 	posY += 20;
 		
@@ -90,6 +89,12 @@ void sendDialog_Create(XtPointer xt_List)
 	XtSetArg (args[n], XmNitemCount, m_Count); n++;
 	XtSetArg (args[n], XmNitems, xstr_list); n++;
 	SENDDIALOG_ClientData[1] = XmCreateScrolledList (SENDDIALOG_Form_Upper, "Users", args, n);
+	
+	if(mSelPos > 0)
+	{
+		XmListSelectPos (SENDDIALOG_ClientData[1], mSelPos, 0);
+	}
+	
 	XtManageChild (SENDDIALOG_ClientData[1]);
 	
 	// Create refresh button
