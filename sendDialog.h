@@ -9,14 +9,10 @@
 
 
 // Variable declerations
-typedef struct {
-	Widget* dList;
-	Widget* dText;	
-	Widget* dLabel;	
-} SendClientData;
+
 
 // Function declerations
-XtPointer sendDialog_Create(XtPointer xt_List, int mSelPos);
+struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos);
 void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 
 

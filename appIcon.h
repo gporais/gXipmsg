@@ -8,9 +8,9 @@
 
 
 // Variable declerations
+
 struct NODE {
-//	SendClientData* ptrData;
-	int* m;
+	struct SendClientData* ptrData;
 	struct NODE* next;
 };
 
@@ -35,6 +35,13 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option);
 
 void appIcon_RecieveDialog(struct Broadcast_Packet* p_Item);
 void appIcon_ReplyDialog(int mPos);
+
+void updRemove_list(struct NODE *llist, int mIdx);
+void updAdd_list(struct NODE *llist, XmString* xstr_item, int mIdx);
+void append_node(struct NODE *llist, struct SendClientData* num);
+void delete_node(struct NODE *llist, struct SendClientData* num);
+
+void appIcon_Unreg(struct SendClientData* num);
 
 
 #endif /*APPICON_H_*/

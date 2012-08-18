@@ -76,6 +76,12 @@ struct Broadcast_Packet {
 	char Hostname[HOSTNAME_MAXLEN];
 	char Handlename[MESSAGE_MAXLEN];
 };
+
+struct SendClientData{
+	Widget dList;
+	Widget dText;	
+	Widget dLabel;	
+};
 	
 extern Position posX, posY;
 extern int n;
