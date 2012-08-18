@@ -5,12 +5,12 @@
 
 void destroy_it (Widget dialog, XtPointer client_data, XtPointer call_data)
 {
-	SendClientData *data = (SendClientData *) client_data;
+	SendClientData* data = (SendClientData*) client_data;
 		
-	XtFree ((char *) data);	
+	XtFree ((char*) data);	
 }
 
-void sendDialog_Create(XtPointer xt_List, int mSelPos)
+XtPointer sendDialog_Create(XtPointer xt_List, int mSelPos)
 {
 	Widget* w_List = (Widget*)xt_List;
 	
@@ -32,7 +32,7 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XmString xstr_Count;	
 	XmStringTable xstr_list;	
 	
-	SendClientData *data = XtNew (SendClientData);
+	SendClientData* data = XtNew (SendClientData);
 	
 	
 	// Get the current entries (and number of entries) from the List
@@ -228,7 +228,7 @@ void sendDialog_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer 
 
 void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	SendClientData *data = (SendClientData *) client_data;
+	SendClientData* data = (SendClientData*) client_data;
 	
 	XmStringTable xstr_list;
 	int mIdx = 0;

@@ -8,6 +8,14 @@
 
 
 // Variable declerations
+struct NODE {
+//	SendClientData* ptrData;
+	int* m;
+	struct NODE* next;
+};
+
+struct NODE* appLList;
+
 Widget APPICON_Form;
 Widget APPICON_BtnG_Icon;
 Widget APPICON_List_Users;
