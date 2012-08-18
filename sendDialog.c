@@ -1,27 +1,24 @@
 // created by: geo (March 2012)
 #include "sendDialog.h"
 
-void update (XtPointer client_data, XtIntervalId *id)
-{
-	TimeOutClientData *data = (TimeOutClientData *) client_data;
-	
-	data->id = XtAppAddTimeOut (data->app, 1000L, update, (XtPointer) data);
-	printf("update\n");
-}
+
 
 void destroy_it (Widget dialog, XtPointer client_data, XtPointer call_data)
 {
-	TimeOutClientData *data = (TimeOutClientData *) client_data;
-	
-	XtRemoveTimeOut (data->id);
-	
+	SendClientData *data = (SendClientData *) client_data;
+		
 	XtFree ((char *) data);
+	
+	printf("destroy_it\n");
 }
 
 void sendDialog_Create(XtPointer xt_List, int mSelPos)
 {
 	Widget* w_List = (Widget*)xt_List;
 	
+	Widget SENDDIALOG_Dialog;
+	Widget SENDDIALOG_Text;
+	Widget SENDDIALOG_List;
 	Widget SENDDIALOG_Form_Upper;
 	Widget SENDDIALOG_Frame_Member;
 	Widget SENDDIALOG_LblG_Count;
@@ -30,17 +27,15 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	Widget SENDDIALOG_Pane_Vertical;
 	Widget SENDDIALOG_Form_Lower;
 	Widget SENDDIALOG_BtnG_Attach;
-	Widget SENDDIALOG_BtnG_Send;
-	
-	Widget* SENDDIALOG_ClientData = malloc((sizeof(Widget)*3));
+	Widget SENDDIALOG_BtnG_Send;	
 		
 	int m_Count;	
 	char str_Count[3];	
 	XmString xstr_Count;	
 	XmStringTable xstr_list;	
 	
-	TimeOutClientData *data = XtNew (TimeOutClientData);
-	XtAppContext app = XtWidgetToApplicationContext (*w_List);
+	SendClientData *data = XtNew (SendClientData);
+	
 	
 	// Get the current entries (and number of entries) from the List
 	XtVaGetValues (*w_List, XmNitemCount, &m_Count,	XmNitems, &xstr_list, NULL);	
@@ -54,14 +49,14 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNy, posY); n++;	
 	XtSetArg (args[n], XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU | MWM_DECOR_RESIZEH); n++;
 	XtSetArg (args[n], XmNmwmFunctions, MWM_FUNC_CLOSE | MWM_FUNC_MOVE); n++;
-	SENDDIALOG_ClientData[0] = (Widget) XmCreateDialogShell (XtParent (*w_List), "send_diag", args, n);
-	XtAddCallback (SENDDIALOG_ClientData[0], XmNdestroyCallback, destroy_it, data);
+	SENDDIALOG_Dialog = (Widget) XmCreateDialogShell (XtParent (*w_List), "send_diag", args, n);
+	XtAddCallback (SENDDIALOG_Dialog, XmNdestroyCallback, destroy_it, data);
 		
 	posX += 20;
 	posY += 20;
 		
 	// Create paned window
-	SENDDIALOG_Pane_Vertical = XmCreatePanedWindow (SENDDIALOG_ClientData[0], "Vertical", NULL, 0);
+	SENDDIALOG_Pane_Vertical = XmCreatePanedWindow (SENDDIALOG_Dialog, "Vertical", NULL, 0);
 	
 	// Create upper form
 	SENDDIALOG_Form_Upper = XmCreateForm (SENDDIALOG_Pane_Vertical, "Upper", NULL, 0);
@@ -111,14 +106,14 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNselectionPolicy, XmEXTENDED_SELECT); n++;
 	XtSetArg (args[n], XmNitemCount, m_Count); n++;
 	XtSetArg (args[n], XmNitems, xstr_list); n++;
-	SENDDIALOG_ClientData[1] = XmCreateScrolledList (SENDDIALOG_Form_Upper, "Users", args, n);
+	SENDDIALOG_List = XmCreateScrolledList (SENDDIALOG_Form_Upper, "Users", args, n);
 	
 	if(mSelPos > 0)
 	{
-		XmListSelectPos (SENDDIALOG_ClientData[1], mSelPos, 0);
+		XmListSelectPos (SENDDIALOG_List, mSelPos, 0);
 	}
 	
-	XtManageChild (SENDDIALOG_ClientData[1]);
+	XtManageChild (SENDDIALOG_List);
 	
 	// Create refresh button
 	n = 0;
@@ -130,7 +125,7 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNrightWidget, SENDDIALOG_Frame_Member); n++;	
 	XtSetArg (args[n], XmNtopOffset, 5); n++;
 	SENDDIALOG_BtnG_Refresh = XmCreatePushButtonGadget (SENDDIALOG_Form_Upper, "Refresh", args, n);
-	XtAddCallback (SENDDIALOG_BtnG_Refresh, XmNactivateCallback, sendDialog_RefreshCallBack, (XtPointer)SENDDIALOG_ClientData[0]);
+//	XtAddCallback (SENDDIALOG_BtnG_Refresh, XmNactivateCallback, sendDialog_RefreshCallBack, (XtPointer)SENDDIALOG_ClientData[0]);
 	XtManageChild (SENDDIALOG_BtnG_Refresh);	
 	
 	// Create lower form
@@ -154,7 +149,7 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNbottomOffset, 5); n++;
 	SENDDIALOG_BtnG_Send = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Send", args, n);
 		
-	XtAddCallback (SENDDIALOG_BtnG_Send, XmNactivateCallback, sendDialog_SendCallBack, (XtPointer)SENDDIALOG_ClientData);
+	XtAddCallback (SENDDIALOG_BtnG_Send, XmNactivateCallback, sendDialog_SendCallBack, (XtPointer)data);
 	XtManageChild (SENDDIALOG_BtnG_Send);
 	
 	
@@ -176,23 +171,20 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNscrollHorizontal, False); n++;
 	XtSetArg (args[n], XmNwordWrap, True); n++;
 	XtSetArg (args[n], XmNeditMode, XmMULTI_LINE_EDIT); n++;
-	SENDDIALOG_ClientData[2] = XmCreateScrolledText(SENDDIALOG_Form_Lower, "Message", args, n);
-	XtManageChild (SENDDIALOG_ClientData[2]);
+	SENDDIALOG_Text = XmCreateScrolledText(SENDDIALOG_Form_Lower, "Message", args, n);
+	XtManageChild (SENDDIALOG_Text);
 	
 	
 	// Materialize major widgets
 	XtManageChild (SENDDIALOG_Form_Upper);
 	XtManageChild (SENDDIALOG_Form_Lower);
-	XtManageChild (SENDDIALOG_Pane_Vertical);	
-
-	XtManageChild (SENDDIALOG_ClientData[0]);
+	XtManageChild (SENDDIALOG_Pane_Vertical);
+	XtManageChild (SENDDIALOG_Dialog);
 	
 	/* complete the timeout client data */
-	data->globalList = *w_List;
-	data->localList = SENDDIALOG_ClientData[1];
-	data->app = app;
-	/* Add the timeout for blinking effect */
-	data->id = XtAppAddTimeOut (app, 1000L, update, (XtPointer) data);
+	data->dList = SENDDIALOG_List;
+	data->dText = SENDDIALOG_Text;
+	data->dLabel = SENDDIALOG_LblG_Count;
 }
 
 
@@ -238,19 +230,20 @@ void sendDialog_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer 
 
 void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget* SENDDIALOG_Dialog = (Widget*) client_data;
-	Widget* SENDDIALOG_List_Users = (Widget*)client_data+1;
-	Widget* SENDDIALOG_Text_Message = (Widget*)client_data+2;
+	SendClientData *data = (SendClientData *) client_data;
 	
-
 	XmStringTable xstr_list;
 	int mIdx = 0;
 	int mCount = 0;	
 	char* text;
 	char* str_IP;
 	
+	Widget SENDDIALOG_Dialog = XtParent(widget);
+	SENDDIALOG_Dialog = XtParent(SENDDIALOG_Dialog);
+	SENDDIALOG_Dialog = XtParent(SENDDIALOG_Dialog);	
+	
   	// Get the selected items (and number of selected) from the List
-	XtVaGetValues (*SENDDIALOG_List_Users, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
+	XtVaGetValues (data->dList, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
 		
 	while(mCount>mIdx)
 	{
@@ -258,7 +251,7 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 		str_IP = strtok(text, "(");
 		str_IP = strtok(NULL, ")");
 		
-		if (text = XmTextGetString (*SENDDIALOG_Text_Message)) {
+		if (text = XmTextGetString (data->dText)) {
 			udp_SendToString(str_IP,text, IPMSG_SENDMSG);		
 		}
 		
@@ -266,9 +259,7 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 		mIdx++;
 	}
 	
-//	XmTextSetString (*SENDDIALOG_Text_Message, NULL); /* clear message area */	
-	
-	XtDestroyWidget (*SENDDIALOG_Dialog);
+	XtDestroyWidget(SENDDIALOG_Dialog);
 }
 
 
