@@ -10,9 +10,9 @@
 
 // Variable declerations
 typedef struct {
-	Widget dList;
-	Widget dText;	
-	Widget dLabel;	
+	Widget* dList;
+	Widget* dText;	
+	Widget* dLabel;	
 } SendClientData;
 
 // Function declerations

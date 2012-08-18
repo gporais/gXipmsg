@@ -7,9 +7,7 @@ void destroy_it (Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	SendClientData *data = (SendClientData *) client_data;
 		
-	XtFree ((char *) data);
-	
-	printf("destroy_it\n");
+	XtFree ((char *) data);	
 }
 
 void sendDialog_Create(XtPointer xt_List, int mSelPos)
@@ -182,9 +180,9 @@ void sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtManageChild (SENDDIALOG_Dialog);
 	
 	/* complete the timeout client data */
-	data->dList = SENDDIALOG_List;
-	data->dText = SENDDIALOG_Text;
-	data->dLabel = SENDDIALOG_LblG_Count;
+	data->dList = &SENDDIALOG_List;
+	data->dText = &SENDDIALOG_Text;
+	data->dLabel = &SENDDIALOG_LblG_Count;
 }
 
 
@@ -243,7 +241,7 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 	SENDDIALOG_Dialog = XtParent(SENDDIALOG_Dialog);	
 	
   	// Get the selected items (and number of selected) from the List
-	XtVaGetValues (data->dList, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
+	XtVaGetValues (*data->dList, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
 		
 	while(mCount>mIdx)
 	{
@@ -251,7 +249,7 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 		str_IP = strtok(text, "(");
 		str_IP = strtok(NULL, ")");
 		
-		if (text = XmTextGetString (data->dText)) {
+		if (text = XmTextGetString (*data->dText)) {
 			udp_SendToString(str_IP,text, IPMSG_SENDMSG);		
 		}
 		
