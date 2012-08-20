@@ -107,7 +107,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNitemCount, m_Count); n++;
 	XtSetArg (args[n], XmNitems, xstr_list); n++;
 	SENDDIALOG_List = XmCreateScrolledList (SENDDIALOG_Form_Upper, "Users", args, n);
-	printf("create: %d",SENDDIALOG_List);
+	
 	if(mSelPos > 0)
 	{
 		XmListSelectPos (SENDDIALOG_List, mSelPos, 0);
