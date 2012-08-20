@@ -81,6 +81,7 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 	int mCount;	
 	char str_Item[150]; 
 	char* text;	
+	char* test;
 		
 	if(strlen(p_Item->Handlename) == 0)
 	{
@@ -139,11 +140,15 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 		{		
 			text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
 					
-			if (strstr(text, p_Item->IP_Address) != '\0')
+			if ((test = strstr(text, p_Item->IP_Address)) != '\0')
 			{
-				mFound = 1;
-				XtFree(text);
-				break;
+				*(strchr(test,')')) = '\0';
+				if(strcmp(test, p_Item->IP_Address) == 0)
+				{
+					mFound = 1;
+					XtFree(text);
+					break;
+				}
 			}		
 			
 			XtFree(text);						
