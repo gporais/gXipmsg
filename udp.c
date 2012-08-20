@@ -160,7 +160,7 @@ int recvfromTimeOutUDP(int socket, long sec, long usec)
 {
     // Setup timeval variable
     struct timeval timeout;
-    struct fd_set fds;
+    fd_set fds;
  
     timeout.tv_sec = sec;
     timeout.tv_usec = usec;
