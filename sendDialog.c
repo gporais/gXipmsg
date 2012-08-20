@@ -125,7 +125,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNrightWidget, SENDDIALOG_Frame_Member); n++;	
 	XtSetArg (args[n], XmNtopOffset, 5); n++;
 	SENDDIALOG_BtnG_Refresh = XmCreatePushButtonGadget (SENDDIALOG_Form_Upper, "Refresh", args, n);
-//	XtAddCallback (SENDDIALOG_BtnG_Refresh, XmNactivateCallback, sendDialog_RefreshCallBack, (XtPointer)SENDDIALOG_ClientData[0]);
+	XtAddCallback (SENDDIALOG_BtnG_Refresh, XmNactivateCallback, sendDialog_RefreshCallBack, (XtPointer)data);
 	XtManageChild (SENDDIALOG_BtnG_Refresh);	
 	
 	// Create lower form
@@ -192,43 +192,12 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 }
 
 
-
-void sendDialog_UpdateCount(int m_Count)
-{
-//	char str_Dest[8];	
-//	XmString xstr_Dest;
-//	
-//	sprintf(str_Dest, "%i", m_Count);
-//			
-//	xstr_Dest = XmStringCreateLocalized (str_Dest);		
-//	XtVaSetValues (SENDDIALOG_LblG_Count, XmNlabelString, xstr_Dest, NULL);
-//	
-//	
-//	strcpy(str_Dest, "Member");
-//		
-//	xstr_Dest = XmStringCreateLocalized (str_Dest);	
-//	XtVaSetValues (SENDDIALOG_LblG_Member, XmNlabelString, xstr_Dest, NULL);		
-//			
-//	XmStringFree(xstr_Dest);
-}
-
 void sendDialog_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget SENDDIALOG_Dialog = (Widget)client_data;
-//	char str_Dest[8];	
-//	XmString xstr_Dest;
-//	int m_Count = 9;
-//	
-//	sprintf(str_Dest, "%i", m_Count);
-//	
-//	xstr_Dest = XmStringCreateLocalized (str_Dest);
-//	XtVaSetValues (SENDDIALOG_LblG_Count, XmNlabelString, xstr_Dest, NULL);
-//	
-//	XmStringFree(xstr_Dest);
-	
-	XtPopup (SENDDIALOG_Dialog, XtGrabNone);
-//	sendDialog_UpdateCount(0);
-//	XmListDeleteAllItems(SENDDIALOG_List_Users);
+	struct SendClientData* data = (struct SendClientData*) client_data;
+
+	XmListDeleteAllItems(data->dList);
+	appIcon_ClearUserList(client_data);
 	udp_BroadcastEntry();
 }
 
@@ -267,8 +236,4 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 }
 
 
-void sendDialog_AddUser(XmString* xmstr_User, int m_Idx)
-{
-//	XmListAddItemUnselected (SENDDIALOG_List_Users, *xmstr_User, m_Idx);
-}
 

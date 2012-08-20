@@ -129,9 +129,9 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 				mIdx++;
 			}
 			
-			XmListAddItemUnselected (APPICON_List_Users, xstr_item, mIdx+1);			
-			updAdd_list(appLList, &xstr_item, mIdx+1);
 			mCount++;
+			XmListAddItemUnselected (APPICON_List_Users, xstr_item, mIdx+1);			
+			updAdd_list(appLList, &xstr_item, mIdx+1, mCount);			
 		}
 	}
 	else
@@ -157,9 +157,9 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 		
 		if(mFound == 1)
 		{
-			XmListDeletePos(APPICON_List_Users, mIdx+1);
-			updRemove_list(appLList, mIdx+1);
 			mCount--;
+			XmListDeletePos(APPICON_List_Users, mIdx+1);
+			updRemove_list(appLList, mIdx+1, mCount);			
 		}
 	}
 	
@@ -182,8 +182,22 @@ void appIcon_Unreg(struct SendClientData* num)
 	delete_node(appLList, num);	
 }
 
+void appIcon_ClearUserList(XtPointer clientList)
+{
+//	Widget* cList = (Widget*)clientList;
+//	struct SendClientData* data = (struct SendClientData*) clientList;
+//	
+//	XmStringTable xstr_list;
+//	XtVaGetValues (APPICON_List_Users, XmNitems, &xstr_list, NULL);	
+//	XtVaSetValues (data->dList, XmNitems, &xstr_list, NULL);	
+	XmListDeleteAllItems(APPICON_List_Users);
+}
 
-void updAdd_list(struct NODE *llist, XmString* xstr_item, int mIdx) {
+
+void updAdd_list(struct NODE *llist, XmString* xstr_item, int mIdx, int mCount) {
+	
+//	char str_Dest[4];	
+//	XmString xstr_Dest;
 	
 	while(llist->next != NULL) {
 		if(llist->ptrData != NULL) {
@@ -193,12 +207,23 @@ void updAdd_list(struct NODE *llist, XmString* xstr_item, int mIdx) {
 	}
 
 	if(llist->ptrData != NULL) {
-		XmListAddItemUnselected(llist->ptrData->dList, *xstr_item, mIdx);		
+		XmListAddItemUnselected(llist->ptrData->dList, *xstr_item, mIdx);
+		
+//		sprintf(str_Dest, "%i", mCount);				
+//		xstr_Dest = XmStringCreateLocalized (str_Dest);		
+//		XtVaSetValues (llist->ptrData->dLabel, XmNlabelString, xstr_Dest, NULL);
+//		
+//		XmStringFree(xstr_Dest);
 	}
+	
+	
 }
 
-void updRemove_list(struct NODE *llist, int mIdx) {
-		
+void updRemove_list(struct NODE *llist, int mIdx, int mCount) {
+	
+//	char str_Dest[4];	
+//	XmString xstr_Dest;
+	
 	while(llist->next != NULL) {
 		if(llist->ptrData != NULL) {
 			XmListDeletePos(llist->ptrData->dList, mIdx);			
@@ -208,8 +233,16 @@ void updRemove_list(struct NODE *llist, int mIdx) {
 	}
 
 	if(llist->ptrData != NULL) {
-		XmListDeletePos(llist->ptrData->dList, mIdx);		
+		XmListDeletePos(llist->ptrData->dList, mIdx);	
+		
+//		sprintf(str_Dest, "%i", mCount);				
+//		xstr_Dest = XmStringCreateLocalized (str_Dest);		
+//		XtVaSetValues (llist->ptrData->dLabel, XmNlabelString, xstr_Dest, NULL);
+//		
+//		XmStringFree(xstr_Dest);
 	}
+	
+			
 }
 
 

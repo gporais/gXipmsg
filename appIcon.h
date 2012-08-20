@@ -36,12 +36,13 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option);
 void appIcon_RecieveDialog(struct Broadcast_Packet* p_Item);
 void appIcon_ReplyDialog(int mPos);
 
-void updRemove_list(struct NODE *llist, int mIdx);
-void updAdd_list(struct NODE *llist, XmString* xstr_item, int mIdx);
+void updRemove_list(struct NODE *llist, int mIdx, int mCount);
+void updAdd_list(struct NODE *llist, XmString* xstr_item, int mIdx, int mCount);
 void append_node(struct NODE *llist, struct SendClientData* num);
 void delete_node(struct NODE *llist, struct SendClientData* num);
 
 void appIcon_Unreg(struct SendClientData* num);
+void appIcon_ClearUserList(XtPointer clientList);
 
 
 #endif /*APPICON_H_*/

@@ -14,16 +14,7 @@
 // Function declerations
 struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos);
 void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
-
-
 void sendDialog_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
-
-
-void sendDialog_AddUser(XmString* xmstr_User, int m_Idx);
-void sendDialog_UpdateCount(int m_Count);
-
 void destroy_it (Widget dialog, XtPointer client_data, XtPointer call_data);
-
-
 
 #endif /*SENDDIALOG_H_*/
