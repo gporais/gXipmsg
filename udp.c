@@ -119,15 +119,15 @@ void udp_InquirePackets(void)
 				
 			case IPMSG_BR_ENTRY:
 				udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_ANSENTRY, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
-				appIcon_AddRemoveItem(&UDP_DataFrom, 1);
+				appIcon_AddRemoveList(&UDP_DataFrom, 1);
 				break;
 				
 			case IPMSG_ANSENTRY:
-				appIcon_AddRemoveItem(&UDP_DataFrom, 1);
+				appIcon_AddRemoveList(&UDP_DataFrom, 1);
 				break;
 				
 			case IPMSG_BR_EXIT:				
-				appIcon_AddRemoveItem(&UDP_DataFrom, 0);
+				appIcon_AddRemoveList(&UDP_DataFrom, 0);
 				break;
 				
 			case IPMSG_SENDMSG:

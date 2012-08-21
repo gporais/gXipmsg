@@ -71,8 +71,14 @@ void appIcon_IconCallBack(Widget widget, XtPointer client_data, XtPointer call_d
 	append_node(appLList,(struct SendClientData*)sendDialog_Create(client_data, 0));	
 }
 
+void appIcon_AddRemoveList(struct Broadcast_Packet* p_Item, char m_Option)
+{
+	appIcon_AddRemoveItem(APPICON_List_Users, p_Item, m_Option);
+	appIcon_UpdateLists(appLList, p_Item, m_Option);
+}
 
-void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
+
+void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m_Option)
 {
 	XmString xstr_item;
 	XmStringTable xstr_list;
@@ -93,7 +99,7 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 	}
 	
   	// Get the current entries (and number of entries) from the List
-	XtVaGetValues (APPICON_List_Users, XmNitemCount, &mCount,	XmNitems, &xstr_list, NULL);
+	XtVaGetValues (wList, XmNitemCount, &mCount,	XmNitems, &xstr_list, NULL);
 		
 	xstr_item = XmStringCreateLocalized (str_Item);
 		
@@ -130,8 +136,7 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 			}
 			
 			mCount++;
-			XmListAddItemUnselected (APPICON_List_Users, xstr_item, mIdx+1);			
-			updAdd_list(appLList, &xstr_item, mIdx+1, mCount);			
+			XmListAddItemUnselected (wList, xstr_item, mIdx+1);		
 		}
 	}
 	else
@@ -158,8 +163,7 @@ void appIcon_AddRemoveItem(struct Broadcast_Packet* p_Item, char m_Option)
 		if(mFound == 1)
 		{
 			mCount--;
-			XmListDeletePos(APPICON_List_Users, mIdx+1);
-			updRemove_list(appLList, mIdx+1, mCount);			
+			XmListDeletePos(wList, mIdx+1);		
 		}
 	}
 	
@@ -184,66 +188,27 @@ void appIcon_Unreg(struct SendClientData* num)
 
 void appIcon_ClearUserList(XtPointer clientList)
 {
-//	Widget* cList = (Widget*)clientList;
-//	struct SendClientData* data = (struct SendClientData*) clientList;
-//	
-//	XmStringTable xstr_list;
-//	XtVaGetValues (APPICON_List_Users, XmNitems, &xstr_list, NULL);	
-//	XtVaSetValues (data->dList, XmNitems, &xstr_list, NULL);	
 	XmListDeleteAllItems(APPICON_List_Users);
 }
 
 
-void updAdd_list(struct NODE *llist, XmString* xstr_item, int mIdx, int mCount) {
-	
-//	char str_Dest[4];	
-//	XmString xstr_Dest;
-	
-	while(llist->next != NULL) {
-		if(llist->ptrData != NULL) {
-			XmListAddItemUnselected(llist->ptrData->dList, *xstr_item, mIdx);			
+void appIcon_UpdateLists(struct NODE *llist, struct Broadcast_Packet* p_Item, char m_Option)
+{	
+	while(llist->next != NULL)
+	{
+		if(llist->ptrData != NULL)
+		{
+			appIcon_AddRemoveItem(llist->ptrData->dList, p_Item, m_Option);
 		}
 		llist = llist->next;
 	}
 
-	if(llist->ptrData != NULL) {
-		XmListAddItemUnselected(llist->ptrData->dList, *xstr_item, mIdx);
-		
-//		sprintf(str_Dest, "%i", mCount);				
-//		xstr_Dest = XmStringCreateLocalized (str_Dest);		
-//		XtVaSetValues (llist->ptrData->dLabel, XmNlabelString, xstr_Dest, NULL);
-//		
-//		XmStringFree(xstr_Dest);
-	}
-	
-	
+	if(llist->ptrData != NULL)
+	{
+		appIcon_AddRemoveItem(llist->ptrData->dList, p_Item, m_Option);
+	}	
 }
 
-void updRemove_list(struct NODE *llist, int mIdx, int mCount) {
-	
-//	char str_Dest[4];	
-//	XmString xstr_Dest;
-	
-	while(llist->next != NULL) {
-		if(llist->ptrData != NULL) {
-			XmListDeletePos(llist->ptrData->dList, mIdx);			
-		}
-		llist = llist->next;
-		
-	}
-
-	if(llist->ptrData != NULL) {
-		XmListDeletePos(llist->ptrData->dList, mIdx);	
-		
-//		sprintf(str_Dest, "%i", mCount);				
-//		xstr_Dest = XmStringCreateLocalized (str_Dest);		
-//		XtVaSetValues (llist->ptrData->dLabel, XmNlabelString, xstr_Dest, NULL);
-//		
-//		XmStringFree(xstr_Dest);
-	}
-	
-			
-}
 
 
 
