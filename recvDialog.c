@@ -37,7 +37,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 			if(strcmp(test, p_Item->IP_Address) == 0)
 			{			
 				// str_Item comes before item
-				sprintf(str_Buff, "%s\n%s", text, asctime(localtime ((const time_t *)&p_Item->UNIX_Time)));
+				sprintf(str_Buff, "%s)\n%s", text, asctime(localtime ((const time_t *)&p_Item->UNIX_Time)));
 				XtFree(text);
 				break;
 			}
