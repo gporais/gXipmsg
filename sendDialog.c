@@ -30,7 +30,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	Widget SENDDIALOG_BtnG_Send;	
 		
 	int m_Count;	
-	char str_Count[3];	
+	char str_Count[4];	
 	XmString xstr_Count;	
 	XmStringTable xstr_list;	
 	

@@ -73,12 +73,12 @@ void appIcon_IconCallBack(Widget widget, XtPointer client_data, XtPointer call_d
 
 void appIcon_AddRemoveList(struct Broadcast_Packet* p_Item, char m_Option)
 {
-	appIcon_AddRemoveItem(APPICON_List_Users, p_Item, m_Option);
+	appIcon_AddRemoveItem(APPICON_List_Users, p_Item, m_Option, NULL);
 	appIcon_UpdateLists(appLList, p_Item, m_Option);
 }
 
 
-void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m_Option)
+void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m_Option, XtPointer xtLabel)
 {
 	XmString xstr_item;
 	XmStringTable xstr_list;
@@ -88,6 +88,9 @@ void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m
 	char str_Item[150]; 
 	char* text;	
 	char* test;
+
+	char str_Count[4];	
+	XmString xstr_Count;
 		
 	if(strlen(p_Item->Handlename) == 0)
 	{
@@ -136,7 +139,13 @@ void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m
 			}
 			
 			mCount++;
-			XmListAddItemUnselected (wList, xstr_item, mIdx+1);		
+			XmListAddItemUnselected (wList, xstr_item, mIdx+1);
+			if(wList != APPICON_List_Users)
+			{
+				sprintf(str_Count, "%i", mCount);
+				xstr_Count = XmStringCreateLocalized (str_Count);				
+				XtVaSetValues(*(Widget*)xtLabel, XmNlabelString, xstr_Count, NULL);				
+			}	
 		}
 	}
 	else
@@ -163,7 +172,13 @@ void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m
 		if(mFound == 1)
 		{
 			mCount--;
-			XmListDeletePos(wList, mIdx+1);		
+			XmListDeletePos(wList, mIdx+1);	
+			if(wList != APPICON_List_Users)
+			{
+				sprintf(str_Count, "%i", mCount);
+				xstr_Count = XmStringCreateLocalized (str_Count);
+				XtVaSetValues(*(Widget*)xtLabel, XmNlabelString, xstr_Count, NULL);
+			}	
 		}
 	}
 	
@@ -198,14 +213,14 @@ void appIcon_UpdateLists(struct NODE *llist, struct Broadcast_Packet* p_Item, ch
 	{
 		if(llist->ptrData != NULL)
 		{
-			appIcon_AddRemoveItem(llist->ptrData->dList, p_Item, m_Option);
+			appIcon_AddRemoveItem(llist->ptrData->dList, p_Item, m_Option, &llist->ptrData->dLabel);
 		}
 		llist = llist->next;
 	}
 
 	if(llist->ptrData != NULL)
 	{
-		appIcon_AddRemoveItem(llist->ptrData->dList, p_Item, m_Option);
+		appIcon_AddRemoveItem(llist->ptrData->dList, p_Item, m_Option, &llist->ptrData->dLabel);
 	}	
 }
 

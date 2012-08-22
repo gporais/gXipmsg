@@ -101,7 +101,7 @@ void udp_InquirePackets(void)
 	char str_Reply[12];
 	char UDP_Buffer[PACKET_MAXLEN];
 	
-	while(recvfromTimeOutUDP(*UDP_LocalSocket, 0, 500) > 0)
+	while(recvfromTimeOutUDP(*UDP_LocalSocket, 0, 0) > 0)
 	{	
 		//Clear buffer
 		memset(UDP_Buffer,'\0',PACKET_MAXLEN);
@@ -118,7 +118,7 @@ void udp_InquirePackets(void)
 				break;			
 				
 			case IPMSG_BR_ENTRY:
-				udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_ANSENTRY, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
+				udp_SendToString(UDP_DataFrom.IP_Address, UDP_LocalHandlename, IPMSG_ANSENTRY);
 				appIcon_AddRemoveList(&UDP_DataFrom, 1);
 				break;
 				

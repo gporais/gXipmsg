@@ -31,7 +31,7 @@ void appIcon_SetupClose(Widget* w_TopLevel, XtCallbackProc xcp_CloseProc);
 void appIcon_SetupTimeout(XtAppContext* xac_App, XtTimerCallbackProc xcp_TOProc);
 void appIcon_Run(XtAppContext* xac_App);
 void appIcon_IconCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
-void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m_Option);
+void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m_Option, XtPointer xtLabel);
 
 void appIcon_AddRemoveList(struct Broadcast_Packet* p_Item, char m_Option);
 
