@@ -31,7 +31,6 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 		
 	int m_Count;	
 	char str_Count[4];	
-	XmString xstr_Count;	
 	XmStringTable xstr_list;	
 	
 	struct SendClientData* data = XtNew (struct SendClientData);
@@ -72,13 +71,15 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	
 	// Create count label
 	sprintf(str_Count, "%i", m_Count);
-	xstr_Count = XmStringCreateLocalized (str_Count);
 	
 	n = 0;
 	XtSetArg (args[n], XmNchildType, XmFRAME_WORKAREA_CHILD); n++;
 	XtSetArg (args[n], XmNchildVerticalAlignment, XmALIGNMENT_CENTER); n++;
-	XtSetArg (args[n], XmNlabelString, xstr_Count); n++;
-	SENDDIALOG_LblG_Count = XmCreateLabelGadget (SENDDIALOG_Frame_Member, "Count", args, n);	
+	XtSetArg (args[n], XmNcolumns, 5); n++;
+	XtSetArg (args[n], XmNeditable, False); n++;
+	XtSetArg (args[n], XmNcursorPositionVisible, False); n++;
+	XtSetArg (args[n], XmNvalue, str_Count); n++;
+	SENDDIALOG_LblG_Count = XmCreateText (SENDDIALOG_Frame_Member, "Count", args, n);	
 	XtManageChild (SENDDIALOG_LblG_Count);
 
 	

@@ -90,8 +90,7 @@ void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m
 	char* test;
 
 	char str_Count[4];	
-	XmString xstr_Count;
-		
+			
 	if(strlen(p_Item->Handlename) == 0)
 	{
 		sprintf(str_Item, "%s@%s (%s)", p_Item->Username, p_Item->Hostname, p_Item->IP_Address);
@@ -143,8 +142,7 @@ void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m
 			if(wList != APPICON_List_Users)
 			{
 				sprintf(str_Count, "%i", mCount);
-				xstr_Count = XmStringCreateLocalized (str_Count);				
-				XtVaSetValues(*(Widget*)xtLabel, XmNlabelString, xstr_Count, NULL);				
+				XtVaSetValues(*(Widget*)xtLabel, XmNvalue, str_Count, NULL);				
 			}	
 		}
 	}
@@ -176,8 +174,7 @@ void appIcon_AddRemoveItem(Widget wList, struct Broadcast_Packet* p_Item, char m
 			if(wList != APPICON_List_Users)
 			{
 				sprintf(str_Count, "%i", mCount);
-				xstr_Count = XmStringCreateLocalized (str_Count);
-				XtVaSetValues(*(Widget*)xtLabel, XmNlabelString, xstr_Count, NULL);
+				XtVaSetValues(*(Widget*)xtLabel, XmNvalue, str_Count, NULL);
 			}	
 		}
 	}
