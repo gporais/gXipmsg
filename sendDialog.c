@@ -141,7 +141,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNtopOffset, 5); n++; 
 	XtSetArg (args[n], XmNrightOffset, 5); n++; 
 	SENDDIALOG_BtnG_Attach = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Attach", args, n);
-	XtManageChild (SENDDIALOG_BtnG_Attach);
+//	XtManageChild (SENDDIALOG_BtnG_Attach);
 	
 	
 	// Create send button
