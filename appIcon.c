@@ -34,6 +34,8 @@ void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* arg
 		       XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU,	
 		       XmNmwmFunctions, MWM_FUNC_CLOSE | MWM_FUNC_MOVE,
 		       XmNtitle, "gXip",
+		       XmNx, 100,
+		       XmNy, 100,
 		       NULL);	
 	
 	// Materialize major widgets
