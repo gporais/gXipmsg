@@ -1,6 +1,6 @@
 DEBUG = -g
-INCDIR = /usr/include/
-LIBDIR = /usr/lib/
+INCDIR = /usr/local/include/
+LIBDIR = /usr/local/lib/
 FLAGS = -lXm -lXt -lSM -lICE -lX11
 
 gXipmsg : main.o udp.o pack.o appIcon.o sendDialog.o recvDialog.o
