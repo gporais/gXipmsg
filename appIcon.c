@@ -195,7 +195,11 @@ void appIcon_ReplyDialog(int mPos)
 
 void appIcon_Unreg(struct SendClientData* num)
 {
-	delete_node(appLList, num);	
+	delete_node(appLList, num);
+	if(appIcon_CountNodes(appLList) == 0)
+	{
+		posX = posY = 0;
+	}
 }
 
 void appIcon_ClearUserList(XtPointer clientList)
@@ -219,6 +223,26 @@ void appIcon_UpdateLists(struct NODE *llist, struct Broadcast_Packet* p_Item, ch
 	{
 		appIcon_AddRemoveItem(llist->ptrData->dList, p_Item, m_Option, &llist->ptrData->dLabel);
 	}	
+}
+
+int appIcon_CountNodes(struct NODE *llist)
+{
+	int mCnt = 0;
+	
+	while(llist->next != NULL)
+	{
+		if(llist->ptrData != NULL)
+		{
+			mCnt++;
+		}
+		llist = llist->next;
+	}
+
+	if(llist->ptrData != NULL)
+	{
+		mCnt++;
+	}
+	return mCnt;
 }
 
 

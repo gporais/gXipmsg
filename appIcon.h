@@ -47,5 +47,7 @@ void delete_node(struct NODE *llist, struct SendClientData* num);
 void appIcon_Unreg(struct SendClientData* num);
 void appIcon_ClearUserList(XtPointer clientList);
 
+int appIcon_CountNodes(struct NODE *llist);
+
 
 #endif /*APPICON_H_*/
