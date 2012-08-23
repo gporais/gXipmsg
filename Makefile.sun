@@ -1,28 +1,28 @@
 DEBUG = -g
-INCDIR = /usr/include/
-LIBDIR = /usr/lib/
+INCDIR =
+LIBDIR =
 FLAGS = -lXm -lXt -lSM -lICE -lX11 -lsocket -lnsl
 
 gXipmsg : main.o udp.o pack.o appIcon.o sendDialog.o recvDialog.o
-	cc -I $(INCDIR) $(DEBUG) -o gXipmsg main.o udp.o pack.o appIcon.o sendDialog.o recvDialog.o -L $(LIBDIR) $(FLAGS)
+	cc $(INCDIR) $(DEBUG) -o gXipmsg main.o udp.o pack.o appIcon.o sendDialog.o recvDialog.o $(LIBDIR) $(FLAGS)
 
 main.o : main.c main.h gXipmsg.h
-	cc -I $(INCDIR) $(DEBUG) -c main.c
+	cc $(INCDIR) $(DEBUG) -c main.c
 
 udp.o : udp.c udp.h 
-	cc -I $(INCDIR) $(DEBUG) -c udp.c	
+	cc $(INCDIR) $(DEBUG) -c udp.c	
 
 pack.o : pack.c pack.h 
-	cc -I $(INCDIR) $(DEBUG) -c pack.c	
+	cc $(INCDIR) $(DEBUG) -c pack.c	
 
 appIcon.o : appIcon.c appIcon.h 
-	cc -I $(INCDIR) $(DEBUG) -c appIcon.c
+	cc $(INCDIR) $(DEBUG) -c appIcon.c
 
 sendDialog.o : sendDialog.c sendDialog.h 
-	cc -I $(INCDIR) $(DEBUG) -c sendDialog.c
+	cc $(INCDIR) $(DEBUG) -c sendDialog.c
 
 recvDialog.o : recvDialog.c recvDialog.h 
-	cc -I $(INCDIR) $(DEBUG) -c recvDialog.c
+	cc $(INCDIR) $(DEBUG) -c recvDialog.c
 
 clean : 
 	rm -f gXipmsg *.s *.o *.exe *.stackdump
