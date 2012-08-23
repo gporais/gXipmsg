@@ -3,6 +3,9 @@
 
 void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* argv[])
 {	
+	Position x, y;
+	Dimension w, h;
+	
 	appLList = (struct NODE *)malloc(sizeof(struct NODE));
 	appLList->ptrData = NULL;
 	appLList->next = NULL;
@@ -30,12 +33,19 @@ void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* arg
 	
 	XtManageChild (APPICON_Form);
 	
+	x = WidthOfScreen (XtScreen (*w_TopLevel));
+	y = HeightOfScreen (XtScreen (*w_TopLevel));
+	XtVaGetValues(*w_TopLevel, XmNwidth, &w, XmNheight, &h, NULL);
+	
+	x = x - (w+150);
+	y = y - (h+150);
+	
 	XtVaSetValues (*w_TopLevel,
 		       XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU,	
 		       XmNmwmFunctions, MWM_FUNC_CLOSE | MWM_FUNC_MOVE,
 		       XmNtitle, "gXip",
-		       XmNx, 100,
-		       XmNy, 100,
+		       XmNx, x,
+		       XmNy, y,
 		       NULL);	
 	
 	// Materialize major widgets
