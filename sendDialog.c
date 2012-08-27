@@ -40,20 +40,18 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtVaGetValues (*w_List, XmNitemCount, &m_Count,	XmNitems, &xstr_list, NULL);	
 		
 	// Create dialog
-	n = 0;
-	XtSetArg (args[n], XmNtitle, "Send Message"); n++;
-	XtSetArg (args[n], XmNdeleteResponse, XmDESTROY); n++;
-	XtSetArg (args[n], XmNdefaultPosition, False); n++;
-	XtSetArg (args[n], XmNx, posX); n++;
-	XtSetArg (args[n], XmNy, posY); n++;	
-	XtSetArg (args[n], XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU | MWM_DECOR_RESIZEH); n++;
-	XtSetArg (args[n], XmNmwmFunctions, MWM_FUNC_CLOSE | MWM_FUNC_MOVE); n++;
-	SENDDIALOG_Dialog = (Widget) XmCreateDialogShell (XtParent (*w_List), "send_diag", args, n);
+	SENDDIALOG_Dialog = XtVaCreatePopupShell("send_diag", 
+			topLevelShellWidgetClass, XtParent (*w_List),
+			XmNtitle, "Send Message",
+			XmNdeleteResponse, XmDESTROY,			
+			XmNx, posX,
+			XmNy, posY,
+			NULL);	
 	XtAddCallback (SENDDIALOG_Dialog, XmNdestroyCallback, destroy_it, data);
-		
+
 	posX += 20;
 	posY += 20;
-		
+
 	// Create paned window
 	SENDDIALOG_Pane_Vertical = XmCreatePanedWindow (SENDDIALOG_Dialog, "Vertical", NULL, 0);
 	

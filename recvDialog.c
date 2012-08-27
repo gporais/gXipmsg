@@ -50,15 +50,13 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	
 		
 	// Create dialog
-	n = 0;
-	XtSetArg (args[n], XmNtitle, "Recieve Message"); n++;
-	XtSetArg (args[n], XmNdeleteResponse, XmDESTROY); n++;
-	XtSetArg (args[n], XmNdefaultPosition, False); n++;
-	XtSetArg (args[n], XmNx, posX); n++;
-	XtSetArg (args[n], XmNy, posY); n++;
-	XtSetArg (args[n], XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU | MWM_DECOR_RESIZEH); n++;
-	XtSetArg (args[n], XmNmwmFunctions, MWM_FUNC_CLOSE | MWM_FUNC_MOVE); n++;
-	RECVDIALOG_Dialog = (Widget) XmCreateDialogShell (XtParent (*w_List), "recv_diag", args, n);
+	RECVDIALOG_Dialog = XtVaCreatePopupShell("recv_diag", 
+			topLevelShellWidgetClass, XtParent (*w_List),
+			XmNtitle, "Recieve Message",
+			XmNdeleteResponse, XmDESTROY,			
+			XmNx, posX,
+			XmNy, posY,
+			NULL);	
 		
 	posX += 20;
 	posY += 20;
