@@ -14,6 +14,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	Widget RECVDIALOG_LblG_FrameChild;	
 	Widget RECVDIALOG_Text_Message;
 	Widget RECVDIALOG_BtnG_Reply;
+	Widget RECVDIALOG_BtnG_Close;
 	
 	char str_Buff[150];	
 	XmString xstr_Buff;
@@ -106,7 +107,17 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	RECVDIALOG_BtnG_Reply = XmCreatePushButtonGadget (RECVDIALOG_Form, "Reply", args, n);		
 	XtAddCallback (RECVDIALOG_BtnG_Reply, XmNactivateCallback, recvDialog_ReplyCallBack, (XtPointer)mIdx);
 	XtManageChild (RECVDIALOG_BtnG_Reply);
-
+	
+	// Create close button
+	n = 0;
+	XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET); n++;
+	XtSetArg (args[n], XmNleftWidget, RECVDIALOG_BtnG_Reply); n++;
+	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
+	XtSetArg (args[n], XmNbottomOffset, 5); n++;
+	RECVDIALOG_BtnG_Close = XmCreatePushButtonGadget (RECVDIALOG_Form, "Close", args, n);		
+	XtAddCallback (RECVDIALOG_BtnG_Close, XmNactivateCallback, recvDialog_CloseCallBack, NULL);
+	XtManageChild (RECVDIALOG_BtnG_Close);
+	
 	
 	// Creatr text message
 	n = 0;
@@ -151,4 +162,15 @@ void recvDialog_ReplyCallBack(Widget widget, XtPointer client_data, XtPointer ca
 	XtDestroyWidget(RECVDIALOG_Dialog);
 	appIcon_ReplyDialog(mPos);	
 }
+
+
+void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	Widget RECVDIALOG_Dialog = XtParent(widget);
+	RECVDIALOG_Dialog = XtParent(RECVDIALOG_Dialog);
+	RECVDIALOG_Dialog = XtParent(RECVDIALOG_Dialog);
+		
+	XtDestroyWidget(RECVDIALOG_Dialog);
+}
+
 

@@ -13,5 +13,6 @@
 // Function declerations
 void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item);
 void recvDialog_ReplyCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
+void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 
 #endif /*RECVDIALOG_H_*/
