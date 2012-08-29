@@ -111,6 +111,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	if(mSelPos > 0)
 	{
 		XmListSelectPos (SENDDIALOG_List, mSelPos, 0);
+		XmListSetPos (SENDDIALOG_List, mSelPos);
 	}
 	
 	XtManageChild (SENDDIALOG_List);
