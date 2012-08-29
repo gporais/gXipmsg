@@ -15,7 +15,8 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	Widget RECVDIALOG_Text_Message;
 	Widget RECVDIALOG_BtnG_Attach;
 	Widget RECVDIALOG_BtnG_Reply;
-	Widget RECVDIALOG_BtnG_Close;
+	Widget RECVDIALOG_BtnG_Close;	
+	Widget RECVDIALOG_TglG_Quote;
 	
 	char str_Buff[150];	
 	XmString xstr_Buff;
@@ -110,26 +111,34 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM); n++; 	
 	XtSetArg (args[n], XmNleftOffset, 5); n++; 
 	XtSetArg (args[n], XmNrightOffset, 5); n++; 
-	RECVDIALOG_BtnG_Attach = XmCreatePushButtonGadget (RECVDIALOG_Form, "Attach", args, n);
-//	XtManageChild (RECVDIALOG_BtnG_Attach);
+	RECVDIALOG_BtnG_Attach = XmCreatePushButtonGadget (RECVDIALOG_Form, "Download", args, n);
+	XtManageChild (RECVDIALOG_BtnG_Attach);
 	
 	// Create reply button
 	n = 0;
 	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
-	XtSetArg (args[n], XmNbottomOffset, 5); n++;
 	RECVDIALOG_BtnG_Reply = XmCreatePushButtonGadget (RECVDIALOG_Form, "Reply", args, n);		
 	XtAddCallback (RECVDIALOG_BtnG_Reply, XmNactivateCallback, recvDialog_ReplyCallBack, (XtPointer)mIdx);
 	XtManageChild (RECVDIALOG_BtnG_Reply);
 	
 	// Create close button
 	n = 0;
-	XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET); n++;
-	XtSetArg (args[n], XmNleftWidget, RECVDIALOG_BtnG_Reply); n++;
+	XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM); n++;
 	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
-	XtSetArg (args[n], XmNbottomOffset, 5); n++;
 	RECVDIALOG_BtnG_Close = XmCreatePushButtonGadget (RECVDIALOG_Form, "Close", args, n);		
 	XtAddCallback (RECVDIALOG_BtnG_Close, XmNactivateCallback, recvDialog_CloseCallBack, NULL);
 	XtManageChild (RECVDIALOG_BtnG_Close);
+	
+	// Create quote checkbox
+	n = 0;
+	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
+	XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET); n++; 
+	XtSetArg (args[n], XmNleftWidget, RECVDIALOG_BtnG_Reply); n++;
+	XtSetArg (args[n], XmNleftOffset, 5); n++;
+	XtSetArg (args[n], XmNindicatorOn, XmINDICATOR_CHECK_BOX); n++;
+	XtSetArg (args[n], XmNset, XmSET); n++;
+	RECVDIALOG_TglG_Quote = XmCreateToggleButtonGadget (RECVDIALOG_Form, "Quote", args, n);
+	XtManageChild (RECVDIALOG_TglG_Quote);
 	
 	
 	// Creatr text message
