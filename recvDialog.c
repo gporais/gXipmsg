@@ -13,6 +13,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	Widget RECVDIALOG_LblG_FrameTitle;
 	Widget RECVDIALOG_LblG_FrameChild;	
 	Widget RECVDIALOG_Text_Message;
+	Widget RECVDIALOG_BtnG_Attach;
 	Widget RECVDIALOG_BtnG_Reply;
 	Widget RECVDIALOG_BtnG_Close;
 	
@@ -100,6 +101,18 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	
 	XtManageChild (RECVDIALOG_Frame);
 	
+	
+	// Create attach button
+	n = 0;
+	XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM); n++;  
+	XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET); n++; 
+	XtSetArg (args[n], XmNtopWidget, RECVDIALOG_Frame); n++;
+	XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM); n++; 	
+	XtSetArg (args[n], XmNleftOffset, 5); n++; 
+	XtSetArg (args[n], XmNrightOffset, 5); n++; 
+	RECVDIALOG_BtnG_Attach = XmCreatePushButtonGadget (RECVDIALOG_Form, "Attach", args, n);
+//	XtManageChild (RECVDIALOG_BtnG_Attach);
+	
 	// Create reply button
 	n = 0;
 	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
@@ -124,7 +137,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM); n++; 												
 	XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM); n++;	
 	XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET); n++; 
-	XtSetArg (args[n], XmNtopWidget, RECVDIALOG_Frame); n++;
+	XtSetArg (args[n], XmNtopWidget, RECVDIALOG_BtnG_Attach); n++;
 	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_WIDGET); n++;	
 	XtSetArg (args[n], XmNbottomWidget, RECVDIALOG_BtnG_Reply); n++;
 	XtSetArg (args[n], XmNleftOffset, 5); n++;
