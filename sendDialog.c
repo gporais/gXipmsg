@@ -27,7 +27,8 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	Widget SENDDIALOG_Pane_Vertical;
 	Widget SENDDIALOG_Form_Lower;
 	Widget SENDDIALOG_BtnG_Attach;
-	Widget SENDDIALOG_BtnG_Send;	
+	Widget SENDDIALOG_BtnG_Send;
+	Widget SENDDIALOG_BtnG_Close;
 		
 	int m_Count;	
 	char str_Count[4];	
@@ -146,10 +147,20 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	n = 0;
 	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
 	XtSetArg (args[n], XmNbottomOffset, 5); n++;
-	SENDDIALOG_BtnG_Send = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Send", args, n);
-		
+	SENDDIALOG_BtnG_Send = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Send", args, n);		
 	XtAddCallback (SENDDIALOG_BtnG_Send, XmNactivateCallback, sendDialog_SendCallBack, (XtPointer)data);
 	XtManageChild (SENDDIALOG_BtnG_Send);
+	
+	
+	// Create close button
+	n = 0;
+	XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET); n++;
+	XtSetArg (args[n], XmNleftWidget, SENDDIALOG_BtnG_Send); n++;
+	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
+	XtSetArg (args[n], XmNbottomOffset, 5); n++;
+	SENDDIALOG_BtnG_Close = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Close", args, n);		
+	XtAddCallback (SENDDIALOG_BtnG_Close, XmNactivateCallback, sendDialog_CloseCallBack, NULL);
+	XtManageChild (SENDDIALOG_BtnG_Close);
 	
 	
 	// Creatr text message
@@ -234,5 +245,13 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 	XtDestroyWidget(SENDDIALOG_Dialog);
 }
 
+void sendDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	Widget SENDDIALOG_Dialog = XtParent(widget);
+	SENDDIALOG_Dialog = XtParent(SENDDIALOG_Dialog);
+	SENDDIALOG_Dialog = XtParent(SENDDIALOG_Dialog);
+		
+	XtDestroyWidget(SENDDIALOG_Dialog);
+}
 
 
