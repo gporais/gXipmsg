@@ -86,6 +86,8 @@ struct SendClientData{
 extern Position posX, posY;
 extern int n;
 extern Arg args[20];
+extern char bgcolor[10];
+extern char fgcolor[10];
 
 
 

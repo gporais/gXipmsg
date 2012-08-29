@@ -175,7 +175,6 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNtopOffset, 5); n++;
 	XtSetArg (args[n], XmNrightOffset, 5); n++;
 	XtSetArg (args[n], XmNtopOffset, 5); n++;
-	
 	XtSetArg (args[n], XmNrows, 10); n++;
 	XtSetArg (args[n], XmNcolumns, 50); n++;
 	XtSetArg (args[n], XmNscrollHorizontal, False); n++;
@@ -184,6 +183,14 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	SENDDIALOG_Text = XmCreateScrolledText(SENDDIALOG_Form_Lower, "Message", args, n);
 	XtManageChild (SENDDIALOG_Text);
 	
+	strcpy(bgcolor, "black");
+	strcpy(fgcolor, "green");
+	XtVaSetValues(SENDDIALOG_Text,
+	        XtVaTypedArg, XmNforeground, XtRString, fgcolor,
+	        strlen(fgcolor) + 1, NULL);	
+	XtVaSetValues(SENDDIALOG_Text,
+		        XtVaTypedArg, XmNbackground, XtRString, bgcolor,
+		        strlen(bgcolor) + 1, NULL);	
 	
 	// Materialize major widgets
 	XtManageChild (SENDDIALOG_Form_Upper);
@@ -197,6 +204,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	data->dLabel = SENDDIALOG_LblG_Count;	
 	
 	
+
 	
 	return data;
 }

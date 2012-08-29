@@ -4,6 +4,8 @@
 Position posX, posY;
 int n;
 Arg args[20];
+char bgcolor[10];
+char fgcolor[10];
 
 static int gXipmsg_main (int argc, char* argv[])
 {	

@@ -141,7 +141,16 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNcursorPositionVisible, False); n++;
 	XtSetArg (args[n], XmNvalue, p_Item->Handlename); n++;
 	RECVDIALOG_Text_Message = XmCreateScrolledText(RECVDIALOG_Form, "Message", args, n);	
-	XtManageChild (RECVDIALOG_Text_Message);	
+	XtManageChild (RECVDIALOG_Text_Message);
+	
+	strcpy(bgcolor, "black");
+	strcpy(fgcolor, "white");
+	XtVaSetValues(RECVDIALOG_Text_Message,
+	        XtVaTypedArg, XmNforeground, XtRString, fgcolor,
+	        strlen(fgcolor) + 1, NULL);	
+	XtVaSetValues(RECVDIALOG_Text_Message,
+		        XtVaTypedArg, XmNbackground, XtRString, bgcolor,
+		        strlen(bgcolor) + 1, NULL);	
 		
 	XtManageChild (RECVDIALOG_Form);
 	XtManageChild (RECVDIALOG_Panel);
