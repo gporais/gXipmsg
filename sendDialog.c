@@ -228,21 +228,24 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
   	// Get the selected items (and number of selected) from the List
 	XtVaGetValues (data->dList, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
 			
-	while(mCount>mIdx)
+	if(mCount > 0)
 	{
-		text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
-		str_IP = strtok(text, "(");
-		str_IP = strtok(NULL, ")");
-		
-		if (text = XmTextGetString (data->dText)) {
-			udp_SendToString(str_IP,text, IPMSG_SENDMSG);		
+		while(mCount>mIdx)
+		{
+			text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+			str_IP = strtok(text, "(");
+			str_IP = strtok(NULL, ")");
+			
+			if (text = XmTextGetString (data->dText)) {
+				udp_SendToString(str_IP,text, IPMSG_SENDMSG);		
+			}
+			
+			XtFree(text);
+			mIdx++;
 		}
-		
-		XtFree(text);
-		mIdx++;
+			
+		XtDestroyWidget(SENDDIALOG_Dialog);
 	}
-		
-	XtDestroyWidget(SENDDIALOG_Dialog);
 }
 
 void sendDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
