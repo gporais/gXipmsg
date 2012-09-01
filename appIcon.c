@@ -80,7 +80,7 @@ void appIcon_Run(XtAppContext* xac_App)
 
 void appIcon_IconCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {	
-	append_node(appLList,(struct SendClientData*)sendDialog_Create(client_data, 0));	
+	append_node(appLList,(struct SendClientData*)sendDialog_Create(client_data, 0, NULL));	
 }
 
 void appIcon_AddRemoveList(struct Broadcast_Packet* p_Item, char m_Option)
@@ -200,9 +200,9 @@ void appIcon_RecieveDialog(struct Broadcast_Packet* p_Item)
 	recvDialog_Create(APPICON_List_Users, p_Item);
 }
 
-void appIcon_ReplyDialog(int mPos)
+void appIcon_ReplyDialog(int mPos, char* qText)
 {
-	append_node(appLList,(struct SendClientData*)sendDialog_Create(APPICON_List_Users, mPos+1));
+	append_node(appLList,(struct SendClientData*)sendDialog_Create(APPICON_List_Users, mPos+1, qText));
 }
 
 void appIcon_Unreg(struct SendClientData* num)

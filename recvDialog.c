@@ -2,6 +2,13 @@
 #include "recvDialog.h"
 
 
+void recvDialog_Destroy (Widget dialog, XtPointer client_data, XtPointer call_data)
+{
+	struct RecvClientData* data = (struct RecvClientData*) client_data;
+		
+	XtFree ((char*) data);	
+}
+
 void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 {
 	Widget* w_List = (Widget*)xt_List;
@@ -26,6 +33,8 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XmStringTable xstr_list;
 	char* text;	
 	char* test;
+	
+	struct RecvClientData* data = XtNew (struct RecvClientData);
 	
 	// Get the current entries (and number of entries) from the List
 	XtVaGetValues (*w_List, XmNitemCount, &mCount,	XmNitems, &xstr_list, NULL);
@@ -60,6 +69,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 			XmNx, posX,
 			XmNy, posY,
 			NULL);	
+	XtAddCallback (RECVDIALOG_Dialog, XmNdestroyCallback, recvDialog_Destroy, data);
 		
 	posX += 20;
 	posY += 20;
@@ -118,7 +128,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	n = 0;
 	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
 	RECVDIALOG_BtnG_Reply = XmCreatePushButtonGadget (RECVDIALOG_Form, "Reply", args, n);		
-	XtAddCallback (RECVDIALOG_BtnG_Reply, XmNactivateCallback, recvDialog_ReplyCallBack, (XtPointer)mIdx);
+	XtAddCallback (RECVDIALOG_BtnG_Reply, XmNactivateCallback, recvDialog_ReplyCallBack, (XtPointer)data);
 	XtManageChild (RECVDIALOG_BtnG_Reply);
 	
 	// Create close button
@@ -178,20 +188,29 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtManageChild (RECVDIALOG_Panel);
 	XtManageChild (RECVDIALOG_Dialog);
 	
+	/* complete the timeout client data */
+	data->dPos = mIdx;
+	data->dText = RECVDIALOG_Text_Message;
+	data->dCheck = RECVDIALOG_TglG_Quote;
+	
 	XmStringFree (xstr_Buff);
 }
 
 
 void recvDialog_ReplyCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	int mPos = (int)client_data;
-
+	struct RecvClientData* data = (struct RecvClientData*) client_data;
+	char* text;
+	
 	Widget RECVDIALOG_Dialog = XtParent(widget);
 	RECVDIALOG_Dialog = XtParent(RECVDIALOG_Dialog);
 	RECVDIALOG_Dialog = XtParent(RECVDIALOG_Dialog);	
 
-	XtDestroyWidget(RECVDIALOG_Dialog);
-	appIcon_ReplyDialog(mPos);	
+	XtDestroyWidget(RECVDIALOG_Dialog);	
+	
+	text = XmTextGetString (data->dText);
+	appIcon_ReplyDialog(data->dPos, XmToggleButtonGadgetGetState(data->dCheck) ? text : NULL);	
+	XtFree (text);
 }
 
 

@@ -37,7 +37,7 @@ void appIcon_AddRemoveList(struct Broadcast_Packet* p_Item, char m_Option);
 
 
 void appIcon_RecieveDialog(struct Broadcast_Packet* p_Item);
-void appIcon_ReplyDialog(int mPos);
+void appIcon_ReplyDialog(int mPos, char* qText);
 
 
 void appIcon_UpdateLists(struct NODE *llist, struct Broadcast_Packet* p_Item, char m_Option);

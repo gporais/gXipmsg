@@ -2,8 +2,7 @@
 #include "sendDialog.h"
 
 
-
-void destroy_it (Widget dialog, XtPointer client_data, XtPointer call_data)
+void sendDialog_Destroy (Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	struct SendClientData* data = (struct SendClientData*) client_data;
 		
@@ -12,10 +11,10 @@ void destroy_it (Widget dialog, XtPointer client_data, XtPointer call_data)
 	XtFree ((char*) data);	
 }
 
-struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
+struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPointer xt_Text)
 {
 	Widget* w_List = (Widget*)xt_List;
-	
+		
 	Widget SENDDIALOG_Dialog;
 	Widget SENDDIALOG_Text;
 	Widget SENDDIALOG_List;
@@ -48,7 +47,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 			XmNx, posX,
 			XmNy, posY,
 			NULL);	
-	XtAddCallback (SENDDIALOG_Dialog, XmNdestroyCallback, destroy_it, data);
+	XtAddCallback (SENDDIALOG_Dialog, XmNdestroyCallback, sendDialog_Destroy, data);
 
 	posX += 20;
 	posY += 20;
@@ -178,6 +177,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos)
 	XtSetArg (args[n], XmNscrollHorizontal, False); n++;
 	XtSetArg (args[n], XmNwordWrap, True); n++;
 	XtSetArg (args[n], XmNeditMode, XmMULTI_LINE_EDIT); n++;
+	XtSetArg (args[n], XmNvalue, (char*)xt_Text); n++;
 	SENDDIALOG_Text = XmCreateScrolledText(SENDDIALOG_Form_Lower, "Message", args, n);
 	XtManageChild (SENDDIALOG_Text);
 	

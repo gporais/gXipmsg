@@ -82,6 +82,12 @@ struct SendClientData{
 	Widget dText;	
 	Widget dLabel;	
 };
+
+struct RecvClientData{
+	int dPos;
+	Widget dText;	
+	Widget dCheck;	
+};
 	
 extern Position posX, posY;
 extern int n;
