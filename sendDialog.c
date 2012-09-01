@@ -190,6 +190,28 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 		        XtVaTypedArg, XmNbackground, XtRString, bgcolor,
 		        strlen(bgcolor) + 1, NULL);	
 	
+
+	if(((char*)xt_Text)!= NULL)
+	{
+		if(strlen((char*)xt_Text) > 0)
+		{
+			XmTextReplace (SENDDIALOG_Text, 0, 0, ">");
+			n = 0;
+			m_Count = 1;
+			while(((char*)xt_Text)[n] != '\0')
+			{
+				if(((char*)xt_Text)[n] == '\n')
+				{
+					XmTextReplace (SENDDIALOG_Text, n+m_Count+1, n+m_Count+1, ">");
+					m_Count++;
+				}
+				n++;
+			}
+		}
+	}
+
+	
+	
 	// Materialize major widgets
 	XtManageChild (SENDDIALOG_Form_Upper);
 	XtManageChild (SENDDIALOG_Form_Lower);
