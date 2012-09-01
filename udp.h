@@ -8,7 +8,7 @@
 #define	UDP_DEFAULT_FAMILY		AF_INET
 #define	UDP_DEFAULT_PORT		2425
 #define	UDP_DEFAULT_IPADDR		INADDR_ANY
-#define	UDP_BROADCAST_IPADDR	"255.255.255.255"
+#define	UDP_BROADCAST_IPADDR	INADDR_BROADCAST
 
 // Variable declerations
 struct sockaddr_in UDP_AddrFrom;
