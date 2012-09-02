@@ -25,9 +25,18 @@ static int gXipmsg_main (int argc, char* argv[])
 	else
 	{
 		// Set local username
-		strcpy(GXIM_Local_Username, GXIM_Passwd->pw_name);
-		
-		// Set local handlename
+		strcpy(GXIM_Local_Username, GXIM_Passwd->pw_name);		
+	}
+	
+	//Get handlename
+	if(argc > 1)
+	{
+		// Set local handlename 
+		strcpy(GXIM_Local_Handlename, argv[1]);
+	}
+	else
+	{
+		// Set local handlename using username
 		strcpy(GXIM_Local_Handlename, GXIM_Passwd->pw_name);
 	}
 	
