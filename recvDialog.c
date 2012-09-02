@@ -34,7 +34,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XmStringTable xstr_list;
 	char* text;	
 	char* test;
-	
+	time_t clock = time(NULL);
 	struct RecvClientData* data = XtNew (struct RecvClientData);
 	
 	// Get the current entries (and number of entries) from the List
@@ -50,7 +50,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 			if(strcmp(test, p_Item->IP_Address) == 0)
 			{			
 				// str_Item comes before item
-				sprintf(str_Buff, "%s)\n%s", text, asctime(localtime ((const time_t *)&p_Item->UNIX_Time)));
+				sprintf(str_Buff, "%s)\n%s", text, ctime(&clock));
 				XtFree(text);
 				break;
 			}
