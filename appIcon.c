@@ -1,6 +1,81 @@
 // created by: geo (April 2012)
 #include "appIcon.h"
 
+static char *ipmsg[] = {
+/* columns rows colors chars-per-pixel */
+"64 64 5 1 ",
+"  c black",
+". c red",
+"X c yellow",
+"o c blue",
+"O c #808080",
+/* pixels */
+"................................................................",
+"................................................................",
+"....XXXXXXXXXXXX..oooooooooooooooooooooooooooooooooooooooooooo..",
+"....XXXXXXXXXXXX..oooooooooooooooooooooooooooooooooooooooooooo..",
+"..XXXXXXXXXXXXXXXX..oooooooooooooooooooooooooooooooooooooooooo..",
+"..XXXXXXXXXXXXXXXX..oooooooooooooooooooooooooooooooooooooooooo..",
+"..XXXXXXXXXXXXXXXXXX..oooooooooooooooooooooooooooooooooooooooo..",
+"..XXXXXXXXXXXXXXXXXX..oooooooooooooooooooooooooooooooooooooooo..",
+"..XXXXXXXXXXXXXXXXXX..ooooooooooooooooooooooooooooXX....oooooo..",
+"..XXXXXXXXXXXXXXXXXX..ooooooooooooooooooooooooooooXX....oooooo..",
+"..XXXXXXXXXXXXXXXXXXXXooooooooooooXX....ooooooooXX........oooo..",
+"..XXXXXXXXXXXXXXXXXXXXooooooooooooXX....ooooooooXX........oooo..",
+"..XXXXXXXXXXXXXXXXXXXXooooooooooXX........ooooooXX........oooo..",
+"..XXXXXXXXXXXXXXXXXXXXooooooooooXX........ooooooXX........oooo..",
+"..XXXXXXXXXXXXXXXXXX..ooooooooooXX........ooooXX..........oooo..",
+"..XXXXXXXXXXXXXXXXXX..ooooooooooXX........ooooXX..........oooo..",
+"..XXXXXXXXXXXXXXXXXX..ooooooooooXX........ooooXX..........oooo..",
+"..XXXXXXXXXXXXXXXXXX..ooooooooooXX........ooooXX..........oooo..",
+"..XXXXXXXXXXXXXXXX..ooooooooooooXX........ooXX..........oooooo..",
+"..XXXXXXXXXXXXXXXX..ooooooooooooXX........ooXX..........oooooo..",
+"..ooXXXXXXXXXXXX....ooooooooooooXX........oo............oooooo..",
+"..ooXXXXXXXXXXXX....ooooooooooooXX........oo............oooooo..",
+"..oooo........ooooooooooooooooooooXX..................oooooooo..",
+"..oooo........ooooooooooooooooooooXX..................oooooooo..",
+"..oooooooooooooooooooooooooooooooooo................oooooooooo..",
+"..oooooooooooooooooooooooooooooooooo................oooooooooo..",
+"..oooooooooooooooooooooooooooooooooo................oooooooooo..",
+"..oooooooooooooooooooooooooooooooooo................oooooooooo..",
+"..ooooooooooooooooooooooooooooooXXXX..............oooooooooooo..",
+"..ooooooooooooooooooooooooooooooXXXX..............oooooooooooo..",
+"..ooooooooooooooooooooooooXXXXXXXX..............oooooooooooooo..",
+"..ooooooooooooooooooooooooXXXXXXXX..............oooooooooooooo..",
+"..ooooooooooooooooooooXXXX....................oooooooooooooooo..",
+"..ooooooooooooooooooooXXXX....................oooooooooooooooo..",
+"..ooooooooooooooooXXXX..........................oooooooooooooo..",
+"..ooooooooooooooooXXXX..........................oooooooooooooo..",
+"..ooooooooooooooooXX............................oooooooooooooo..",
+"..ooooooooooooooooXX............................oooooooooooooo..",
+"..ooooooooooooXXXX..............oooooooo........oooooooooooooo..",
+"..ooooooooooooXXXX..............oooooooo........oooooooooooooo..",
+"..ooooooooooooXXXX............oooooooooo........oooooooooooooo..",
+"..ooooooooooooXXXX............oooooooooo........oooooooooooooo..",
+"..ooooooooooXXXX............oooooooooooo..........oooooooooooo..",
+"..ooooooooooXXXX............oooooooooooo..........oooooooooooo..",
+"..OOOOOOOOOOXXXX..........OOOOOOOOOOOOOOXX............OOOOOOOO..",
+"..OOOOOOOOOOXXXX..........OOOOOOOOOOOOOOXX............OOOOOOOO..",
+"..OOOOOOOOOOXX............OOOOOOOOOOOOOOXX............OOOOOOOO..",
+"..OOOOOOOOOOXX............OOOOOOOOOOOOOOXX............OOOOOOOO..",
+"..OOOOOOOOOOXX..........OOOOOOOOOOOOOOOOOOXX..........OOOOOOOO..",
+"..OOOOOOOOOOXX..........OOOOOOOOOOOOOOOOOOXX..........OOOOOOOO..",
+"..OOOOOOOOOOXX..........OOOOOOOOOOOOOOOOOOOOOO......OOOOOOOOOO..",
+"..OOOOOOOOOOXX..........OOOOOOOOOOOOOOOOOOOOOO......OOOOOOOOOO..",
+"..OOOOOOOOOOOO........OOOOOOOOOOOOOOOOOOOOOOOOOO        OOOOOO..",
+"..OOOOOOOOOOOO........OOOOOOOOOOOOOOOOOOOOOOOOOO        OOOOOO..",
+"..OOOOOOOOOOOOOO            OOOOOOOOOOOOOOOOOOOOOO          OO..",
+"..OOOOOOOOOOOOOO            OOOOOOOOOOOOOOOOOOOOOO          OO..",
+"..OOOOOOOOOOOOOOOO                OOOOOOOOOOOOOOOOOO          ..",
+"..OOOOOOOOOOOOOOOO                OOOOOOOOOOOOOOOOOO          ..",
+"..OOOOOOOOOOOOOOOOOO                                          ..",
+"..OOOOOOOOOOOOOOOOOO                                          ..",
+"..OOOOOOOOOOOOOOOOOOOOOOOO                                    ..",
+"..OOOOOOOOOOOOOOOOOOOOOOOO                                    ..",
+"................................................................",
+"................................................................"
+};
+
 void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* argv[])
 {	
 	Position x, y;
@@ -21,13 +96,15 @@ void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* arg
 	
 	XtVaGetValues (APPICON_Form, XmNforeground, &fg, XmNbackground, &bg, NULL);
 	
-	pixmap = XmGetPixmap (XtScreen (APPICON_Form), "ipmsg.xpm", fg, bg);
+	XpmCreatePixmapFromData( XtDisplay( APPICON_Form ),
+	    DefaultRootWindow( XtDisplay(APPICON_Form) ),
+	    ipmsg, &pixmap, NULL, NULL);
 		
 	// Create icon button
 	n = 0;
 	XtSetArg (args[n], XmNlabelType, XmPIXMAP); n++; 
 	XtSetArg (args[n], XmNlabelPixmap, pixmap); n++;
-	APPICON_BtnG_Icon = XmCreatePushButtonGadget (APPICON_Form, "ipmsg.xpm", args, n);	
+	APPICON_BtnG_Icon = XmCreatePushButtonGadget (APPICON_Form, "ipmsgButton", args, n);	
 	XtAddCallback (APPICON_BtnG_Icon, XmNactivateCallback, appIcon_IconCallBack, APPICON_List_Users);
 	XtManageChild (APPICON_BtnG_Icon);	
 	
