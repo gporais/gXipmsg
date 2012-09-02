@@ -137,7 +137,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM); n++; 						
 	XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM); n++; 	
 	XtSetArg (args[n], XmNleftOffset, 5); n++; 
-	XtSetArg (args[n], XmNtopOffset, 5); n++; 
+	XtSetArg (args[n], XmNtopOffset, 3); n++; 
 	XtSetArg (args[n], XmNrightOffset, 5); n++; 
 	SENDDIALOG_BtnG_Attach = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Upload", args, n);
 	XtManageChild (SENDDIALOG_BtnG_Attach);
@@ -171,7 +171,6 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	XtSetArg (args[n], XmNleftOffset, 5); n++;
 	XtSetArg (args[n], XmNtopOffset, 5); n++;
 	XtSetArg (args[n], XmNrightOffset, 5); n++;
-	XtSetArg (args[n], XmNtopOffset, 5); n++;
 	XtSetArg (args[n], XmNrows, 10); n++;
 	XtSetArg (args[n], XmNcolumns, 50); n++;
 	XtSetArg (args[n], XmNscrollHorizontal, False); n++;
