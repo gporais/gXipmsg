@@ -2,6 +2,7 @@ DEBUG = -g
 INCDIR = -I /usr/local/include/
 LIBDIR = -L /usr/local/lib/
 FLAGS = -lXm -lXt -lSM -lICE -lX11
+DESTDIR = /usr/bin/
 
 gXipmsg : main.o udp.o pack.o appIcon.o sendDialog.o recvDialog.o
 	cc $(INCDIR) $(DEBUG) -o gXipmsg main.o udp.o pack.o appIcon.o sendDialog.o recvDialog.o $(LIBDIR) $(FLAGS)
@@ -26,4 +27,11 @@ recvDialog.o : recvDialog.c recvDialog.h
 
 clean : 
 	rm -f gXipmsg *.s *.o *.exe *.stackdump
+	
+install :
+	cp gXipmsg ipmsg.xpm $(DESTDIR)
+	
+uninstall :
+	rm $(DESTDIR)gXipmsg
+	rm $(DESTDIR)ipmsg.xpm
 
