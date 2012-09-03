@@ -89,11 +89,13 @@ struct RecvClientData{
 	Widget dCheck;	
 };
 	
+extern Position posX, posY;
 extern int n;
 extern Arg args[20];
 extern char bgcolor[10];
 extern char fgcolor[10];
 
+extern void gXipmsg_MapDialog(Widget dialog, XtPointer client_data, XtPointer call_data);
 
 
 #endif /*COMMON_H_*/

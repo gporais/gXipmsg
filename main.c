@@ -1,10 +1,12 @@
 // created by: geo (March 2012)
 #include "gXipmsg.h"
 
+Position posX, posY;
 int n;
 Arg args[20];
 char bgcolor[10];
 char fgcolor[10];
+
 
 static int gXipmsg_main (int argc, char* argv[])
 {	
@@ -71,5 +73,19 @@ void gxipmg_CheckData(XtPointer xp_Client_data, XtIntervalId* id)
 	udp_InquirePackets();
 	
 	appIcon_SetupTimeout(&GXIM_App, gxipmg_CheckData);	
+}
+
+void gXipmsg_MapDialog(Widget dialog, XtPointer client_data, XtPointer call_data)
+{
+	Dimension w, h;
+	
+	XtVaGetValues(dialog, XmNwidth, &w, XmNheight, &h, NULL);
+	if ((posX + w) >= WidthOfScreen (XtScreen (dialog)))
+		posX = 0;
+	if ((posY + h) >= HeightOfScreen (XtScreen (dialog)))
+		posY = 0;
+	XtVaSetValues (dialog, XmNx, posX, XmNy, posY, NULL);
+	posX += 20;
+	posY += 20;	
 }
 

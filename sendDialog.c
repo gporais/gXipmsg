@@ -2,20 +2,6 @@
 #include "sendDialog.h"
 
 
-static void sendDialog_Map(Widget dialog, XtPointer client_data, XtPointer call_data)
-{
-	static Position x, y;
-	Dimension w, h;
-	XtVaGetValues(dialog, XmNwidth, &w, XmNheight, &h, NULL);
-	if ((x + w) >= WidthOfScreen (XtScreen (dialog)))
-	x = 0;
-	if ((y + h) >= HeightOfScreen (XtScreen (dialog)))
-	y = 0;
-	XtVaSetValues (dialog, XmNx, x, XmNy, y, NULL);
-	x += 20;
-	y += 20;	
-}
-
 void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	struct SendClientData* data = (struct SendClientData*) client_data;
@@ -59,7 +45,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 			XmNtitle, "Send Message",
 			XmNdeleteResponse, XmDESTROY,			
 			NULL);	
-	XtAddCallback (SENDDIALOG_Dialog, XmNpopupCallback, sendDialog_Map, NULL);
+	XtAddCallback (SENDDIALOG_Dialog, XmNpopupCallback, gXipmsg_MapDialog, NULL);
 	XtAddCallback (SENDDIALOG_Dialog, XmNdestroyCallback, sendDialog_Destroy, data);
 
 	// Create paned window
