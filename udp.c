@@ -61,8 +61,18 @@ void udp_BroadcastExit(void)
 
 int udp_BroadcastString(char* p_String)
 {
+#ifdef IP_ONESBCAST
+	
+	int onesbcast = 1;   /* 0 = disable (default), 1 = enable */
+	setsockopt(*UDP_LocalSocket, IPPROTO_IP, IP_ONESBCAST, &onesbcast, sizeof(onesbcast));
+	UDP_AddrTo.sin_addr.s_addr = inet_addr("192.168.0.255");
+	
+#else
+		
 	// Set IP of socket address for broadcast
-	UDP_AddrTo.sin_addr.s_addr = UDP_BROADCAST_IPADDR;	
+	UDP_AddrTo.sin_addr.s_addr = UDP_BROADCAST_IPADDR;
+		
+#endif	
 	
 	// Send string to address to
 	if((sendto(*UDP_LocalSocket, p_String, strlen(p_String)+1, 0, (struct sockaddr*)&UDP_AddrTo, sizeof(UDP_AddrTo))) == -1)
@@ -77,6 +87,14 @@ int udp_BroadcastString(char* p_String)
 int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags)
 {
 	char* p_Buffer = (char*)pack_PackBroadcast(m_Flags, UDP_LocalUsername, UDP_LocalHostname, p_String);
+	
+#ifdef IP_ONESBCAST
+	
+	int onesbcast = 0;   /* 0 = disable (default), 1 = enable */
+	setsockopt(*UDP_LocalSocket, IPPROTO_IP, IP_ONESBCAST, &onesbcast, sizeof(onesbcast));
+	
+#endif
+	
 		
 	// Set IP of socket address for send
 	if((UDP_AddrTo.sin_addr.s_addr = inet_addr(p_IPAddress)) == -1)
