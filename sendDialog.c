@@ -2,7 +2,21 @@
 #include "sendDialog.h"
 
 
-void sendDialog_Destroy (Widget dialog, XtPointer client_data, XtPointer call_data)
+void sendDialog_Map(Widget dialog, XtPointer client_data, XtPointer call_data)
+{
+	static Position x, y;
+	Dimension w, h;
+	XtVaGetValues(dialog, XmNwidth, &w, XmNheight, &h, NULL);
+	if ((x + w) >= WidthOfScreen (XtScreen (dialog)))
+	x = 0;
+	if ((y + h) >= HeightOfScreen (XtScreen (dialog)))
+	y = 0;
+	XtVaSetValues (dialog, XmNx, x, XmNy, y, NULL);
+	x += 20;
+	y += 20;	
+}
+
+void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	struct SendClientData* data = (struct SendClientData*) client_data;
 		
@@ -44,13 +58,9 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 			topLevelShellWidgetClass, XtParent (*w_List),
 			XmNtitle, "Send Message",
 			XmNdeleteResponse, XmDESTROY,			
-			XmNx, posX,
-			XmNy, posY,
 			NULL);	
+	XtAddCallback (SENDDIALOG_Dialog, XmNpopupCallback, sendDialog_Map, NULL);
 	XtAddCallback (SENDDIALOG_Dialog, XmNdestroyCallback, sendDialog_Destroy, data);
-
-	posX += 20;
-	posY += 20;
 
 	// Create paned window
 	SENDDIALOG_Pane_Vertical = XmCreatePanedWindow (SENDDIALOG_Dialog, "Vertical", NULL, 0);
@@ -216,16 +226,13 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	// Materialize major widgets
 	XtManageChild (SENDDIALOG_Form_Upper);
 	XtManageChild (SENDDIALOG_Form_Lower);
-	XtManageChild (SENDDIALOG_Pane_Vertical);
-	XtManageChild (SENDDIALOG_Dialog);
+	XtManageChild (SENDDIALOG_Pane_Vertical);	
+	XtPopup (SENDDIALOG_Dialog, XtGrabNone);
 	
 	/* complete the timeout client data */
 	data->dList = SENDDIALOG_List;
 	data->dText = SENDDIALOG_Text;
-	data->dLabel = SENDDIALOG_LblG_Count;	
-	
-	
-
+	data->dLabel = SENDDIALOG_LblG_Count;
 	
 	return data;
 }

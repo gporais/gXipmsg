@@ -1,7 +1,6 @@
 // created by: geo (March 2012)
 #include "gXipmsg.h"
 
-Position posX, posY;
 int n;
 Arg args[20];
 char bgcolor[10];

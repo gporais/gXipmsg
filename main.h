@@ -89,7 +89,6 @@ struct RecvClientData{
 	Widget dCheck;	
 };
 	
-extern Position posX, posY;
 extern int n;
 extern Arg args[20];
 extern char bgcolor[10];

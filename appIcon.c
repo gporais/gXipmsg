@@ -21,7 +21,7 @@ void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* arg
 	
 	XtVaGetValues (APPICON_Form, XmNforeground, &fg, XmNbackground, &bg, NULL);
 	
-	pixmap = XmGetPixmap (XtScreen (APPICON_Form), "ipmsg.xpm", fg, bg);
+	pixmap = XmGetPixmap (XtScreen (APPICON_Form), "./ipmsg.xpm", fg, bg);
 		
 	// Create icon button
 	n = 0;
@@ -207,11 +207,7 @@ void appIcon_ReplyDialog(int mPos, char* qText)
 
 void appIcon_Unreg(struct SendClientData* num)
 {
-	delete_node(appLList, num);
-	if(appIcon_CountNodes(appLList) == 0)
-	{
-		posX = posY = 0;
-	}
+	delete_node(appLList, num);	
 }
 
 void appIcon_ClearUserList(XtPointer clientList)

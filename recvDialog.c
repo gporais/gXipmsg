@@ -2,6 +2,20 @@
 #include "recvDialog.h"
 
 
+void recvDialog_Map(Widget dialog, XtPointer client_data, XtPointer call_data)
+{
+	static Position x, y;
+	Dimension w, h;
+	XtVaGetValues(dialog, XmNwidth, &w, XmNheight, &h, NULL);
+	if ((x + w) >= WidthOfScreen (XtScreen (dialog)))
+	x = 0;
+	if ((y + h) >= HeightOfScreen (XtScreen (dialog)))
+	y = 0;
+	XtVaSetValues (dialog, XmNx, x, XmNy, y, NULL);
+	x += 20;
+	y += 20;	
+}
+
 void recvDialog_Destroy (Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	struct RecvClientData* data = (struct RecvClientData*) client_data;
@@ -67,14 +81,10 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 			topLevelShellWidgetClass, XtParent (*w_List),
 			XmNtitle, "Recieve Message",
 			XmNdeleteResponse, XmDESTROY,			
-			XmNx, posX,
-			XmNy, posY,
-			NULL);	
+			NULL);
+	XtAddCallback (RECVDIALOG_Dialog, XmNpopupCallback, recvDialog_Map, NULL);
 	XtAddCallback (RECVDIALOG_Dialog, XmNdestroyCallback, recvDialog_Destroy, data);
-		
-	posX += 20;
-	posY += 20;
-		
+
 	// Create paned window
 	RECVDIALOG_MainForm = XmCreateForm (RECVDIALOG_Dialog, "recv_form", NULL, 0);
 		
@@ -205,7 +215,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtManageChild (RECVDIALOG_Form_Upper);
 	XtManageChild (RECVDIALOG_Form_Lower);
 	XtManageChild (RECVDIALOG_MainForm);
-	XtManageChild (RECVDIALOG_Dialog);
+	XtPopup (RECVDIALOG_Dialog, XtGrabNone);
 	
 	/* complete the timeout client data */
 	data->dPos = mIdx;
