@@ -2,7 +2,7 @@
 #include "recvDialog.h"
 
 
-void recvDialog_Map(Widget dialog, XtPointer client_data, XtPointer call_data)
+static void recvDialog_Map(Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	static Position x, y;
 	Dimension w, h;

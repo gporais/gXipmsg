@@ -2,7 +2,7 @@
 #include "sendDialog.h"
 
 
-void sendDialog_Map(Widget dialog, XtPointer client_data, XtPointer call_data)
+static void sendDialog_Map(Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	static Position x, y;
 	Dimension w, h;

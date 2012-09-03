@@ -17,6 +17,6 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 void sendDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 void sendDialog_RefreshCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_data);
-void sendDialog_Map(Widget dialog, XtPointer client_data, XtPointer call_data);
+static void sendDialog_Map(Widget dialog, XtPointer client_data, XtPointer call_data);
 
 #endif /*SENDDIALOG_H_*/
