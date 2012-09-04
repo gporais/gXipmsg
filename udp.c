@@ -1,9 +1,119 @@
 // created by: geo (March 2012)
 #include "udp.h"
 
+#ifdef IP_ONESBCAST
+
+void udp_GetInfo(int* p_Socket)
+{
+	struct ifconf ifc; /* holds IOCTL return value for SIOCGIFCONF */
+	int	return_val,	numreqs = 30, n;
+	struct ifreq *ifr; /* points to one interface returned from ioctl */
+			
+	memset (&ifc, 0, sizeof(ifc));
+
+	ifc.ifc_buf = NULL;
+	ifc.ifc_len =  sizeof(struct ifreq) * numreqs;
+	ifc.ifc_buf = malloc(ifc.ifc_len);
+
+	/* This code attempts to handle an arbitrary number of interfaces,
+	   it keeps trying the ioctl until it comes back OK and the size
+	   returned is less than the size we sent it.
+	 */
+	for (;;) {
+		ifc.ifc_len = sizeof(struct ifreq) * numreqs;
+		ifc.ifc_buf = realloc(ifc.ifc_buf, ifc.ifc_len);
+		
+		if ((return_val = ioctl(*p_Socket, SIOCGIFCONF, &ifc)) < 0) {
+			perror("SIOCGIFCONF");
+			break;
+		}
+		if (ifc.ifc_len == sizeof(struct ifreq) * numreqs) {
+			/* assume it overflowed and try again */
+			numreqs += 10;
+			continue;
+		}
+		break;
+	}
+	
+	if (return_val < 0) {
+		fprintf (stderr, "ioctl:");		
+		exit(1);
+	}
+
+
+	/* loop through interfaces returned from SIOCGIFCONF */
+	ifr=ifc.ifc_req;
+	for (n=0; n < ifc.ifc_len; n+=sizeof(struct ifreq)) {
+
+		printf ("ifr_name %s\n", ifr->ifr_name);
+
+		/* Get the flags for this interface*/
+		return_val = ioctl(*p_Socket,SIOCGIFFLAGS, ifr);
+		if (return_val == 0 ) {
+			printf ("ifr_flags %08X\n", ifr->ifr_flags);
+		} else {
+			perror ("Get flags failed");			
+		}
+
+		/* Get the Destination Address for this interface */
+		return_val = ioctl(*p_Socket,SIOCGIFDSTADDR, ifr);
+		if (return_val == 0 ) {
+			if (ifr->ifr_broadaddr.sa_family == AF_INET) {
+				struct sockaddr_in
+					*sin = (struct sockaddr_in *)
+					&ifr->ifr_dstaddr;
+				
+				printf ("ifr_dstaddr %s\n",
+					inet_ntoa(sin->sin_addr));
+
+			}
+			else
+			{
+				printf ("unsupported family for dest\n");
+			}
+		} else {
+			perror ("Get dest failed");
+		}
+
+		
+		/* Get the BROADCAST address */
+		return_val = ioctl(*p_Socket,SIOCGIFBRDADDR, ifr);
+		if (return_val == 0 ) {
+			if (ifr->ifr_broadaddr.sa_family == AF_INET) {
+				struct sockaddr_in
+					*sin = (struct sockaddr_in *)
+					&ifr->ifr_broadaddr;
+				
+				printf ("ifr_broadaddr %s\n",
+					inet_ntoa(sin->sin_addr));
+				
+				if(n == 0)
+				{
+					UDP_Info.sin_addr = sin->sin_addr;
+				}
+			}
+			else
+			{
+				printf ("unsupported family for broadcast\n");
+			}
+			
+		} else {
+			perror ("Get broadcast failed");
+		}
+
+		/* check the next entry returned */
+		ifr++;
+	}
+
+	/* we don't need this memory any more */
+	free (ifc.ifc_buf);
+}
+
+#endif
+
 int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Handlename)
 {
-	int broadcast = 1;
+	int broadcast = 1;	
 	
 	// Create socket
 	if((*p_Socket = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
@@ -11,6 +121,13 @@ int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 		printf("error: socket()");
 		return -1;
 	}
+		
+#ifdef IP_ONESBCAST
+	
+	// Get network info
+	udp_GetInfo(p_Socket);
+	
+#endif
 	
 	// Enable broadcast option 
 	if((setsockopt(*p_Socket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))) == -1)
@@ -65,7 +182,7 @@ int udp_BroadcastString(char* p_String)
 	
 	int onesbcast = 1;   /* 0 = disable (default), 1 = enable */
 	setsockopt(*UDP_LocalSocket, IPPROTO_IP, IP_ONESBCAST, &onesbcast, sizeof(onesbcast));
-	UDP_AddrTo.sin_addr.s_addr = inet_addr("192.168.0.255");
+	UDP_AddrTo.sin_addr = UDP_Info.sin_addr;
 	
 #else
 		
