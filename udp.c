@@ -45,36 +45,7 @@ void udp_GetInfo(int* p_Socket)
 	ifr=ifc.ifc_req;
 	for (n=0; n < ifc.ifc_len; n+=sizeof(struct ifreq)) {
 
-		printf ("ifr_name %s\n", ifr->ifr_name);
-
-		/* Get the flags for this interface*/
-		return_val = ioctl(*p_Socket,SIOCGIFFLAGS, ifr);
-		if (return_val == 0 ) {
-			printf ("ifr_flags %08X\n", ifr->ifr_flags);
-		} else {
-			perror ("Get flags failed");			
-		}
-
-		/* Get the Destination Address for this interface */
-		return_val = ioctl(*p_Socket,SIOCGIFDSTADDR, ifr);
-		if (return_val == 0 ) {
-			if (ifr->ifr_broadaddr.sa_family == AF_INET) {
-				struct sockaddr_in
-					*sin = (struct sockaddr_in *)
-					&ifr->ifr_dstaddr;
-				
-				printf ("ifr_dstaddr %s\n",
-					inet_ntoa(sin->sin_addr));
-
-			}
-			else
-			{
-				printf ("unsupported family for dest\n");
-			}
-		} else {
-			perror ("Get dest failed");
-		}
-
+		
 		
 		/* Get the BROADCAST address */
 		return_val = ioctl(*p_Socket,SIOCGIFBRDADDR, ifr);
@@ -84,22 +55,13 @@ void udp_GetInfo(int* p_Socket)
 					*sin = (struct sockaddr_in *)
 					&ifr->ifr_broadaddr;
 				
-				printf ("ifr_broadaddr %s\n",
-					inet_ntoa(sin->sin_addr));
-				
 				if(n == 0)
 				{
 					UDP_Info.sin_addr = sin->sin_addr;
 				}
-			}
-			else
-			{
-				printf ("unsupported family for broadcast\n");
-			}
+			}			
 			
-		} else {
-			perror ("Get broadcast failed");
-		}
+		} 
 
 		/* check the next entry returned */
 		ifr++;

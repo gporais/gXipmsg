@@ -14,12 +14,14 @@
 
 /* includes below are order dependent */
 #include <sys/param.h> /* htons() */
+#include <sys/ioctl.h>
 #include <sys/types.h> /* socket() */
 #include <sys/socket.h> /* socket() */
 #include <netinet/in.h> /* inet_addr() INADDR_ANY */
 #include <arpa/inet.h> /* inet_addr() */
 #include <netdb.h> /* gethostbyname() */
 #include <pwd.h>
+#include <net/if.h>
 
 #include <Xm/PushBG.h>
 #include <Xm/LabelG.h>
