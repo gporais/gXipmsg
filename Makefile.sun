@@ -2,7 +2,8 @@ DEBUG = -g
 INCDIR =
 LIBDIR =
 FLAGS = -lXm -lXt -lSM -lICE -lX11 -lsocket -lnsl
-DESTDIR = /usr/bin/
+BINDIR = /usr/bin/
+XPMDIR = /etc/gXipmsg/
 
 gXipmsg : main.o udp.o pack.o appIcon.o sendDialog.o recvDialog.o
 	cc $(INCDIR) $(DEBUG) -o gXipmsg main.o udp.o pack.o appIcon.o sendDialog.o recvDialog.o $(LIBDIR) $(FLAGS)
@@ -29,9 +30,12 @@ clean :
 	rm -f gXipmsg *.s *.o *.exe *.stackdump
 
 install :
-	cp gXipmsg ipmsg.xpm $(DESTDIR)
-	
+	cp gXipmsg $(BINDIR)
+	mkdir $(XPMDIR)
+	cp ipmsg.xpm $(XPMDIR)
+
 uninstall :
-	rm $(DESTDIR)gXipmsg
-	rm $(DESTDIR)ipmsg.xpm
+	rm $(BINDIR)gXipmsg
+	rm $(XPMDIR)ipmsg.xpm
+	rm -r $(XPMDIR)
 

@@ -21,7 +21,12 @@ void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* arg
 	
 	XtVaGetValues (APPICON_Form, XmNforeground, &fg, XmNbackground, &bg, NULL);
 	
-	pixmap = XmGetPixmap (XtScreen (APPICON_Form), "./ipmsg.xpm", fg, bg);
+	pixmap =XmGetPixmap (XtScreen (APPICON_Form), "ipmsg.xpm", fg, bg);
+	
+	if(pixmap == XmUNSPECIFIED_PIXMAP)
+	{
+		pixmap = XmGetPixmap (XtScreen (APPICON_Form), "/etc/gXipmsg/ipmsg.xpm", fg, bg);
+	}
 		
 	// Create icon button
 	n = 0;
