@@ -91,10 +91,17 @@ int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 	
 #endif
 	
+	// Set non block option 
+	if((ioctl(*p_Socket, FIONBIO, &broadcast)) == -1)
+	{
+		printf("error: ioctl(udp, FIONBIO)");
+		return -1;
+	}
+	
 	// Enable broadcast option 
 	if((setsockopt(*p_Socket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))) == -1)
 	{
-		printf("error: setsockopt()");
+		printf("error: setsockopt(udp, SO_BROADCAST)");
 		return -1;
 	}
 	
@@ -106,7 +113,7 @@ int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 	// Bind socket 
 	if((bind(*p_Socket, (struct sockaddr*)&UDP_AddrFrom, sizeof(UDP_AddrFrom))) == -1)
 	{
-		printf("error: bind()");
+		printf("error: bind(udp)");
 		return -1;
 	}
 	
