@@ -80,7 +80,7 @@ int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 	// Create socket
 	if((*p_Socket = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
 	{
-		printf("error: socket()");
+		printf("error: socket(SOCK_DGRAM)");
 		return -1;
 	}
 		
@@ -90,21 +90,7 @@ int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 	udp_GetInfo(p_Socket);
 	
 #endif
-	
-	// Set non block option 
-	if((ioctl(*p_Socket, FIONBIO, &broadcast)) == -1)
-	{
-		printf("error: ioctl(udp, FIONBIO)");
-		return -1;
-	}
-	
-	// Enable broadcast option 
-	if((setsockopt(*p_Socket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))) == -1)
-	{
-		printf("error: setsockopt(udp, SO_BROADCAST)");
-		return -1;
-	}
-	
+		
 	// Create socket address from
 	UDP_AddrFrom.sin_family = UDP_DEFAULT_FAMILY;
 	UDP_AddrFrom.sin_port = htons(UDP_DEFAULT_PORT);
@@ -114,6 +100,13 @@ int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 	if((bind(*p_Socket, (struct sockaddr*)&UDP_AddrFrom, sizeof(UDP_AddrFrom))) == -1)
 	{
 		printf("error: bind(udp)");
+		return -1;
+	}
+	
+	// Enable broadcast option 
+	if((setsockopt(*p_Socket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))) == -1)
+	{
+		printf("error: setsockopt(udp, SO_BROADCAST)");
 		return -1;
 	}
 	
@@ -257,6 +250,7 @@ void udp_CloseSocket(void)
 {
 	// Close socket
 	close(*UDP_LocalSocket);
+	*UDP_LocalSocket = -1;
 }
 
 // A sample of the select() return value

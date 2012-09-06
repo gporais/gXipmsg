@@ -1,6 +1,6 @@
 // created by: geo (March 2012)
-#ifndef UPD_H_
-#define UPD_H_
+#ifndef UDP_H_
+#define UDP_H_
 
 #include "main.h"
 
@@ -37,4 +37,4 @@ void udp_BroadcastExit(void);
 
 int recvfromTimeOutUDP(int socket, long sec, long usec);
 
-#endif /*UPD_H_*/
+#endif /*UDP_H_*/
