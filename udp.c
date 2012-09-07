@@ -200,7 +200,7 @@ void udp_InquirePackets(void)
 	
 	while(recvfromTimeOutUDP(*UDP_LocalSocket, 0, 0) > 0)
 	{	
-		//Clear buffer
+		// Clear buffer
 		memset(UDP_Buffer,'\0',PACKET_MAXLEN);
 		
 		// Ok the data is ready, call recvfrom() to get it then
@@ -208,8 +208,9 @@ void udp_InquirePackets(void)
 	    
 	    pack_UnpackBroadcast(UDP_Buffer, &UDP_DataFrom);
 	    strcpy(UDP_DataFrom.IP_Address, inet_ntoa(UDP_AddrFrom.sin_addr));
-
-	    switch(UDP_DataFrom.IP_Flags & 0x000000FFUL)
+	    
+	    // Decode command
+	    switch(GET_MODE(UDP_DataFrom.IP_Flags))
 		{
 			case IPMSG_NOOPERATION:
 				break;			
@@ -241,8 +242,9 @@ void udp_InquirePackets(void)
 				break;
 				
 			default:
-				printf("unknown: %s\n", UDP_Buffer);
-		}
+				printf("unknown command: %s\n", UDP_Buffer);
+		}	  	    				
+	    
 	}	
 }
 

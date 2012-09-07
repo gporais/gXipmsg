@@ -130,7 +130,11 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNleftOffset, 5); n++; 
 	XtSetArg (args[n], XmNrightOffset, 5); n++; 
 	RECVDIALOG_BtnG_Attach = XmCreatePushButtonGadget (RECVDIALOG_Form_Lower, "Download", args, n);
-//	XtManageChild (RECVDIALOG_BtnG_Attach);
+	
+	if((GET_OPT(p_Item->IP_Flags) & IPMSG_FILEATTACHOPT)  == IPMSG_FILEATTACHOPT)
+	{
+		XtManageChild (RECVDIALOG_BtnG_Attach);
+	}
 	
 	// Create reply button
 	n = 0;
