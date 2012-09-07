@@ -11,13 +11,13 @@
 #define	TCP_BROADCAST_IPADDR	INADDR_BROADCAST
 
 // Variable declerations
-struct sockaddr_in TCP_AddrFrom;
+struct sockaddr_in TCP_AddrServ;
 
 int* TCP_LocalSocket;
 
 
 // Function declerations
 int tcp_InitSocket(int* p_Socket);
-void tcp_CloseSocket(int* p_Socket);
+void tcp_CloseSocket(void);
 
 #endif /*TCP_H_*/

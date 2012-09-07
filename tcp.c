@@ -14,14 +14,14 @@ int tcp_InitSocket(int* p_Socket)
 	}
 		
 	// Create socket address from
-	TCP_AddrFrom.sin_family = TCP_DEFAULT_FAMILY;
-	TCP_AddrFrom.sin_port = htons(TCP_DEFAULT_PORT);
-	TCP_AddrFrom.sin_addr.s_addr = TCP_DEFAULT_IPADDR;
+	TCP_AddrServ.sin_family = TCP_DEFAULT_FAMILY;
+	TCP_AddrServ.sin_port = htons(TCP_DEFAULT_PORT);
+	TCP_AddrServ.sin_addr.s_addr = TCP_DEFAULT_IPADDR;
 	
 	// Bind socket 
-	if((bind(*p_Socket, (struct sockaddr*)&TCP_AddrFrom, sizeof(TCP_AddrFrom))) == -1)
+	if((bind(*p_Socket, (struct sockaddr*)&TCP_AddrServ, sizeof(TCP_AddrServ))) == -1)
 	{
-		tcp_CloseSocket(p_Socket);
+		tcp_CloseSocket();
 		printf("error: bind(tcp)");
 		return -1;
 	}
@@ -35,15 +35,17 @@ int tcp_InitSocket(int* p_Socket)
 
 	if ((*p_Socket != -1) && listen(*p_Socket, 100) != 0)
 		return	-1;
+	
+	TCP_LocalSocket = p_Socket;
 				
 	return 0;
 }
 
 
-void tcp_CloseSocket(int* p_Socket)
+void tcp_CloseSocket(void)
 {
 	// Close socket
-	close(*p_Socket);
-	*p_Socket = -1;
+	close(*TCP_LocalSocket);
+	*TCP_LocalSocket = -1;
 }
 

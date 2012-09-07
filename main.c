@@ -71,7 +71,7 @@ void gxipmg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_
 {		
 	udp_BroadcastExit();
 	udp_CloseSocket();	
-	tcp_CloseSocket(&GXIM_TCP_Socket);
+	tcp_CloseSocket();
 	exit(1);
 }
 
