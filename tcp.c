@@ -2,7 +2,7 @@
 #include "tcp.h"
 
 
-int tcp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Handlename)
+int tcp_InitSocket(int* p_Socket)
 {
 	int reuse = 1;	
 	
@@ -21,7 +21,7 @@ int tcp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 	// Bind socket 
 	if((bind(*p_Socket, (struct sockaddr*)&TCP_AddrFrom, sizeof(TCP_AddrFrom))) == -1)
 	{
-		tcp_CloseSocket();
+		tcp_CloseSocket(p_Socket);
 		printf("error: bind(tcp)");
 		return -1;
 	}
@@ -35,25 +35,15 @@ int tcp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 
 	if ((*p_Socket != -1) && listen(*p_Socket, 100) != 0)
 		return	-1;
-
-	
-	// Create socket address to
-	TCP_AddrTo.sin_family = TCP_DEFAULT_FAMILY;
-	TCP_AddrTo.sin_port = htons(TCP_DEFAULT_PORT);		
-		
-	TCP_LocalSocket = p_Socket;
-	TCP_LocalUsername = p_Username;
-	TCP_LocalHostname = p_Hostname;	
-	TCP_LocalHandlename = p_Handlename;
 				
 	return 0;
 }
 
 
-void tcp_CloseSocket(void)
+void tcp_CloseSocket(int* p_Socket)
 {
 	// Close socket
-	close(*TCP_LocalSocket);
-	*TCP_LocalSocket = -1;
+	close(*p_Socket);
+	*p_Socket = -1;
 }
 

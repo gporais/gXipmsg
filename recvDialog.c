@@ -21,7 +21,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	Widget RECVDIALOG_LblG_FrameTitle;
 	Widget RECVDIALOG_LblG_FrameChild;	
 	Widget RECVDIALOG_Text_Message;
-	Widget RECVDIALOG_BtnG_Attach;
+	Widget RECVDIALOG_BtnG_Download;
 	Widget RECVDIALOG_BtnG_Reply;
 	Widget RECVDIALOG_BtnG_Close;	
 	Widget RECVDIALOG_TglG_Quote;
@@ -121,7 +121,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
 	RECVDIALOG_Form_Lower = XmCreateForm (RECVDIALOG_MainForm, "recv_form_lwr", args, n);
 	
-	// Create attach button
+	// Create download button
 	n = 0;
 	XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM); n++;  
 	XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM); n++; 
@@ -129,11 +129,12 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNtopOffset, 7); n++; 
 	XtSetArg (args[n], XmNleftOffset, 5); n++; 
 	XtSetArg (args[n], XmNrightOffset, 5); n++; 
-	RECVDIALOG_BtnG_Attach = XmCreatePushButtonGadget (RECVDIALOG_Form_Lower, "Download", args, n);
+	RECVDIALOG_BtnG_Download = XmCreatePushButtonGadget (RECVDIALOG_Form_Lower, "Download", args, n);
+	XtAddCallback (RECVDIALOG_BtnG_Download, XmNactivateCallback, recvDialog_DownloadCallBack, NULL);
 	
 	if((GET_OPT(p_Item->IP_Flags) & IPMSG_FILEATTACHOPT)  == IPMSG_FILEATTACHOPT)
 	{
-		XtManageChild (RECVDIALOG_BtnG_Attach);
+		XtManageChild (RECVDIALOG_BtnG_Download);
 	}
 	
 	// Create reply button
@@ -174,7 +175,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM); n++; 												
 	XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM); n++;	
 	XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET); n++; 
-	XtSetArg (args[n], XmNtopWidget, RECVDIALOG_BtnG_Attach); n++;
+	XtSetArg (args[n], XmNtopWidget, RECVDIALOG_BtnG_Download); n++;
 	XtSetArg (args[n], XmNbottomAttachment, XmATTACH_WIDGET); n++;	
 	XtSetArg (args[n], XmNbottomWidget, RECVDIALOG_BtnG_Reply); n++;
 	XtSetArg (args[n], XmNleftOffset, 5); n++;
@@ -240,6 +241,12 @@ void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 	RECVDIALOG_Dialog = XtParent(RECVDIALOG_Dialog);
 		
 	XtDestroyWidget(RECVDIALOG_Dialog);
+}
+
+
+void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	printf("download..");
 }
 
 
