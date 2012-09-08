@@ -29,7 +29,7 @@ int tcp_InitSocket(int* p_Socket)
 	// Set reuse address option 
 	if ((*p_Socket != -1) && setsockopt(*p_Socket, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) != 0)
 	{
-		printf("setsockopt tcp(reuseaddr)");
+		printf("error: setsockopt(tcp, reuseaddr)");
 		return -1;
 	}
 
@@ -48,4 +48,33 @@ void tcp_CloseSocket(void)
 	close(*TCP_LocalSocket);
 	*TCP_LocalSocket = -1;
 }
+
+
+int tcp_ClientInit(int* p_Socket)
+{
+	int recv_tcpClient;
+	struct sockaddr_in TCP_AddrClient;
+	socklen_t TCP_ClientLen = sizeof(TCP_AddrClient);
+	
+	
+	TCP_ClientLen = sizeof(TCP_AddrClient);
+	printf("accept().. ");
+	if((recv_tcpClient = accept(*TCP_LocalSocket, (struct sockaddr *) &TCP_AddrClient, &TCP_ClientLen)) == -1)
+	{
+		printf("error: accept()");
+		return -1;
+	}
+	
+	printf("close()");
+	close(recv_tcpClient);
+}
+
+
+void tcp_ClientClose(int* p_Socket)
+{
+	// Close socket
+	close(*p_Socket);
+	*p_Socket = -1;
+}
+
 

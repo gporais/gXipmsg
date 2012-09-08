@@ -246,7 +246,12 @@ void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 
 void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	printf("download..");
+//	int recv_tcpClient;
+	printf("init..  ");	
+	tcp_ClientInit(NULL);
+	
+//	printf("close\n");
+//	tcp_ClientClose(&recv_tcpClient);
 }
 
 

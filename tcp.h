@@ -20,4 +20,7 @@ int* TCP_LocalSocket;
 int tcp_InitSocket(int* p_Socket);
 void tcp_CloseSocket(void);
 
+int tcp_ClientInit(int* p_Socket);
+void tcp_ClientClose(int* p_Socket);
+
 #endif /*TCP_H_*/
