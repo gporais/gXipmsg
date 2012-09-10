@@ -9,7 +9,6 @@
 
 // Variable declerations
 int GXIM_UDP_Socket;
-int GXIM_TCP_Socket;
 
 char GXIM_Local_Hostname[HOSTNAME_MAXLEN];
 char GXIM_Local_Username[USERNAME_MAXLEN];

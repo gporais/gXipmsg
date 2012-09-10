@@ -71,8 +71,10 @@ struct SendClientData{
 
 struct RecvClientData{
 	int dPos;
+	int dSocket;
 	Widget dText;	
 	Widget dCheck;	
+	struct Broadcast_Packet dServerInfo;
 };
 	
 extern Position posX, posY;

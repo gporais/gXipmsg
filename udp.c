@@ -252,9 +252,12 @@ void udp_InquirePackets(void)
 
 void udp_CloseSocket(void)
 {
-	// Close socket
-	close(*UDP_LocalSocket);
-	*UDP_LocalSocket = -1;
+	if(*UDP_LocalSocket != -1)
+	{
+		// Close socket
+		close(*UDP_LocalSocket);
+		*UDP_LocalSocket = -1;
+	}
 }
 
 // A sample of the select() return value

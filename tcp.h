@@ -13,14 +13,9 @@
 // Variable declerations
 struct sockaddr_in TCP_AddrServ;
 
-int* TCP_LocalSocket;
-
 
 // Function declerations
-int tcp_InitSocket(int* p_Socket);
-void tcp_CloseSocket(void);
-
-int tcp_ClientInit(int* p_Socket);
-void tcp_ClientClose(int* p_Socket);
+int tcp_InitClient(struct RecvClientData* data);
+void tcp_CloseClient(struct RecvClientData* data);
 
 #endif /*TCP_H_*/

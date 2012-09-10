@@ -47,12 +47,6 @@ static int gXipmsg_main (int argc, char* argv[])
 		exit(1);
 	}
 	
-	// Initialize a socket for TCP
-	if((tcp_InitSocket(&GXIM_TCP_Socket)) == -1)
-	{
-		exit(1);
-	}
-
 	appIcon_Init(&GXIM_App, &GXIM_TopLevel, argc, argv);
 	appIcon_SetupClose(&GXIM_TopLevel, gxipmg_AtExit);
 	appIcon_SetupTimeout(&GXIM_App, gxipmg_CheckData);
@@ -71,7 +65,6 @@ void gxipmg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_
 {		
 	udp_BroadcastExit();
 	udp_CloseSocket();	
-	tcp_CloseSocket();
 	exit(1);
 }
 

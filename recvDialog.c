@@ -29,6 +29,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	char str_Buff[150];	
 	XmString xstr_Buff;
 	
+	int mClientSocket = -1;
 	int mCount;
 	int mIdx = 0;
 	XmStringTable xstr_list;
@@ -130,7 +131,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNleftOffset, 5); n++; 
 	XtSetArg (args[n], XmNrightOffset, 5); n++; 
 	RECVDIALOG_BtnG_Download = XmCreatePushButtonGadget (RECVDIALOG_Form_Lower, "Download", args, n);
-	XtAddCallback (RECVDIALOG_BtnG_Download, XmNactivateCallback, recvDialog_DownloadCallBack, NULL);
+	XtAddCallback (RECVDIALOG_BtnG_Download, XmNactivateCallback, recvDialog_DownloadCallBack, (XtPointer)data);
 	
 	if((GET_OPT(p_Item->IP_Flags) & IPMSG_FILEATTACHOPT)  == IPMSG_FILEATTACHOPT)
 	{
@@ -212,6 +213,8 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	data->dPos = mIdx;
 	data->dText = RECVDIALOG_Text_Message;
 	data->dCheck = RECVDIALOG_TglG_Quote;
+	data->dSocket = mClientSocket;
+	data->dServerInfo = *p_Item;
 	
 	XmStringFree (xstr_Buff);
 }
@@ -246,12 +249,13 @@ void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 
 void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-//	int recv_tcpClient;
-	printf("init..  ");	
-	tcp_ClientInit(NULL);
+	struct RecvClientData* data = (struct RecvClientData*) client_data;
 	
-//	printf("close\n");
-//	tcp_ClientClose(&recv_tcpClient);
+	printf("init..  ");	
+	tcp_InitClient(data);
+	
+	printf("close\n");
+	tcp_CloseClient(data);
 }
 
 
