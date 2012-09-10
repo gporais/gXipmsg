@@ -21,5 +21,7 @@ void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPac
 	int n = 0;
 	sscanf(p_Packet, "%[^':']:%lu:%[^':']:%[^':']:%lu:%n", p_RestoredPacket->IP_Ver, &p_RestoredPacket->UNIX_Time, p_RestoredPacket->Username, p_RestoredPacket->Hostname, &p_RestoredPacket->IP_Flags, &n);
 	strcpy(p_RestoredPacket->Handlename, (p_Packet+n));	
+	n += strlen(p_RestoredPacket->Handlename)+1;
+	strcpy(p_RestoredPacket->Extended, (p_Packet+n));
 }
 
