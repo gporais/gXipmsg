@@ -250,15 +250,18 @@ void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
 	struct RecvClientData* data = (struct RecvClientData*) client_data;
-	struct FileInfo_Packet RestoredPacket;
+	struct FileInfo_Packet RecvdFileInfos;
 	
-	printf("init..  ");	
+	printf("init.. \n");	
 	tcp_InitClient(data);
 	
+	pack_UnpackExtended(data, &RecvdFileInfos);
+	printf("\nunpacked: %s:%s:%s:%s:%s\n", RecvdFileInfos.FileID, RecvdFileInfos.FileName, RecvdFileInfos.FileSize, RecvdFileInfos.FileTime, RecvdFileInfos.FileAttrib);
 	
-	
-	printf("close\n");
+	printf("close %s\n", data->dServerInfo.Extended);
 	tcp_CloseClient(data);
+	
+	
 }
 
 

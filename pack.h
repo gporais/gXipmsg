@@ -17,6 +17,5 @@ unsigned long PACK_Flags;
 char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostname, char* p_handlename);
 void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPacket);
 
-void pack_UnpackExtended(char* p_Packet, struct FileInfo_Packet* p_RestoredPacket);
-
+void pack_UnpackExtended(struct RecvClientData* p_Data, struct FileInfo_Packet* p_FileInfo);
 #endif /*PACK_H_*/
