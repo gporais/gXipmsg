@@ -250,9 +250,12 @@ void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
 	struct RecvClientData* data = (struct RecvClientData*) client_data;
+	struct FileInfo_Packet RestoredPacket;
 	
 	printf("init..  ");	
 	tcp_InitClient(data);
+	
+	
 	
 	printf("close\n");
 	tcp_CloseClient(data);

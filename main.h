@@ -52,6 +52,14 @@
 
 #define	PACKET_MAXLEN			IPVER_MAXLEN+UNIXTIME_MAXLEN+IPFLAGS_MAXLEN+IPADDRESS_MAXLEN+USERNAME_MAXLEN+HOSTNAME_MAXLEN+MESSAGE_MAXLEN+EXTENDED_MAXLEN
 
+struct FileInfo_Packet {
+	char* FileID;
+	char* FileName;
+	char* FileSize;
+	char* FileTime;
+	char* FileAttrib;
+};
+
 struct Broadcast_Packet {
 	unsigned long UNIX_Time;
 	unsigned long IP_Flags;
