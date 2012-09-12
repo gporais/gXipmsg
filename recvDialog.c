@@ -251,17 +251,19 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 {
 	struct RecvClientData* data = (struct RecvClientData*) client_data;
 	struct FileInfo_Packet RecvdFileInfos;
-	
-	printf("init.. \n");	
+
+	// Init tcp client	
 	tcp_InitClient(data);
 	
+	// Unpack extended data which contains file infos
 	pack_UnpackExtended(data, &RecvdFileInfos);
 	printf("\nunpacked: %s:%s:%s:%s:%s\n", RecvdFileInfos.FileID, RecvdFileInfos.FileName, RecvdFileInfos.FileSize, RecvdFileInfos.FileTime, RecvdFileInfos.FileAttrib);
 	
-	printf("close %s\n", data->dServerInfo.Extended);
+	// Close tcp client
 	tcp_CloseClient(data);
 	
-	
+	// Hide download button
+	XtUnmanageChild (widget);
 }
 
 

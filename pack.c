@@ -28,28 +28,22 @@ void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPac
 
 void pack_UnpackExtended(struct RecvClientData* p_Data, struct FileInfo_Packet* p_FileInfo)
 {
-	char line[strlen(p_Data->dServerInfo.Extended)]; 
-	char *search = ":";
+	char* search = ":";
 
-	strcpy(line, p_Data->dServerInfo.Extended);	
-
-	// Token will point to "SEVERAL".
+	// Token will point to Get FileID
 	p_FileInfo->FileID = strtok(p_Data->dServerInfo.Extended, search);
 	
-	// Token will point to "SEVERAL".
+	// Token will point to Get FileName
 	p_FileInfo->FileName = strtok(NULL, search);
 	
-	// Token will point to "SEVERAL".
+	// Token will point to Get FileSize
 	p_FileInfo->FileSize = strtok(NULL, search);
 	
-	// Token will point to "SEVERAL".
+	// Token will point to Get FileTime
 	p_FileInfo->FileTime = strtok(NULL, search);
 
 
-	// Token will point to "WORDS".
+	// Token will point to Get FileAttrib
 	p_FileInfo->FileAttrib = strtok(NULL, search);
-	
-//	strcpy(p_Data->dServerInfo.Extended, line);	
-	printf("\nline: %s\n",line);
 }
 

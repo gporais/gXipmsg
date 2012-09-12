@@ -229,8 +229,6 @@ void udp_InquirePackets(void)
 				break;
 				
 			case IPMSG_SENDMSG:
-				//printf("IPMSG_SENDMSG: %s\n", UDP_Buffer);
-				printf("IPMSG_SENDMSG: %s\n", UDP_DataFrom.Extended);
 				// Pop message
 				appIcon_RecieveDialog(&UDP_DataFrom);
 								
