@@ -7,6 +7,10 @@ Arg args[20];
 char bgcolor[10];
 char fgcolor[10];
 
+char GXIM_Local_Hostname[HOSTNAME_MAXLEN];
+char GXIM_Local_Username[USERNAME_MAXLEN];
+char GXIM_Local_Handlename[HANDLENAME_MAXLEN];
+
 
 static int gXipmsg_main (int argc, char* argv[])
 {	

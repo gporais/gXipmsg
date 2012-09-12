@@ -251,13 +251,58 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 {
 	struct RecvClientData* data = (struct RecvClientData*) client_data;
 	struct FileInfo_Packet RecvdFileInfos;
+	
+	unsigned long FileID = 0;
+	unsigned long FileAttrib = 0;
+	unsigned long FileSize = 0;
+	
+	char buffer[50];
+	char strExtended[50];
+	char* strRequestPacket;
+	
+	int n=0;
 
 	// Init tcp client	
 	tcp_InitClient(data);
 	
 	// Unpack extended data which contains file infos
 	pack_UnpackExtended(data, &RecvdFileInfos);
-	printf("\nunpacked: %s:%s:%s:%s:%s\n", RecvdFileInfos.FileID, RecvdFileInfos.FileName, RecvdFileInfos.FileSize, RecvdFileInfos.FileTime, RecvdFileInfos.FileAttrib);
+	
+	// Prepare File infos
+	sscanf(RecvdFileInfos.FileID, "%i", &FileID);
+	sscanf(RecvdFileInfos.FileSize, "%i", &FileSize);
+	
+	// Check if file or directory
+	sscanf(RecvdFileInfos.FileAttrib, "%x", &FileAttrib);
+	
+	if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
+	{
+		sprintf(strExtended, "%x:%x:0", data->dServerInfo.UNIX_Time, FileID);
+		strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
+	}
+	else if((GET_MODE(FileAttrib) & IPMSG_FILE_DIR)  == IPMSG_FILE_DIR)
+	{
+		sprintf(strExtended, "%x:%x", data->dServerInfo.UNIX_Time, FileID);
+		strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETDIRFILES, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
+	}
+	else
+	{
+		printf("error: unknown attachment\n");
+	}
+	
+	
+//	printf("%s\n",strRequestPacket);
+	n = write(data->dSocket,strRequestPacket,strlen(strRequestPacket));
+	if(n!= strlen(strRequestPacket))
+		printf("error: sent bytes %i not equal\n",n);
+	
+	printf("sent %i bytes\n",n);
+	
+	n = read(data->dSocket,buffer,FileSize);
+	if(n!= FileSize)
+			printf("error: read bytes %i not equal\n",n);
+	
+	printf("read %i bytes: %s\n",n,buffer);
 	
 	// Close tcp client
 	tcp_CloseClient(data);

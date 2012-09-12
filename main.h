@@ -91,6 +91,10 @@ extern Arg args[20];
 extern char bgcolor[10];
 extern char fgcolor[10];
 
+extern char GXIM_Local_Hostname[HOSTNAME_MAXLEN];
+extern char GXIM_Local_Username[USERNAME_MAXLEN];
+extern char GXIM_Local_Handlename[HANDLENAME_MAXLEN];
+
 extern void gXipmsg_MapDialog(Widget dialog, XtPointer client_data, XtPointer call_data);
 
 
