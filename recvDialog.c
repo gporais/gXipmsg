@@ -259,7 +259,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	char strExtended[50];
 	char* strRequestPacket;
 	char* buffer;	
-	int n, m;
+	int n, m;	
 	
 	FILE *fpWrite;
 		
@@ -284,10 +284,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		
 		// Check if file or directory
 		sscanf(RecvdFileInfos.FileAttrib, "%x", &FileAttrib);
-		
-		printf("strings: %s %s %s\n",RecvdFileInfos.FileID, RecvdFileInfos.FileSize, RecvdFileInfos.FileAttrib);
-		printf("ints: %i %i %i\n",FileID, FileSize, FileAttrib);
-		
+				
 		if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
 		{
 			sprintf(strExtended, "%x:%x:0", data->dServerInfo.UNIX_Time, FileID);
@@ -309,25 +306,28 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		n = tcp_Write(data,strRequestPacket,strlen(strRequestPacket));
 		if(n!= strlen(strRequestPacket))
 			printf("error: sent bytes %i not equal\n",n);
+		
+//		XtVaSetValues(widget, XtVaTypedArg, XmNlabelString, str, NULL);	
 						
 		n = 0;
 		do
 		{
 			m = tcp_Read(data,&buffer[n],FileSize);
 			n += m;			
-			printf("DL... Expected byte: %i Read byte: %i\n",FileSize,n);
+//			printf("DL... Expected byte: %i Read byte: %i\n",FileSize,n);
 			if(n == FileSize)
 				break;		
 		}
 		while(m != 0);
 		
-		printf("Done! Expected byte: %i Read byte: %i\n",FileSize,n);
-
-		// Write to file
-		fwrite(buffer, sizeof(buffer[0]), FileSize,fpWrite);
-		
-		// Close file
-		fclose(fpWrite);
+		if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
+		{
+			// Write to file
+			fwrite(buffer, sizeof(buffer[0]), FileSize,fpWrite);
+			
+			// Close file
+			fclose(fpWrite);
+		}
 				
 		// Close tcp client
 		tcp_CloseClient(data);	
