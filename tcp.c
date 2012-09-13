@@ -54,3 +54,15 @@ void tcp_CloseClient(struct RecvClientData* data)
 }
 
 
+int tcp_Write(struct RecvClientData* ptrData, char* ptrBuff, int mSize)
+{
+	return write(ptrData->dSocket, ptrBuff, mSize);
+}
+
+
+int tcp_Read(struct RecvClientData* ptrData, char* ptrBuff, int mSize)
+{
+	return read(ptrData->dSocket, ptrBuff, mSize);
+}
+
+

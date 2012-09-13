@@ -18,4 +18,7 @@ struct sockaddr_in TCP_AddrServ;
 int tcp_InitClient(struct RecvClientData* data);
 void tcp_CloseClient(struct RecvClientData* data);
 
+int tcp_Write(struct RecvClientData* ptrData, char* ptrBuff, int mSize);
+int tcp_Read(struct RecvClientData* ptrData, char* ptrBuff, int mSize);
+
 #endif /*TCP_H_*/
