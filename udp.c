@@ -73,7 +73,7 @@ void udp_GetInfo(int* p_Socket)
 
 #endif
 
-int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Handlename)
+int udp_InitSocket(int* p_Socket)
 {
 	int broadcast = 1;	
 	
@@ -115,9 +115,6 @@ int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 	UDP_AddrTo.sin_port = htons(UDP_DEFAULT_PORT);		
 		
 	UDP_LocalSocket = p_Socket;
-	UDP_LocalUsername = p_Username;
-	UDP_LocalHostname = p_Hostname;	
-	UDP_LocalHandlename = p_Handlename;
 	
 	udp_BroadcastEntry();
 		
@@ -126,16 +123,16 @@ int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Ha
 
 void udp_BroadcastEntry(void)
 {
-	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
-	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_ENTRY, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_ENTRY, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
 }
 
 void udp_BroadcastExit(void)
 {
-	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
-	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_EXIT, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
-	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
-	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_EXIT, UDP_LocalUsername, UDP_LocalHostname, UDP_LocalHandlename));
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_EXIT, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_EXIT, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
 }
 
 int udp_BroadcastString(char* p_String)
@@ -165,7 +162,7 @@ int udp_BroadcastString(char* p_String)
 
 int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags)
 {
-	char* p_Buffer = (char*)pack_PackBroadcast(m_Flags, UDP_LocalUsername, UDP_LocalHostname, p_String);
+	char* p_Buffer = (char*)pack_PackBroadcast(m_Flags, GXIM_Local_Username, GXIM_Local_Hostname, p_String);
 	
 #ifdef IP_ONESBCAST
 	
@@ -216,7 +213,7 @@ void udp_InquirePackets(void)
 				break;			
 				
 			case IPMSG_BR_ENTRY:
-				udp_SendToString(UDP_DataFrom.IP_Address, UDP_LocalHandlename, IPMSG_ANSENTRY);
+				udp_SendToString(UDP_DataFrom.IP_Address, GXIM_Local_Handlename, IPMSG_ANSENTRY);
 				appIcon_AddRemoveList(&UDP_DataFrom, 1);
 				break;
 				

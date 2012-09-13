@@ -16,9 +16,6 @@ struct sockaddr_in UDP_AddrTo;
 struct Broadcast_Packet UDP_DataFrom;
 
 int* UDP_LocalSocket;
-char* UDP_LocalHostname;
-char* UDP_LocalUsername;
-char* UDP_LocalHandlename;
 
 #ifdef IP_ONESBCAST
 struct sockaddr_in UDP_Info;
@@ -26,7 +23,7 @@ void udp_GetInfo(int* p_Socket);
 #endif
 
 // Function declerations
-int udp_InitSocket(int* p_Socket, char* p_Username, char* p_Hostname, char* p_Handlename);
+int udp_InitSocket(int* p_Socket);
 int udp_BroadcastString(char* p_String);
 int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags);
 void udp_InquirePackets(void);

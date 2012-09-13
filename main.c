@@ -46,7 +46,7 @@ static int gXipmsg_main (int argc, char* argv[])
 	}
 	
 	// Initialize a socket for UDP
-	if((udp_InitSocket(&GXIM_UDP_Socket, &GXIM_Local_Username, &GXIM_Local_Hostname, &GXIM_Local_Handlename)) == -1)
+	if((udp_InitSocket(&GXIM_UDP_Socket)) == -1)
 	{
 		exit(1);
 	}
