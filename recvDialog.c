@@ -256,11 +256,12 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	unsigned long FileAttrib = 0;
 	unsigned long FileSize = 0;
 	
-	char buffer[50];
+	
 	char strExtended[50];
 	char* strRequestPacket;
+	char* buffer;
 	
-	int n=0;
+	int n=0,m=0;
 
 	// Init tcp client	
 	tcp_InitClient(data);
@@ -270,7 +271,9 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	
 	// Prepare File infos
 	sscanf(RecvdFileInfos.FileID, "%i", &FileID);
-	sscanf(RecvdFileInfos.FileSize, "%i", &FileSize);
+	sscanf(RecvdFileInfos.FileSize, "%x", &FileSize);
+	buffer = malloc(FileSize + 1);
+	bzero(buffer, FileSize + 1);
 	
 	// Check if file or directory
 	sscanf(RecvdFileInfos.FileAttrib, "%x", &FileAttrib);
@@ -291,24 +294,32 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	}
 	
 	
-//	printf("%s\n",strRequestPacket);
 	n = write(data->dSocket,strRequestPacket,strlen(strRequestPacket));
 	if(n!= strlen(strRequestPacket))
 		printf("error: sent bytes %i not equal\n",n);
 	
 	printf("sent %i bytes\n",n);
 	
-	n = read(data->dSocket,buffer,FileSize);
-	if(n!= FileSize)
-			printf("error: read bytes %i not equal\n",n);
+	n = 0;
+	do
+	{
+		m = read(data->dSocket,&buffer[n],FileSize);
+		n += m;
+		if(n == FileSize)
+			break;
+		
+		
+	}
+	while(m != 0);
 	
-	printf("read %i bytes: %s\n",n,buffer);
+	printf("read %i %i bytes: %s\n",n,FileSize,buffer);
 	
 	// Close tcp client
 	tcp_CloseClient(data);
 	
 	// Hide download button
 	XtUnmanageChild (widget);
+	free(buffer);
 }
 
 
