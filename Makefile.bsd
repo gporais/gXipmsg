@@ -8,7 +8,7 @@ XPMDIR = /etc/gXipmsg/
 gXipmsg : main.o udp.o tcp.o pack.o appIcon.o sendDialog.o recvDialog.o
 	cc $(INCDIR) $(DEBUG) -o gXipmsg main.o udp.o tcp.o pack.o appIcon.o sendDialog.o recvDialog.o $(LIBDIR) $(FLAGS)
 
-main.o : main.c main.h gXipmsg.h
+main.o : main.c main.h
 	cc $(INCDIR) $(DEBUG) -c main.c
 
 udp.o : udp.c udp.h 

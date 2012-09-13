@@ -1,5 +1,5 @@
 // created by: geo (March 2012)
-#include "gXipmsg.h"
+#include "main.h"
 
 Position posX, posY;
 int n;
@@ -52,8 +52,8 @@ static int gXipmsg_main (int argc, char* argv[])
 	}
 	
 	appIcon_Init(&GXIM_App, &GXIM_TopLevel, argc, argv);
-	appIcon_SetupClose(&GXIM_TopLevel, gxipmg_AtExit);
-	appIcon_SetupTimeout(&GXIM_App, gxipmg_CheckData);
+	appIcon_SetupClose(&GXIM_TopLevel, gXipmsg_AtExit);
+	appIcon_SetupTimeout(&GXIM_App, gXipmsg_CheckData);
 	appIcon_Run(&GXIM_App);
 			
 
@@ -65,18 +65,18 @@ int main(int argc, char* argv[])
 	return gXipmsg_main(argc,argv);    
 }
 
-void gxipmg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data)
+void gXipmsg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data)
 {		
 	udp_BroadcastExit();
 	udp_CloseSocket();	
 	exit(1);
 }
 
-void gxipmg_CheckData(XtPointer xp_Client_data, XtIntervalId* id)
+void gXipmsg_CheckData(XtPointer xp_Client_data, XtIntervalId* id)
 {
 	udp_InquirePackets();
 	
-	appIcon_SetupTimeout(&GXIM_App, gxipmg_CheckData);	
+	appIcon_SetupTimeout(&GXIM_App, gXipmsg_CheckData);	
 }
 
 void gXipmsg_MapDialog(Widget dialog, XtPointer client_data, XtPointer call_data)
