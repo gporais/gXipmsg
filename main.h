@@ -96,10 +96,10 @@ extern char GXIM_Local_Hostname[HOSTNAME_MAXLEN];
 extern char GXIM_Local_Username[USERNAME_MAXLEN];
 extern char GXIM_Local_Handlename[HANDLENAME_MAXLEN];
 
-int GXIM_UDP_Socket;
-struct passwd* GXIM_Passwd;
-XtAppContext GXIM_App;
-Widget GXIM_TopLevel;
+extern int GXIM_UDP_Socket;
+extern struct passwd* GXIM_Passwd;
+extern XtAppContext GXIM_App;
+extern Widget GXIM_TopLevel;
 
 extern void gXipmsg_MapDialog(Widget dialog, XtPointer client_data, XtPointer call_data);
 void gXipmsg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data);
