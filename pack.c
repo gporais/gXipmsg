@@ -22,7 +22,10 @@ void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPac
 	sscanf(p_Packet, "%[^':']:%lu:%[^':']:%[^':']:%lu:%n", p_RestoredPacket->IP_Ver, &p_RestoredPacket->UNIX_Time, p_RestoredPacket->Username, p_RestoredPacket->Hostname, &p_RestoredPacket->IP_Flags, &n);
 	strcpy(p_RestoredPacket->Handlename, (p_Packet+n));	
 	n += strlen(p_RestoredPacket->Handlename)+1;
-	strcpy(p_RestoredPacket->Extended, (p_Packet+n));
+	
+	p_RestoredPacket->Extended = malloc(strlen(p_Packet + n) + 1);
+	p_RestoredPacket->ExtendedAddr = p_RestoredPacket->Extended;
+	strcpy(p_RestoredPacket->Extended, (p_Packet + n));	
 }
 
 
@@ -32,18 +35,21 @@ void pack_UnpackExtended(struct RecvClientData* p_Data, struct FileInfo_Packet* 
 
 	// Token will point to Get FileID
 	p_FileInfo->FileID = strtok(p_Data->dServerInfo.Extended, search);
-	
+		
 	// Token will point to Get FileName
 	p_FileInfo->FileName = strtok(NULL, search);
-	
+		
 	// Token will point to Get FileSize
 	p_FileInfo->FileSize = strtok(NULL, search);
-	
+		
 	// Token will point to Get FileTime
 	p_FileInfo->FileTime = strtok(NULL, search);
-
-
+	
 	// Token will point to Get FileAttrib
 	p_FileInfo->FileAttrib = strtok(NULL, search);
+	
+	
+	// Update original string
+	p_Data->dServerInfo.Extended = p_FileInfo->FileAttrib + strlen(p_FileInfo->FileAttrib) + 1;
 }
 
