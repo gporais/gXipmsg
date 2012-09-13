@@ -1,4 +1,4 @@
-﻿/*	@(#)Copyright (C) H.Shirouzu 1996-2011   ipmsg.h	Ver3.00 */
+/* @(#)Copyright (C) H.Shirouzu 1996-2011   ipmsg.h	Ver3.00 */
 
 #ifndef IPMSG_H
 #define IPMSG_H
