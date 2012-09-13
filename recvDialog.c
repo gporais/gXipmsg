@@ -260,6 +260,8 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	char* strRequestPacket;
 	char* buffer;	
 	int n, m;
+	
+	FILE *fpWrite;
 		
 	
 	while(strlen(data->dServerInfo.Extended) > 1)
@@ -290,6 +292,9 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		{
 			sprintf(strExtended, "%x:%x:0", data->dServerInfo.UNIX_Time, FileID);
 			strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
+			
+			// Create file
+			fpWrite = fopen(RecvdFileInfos.FileName, "wb");
 		}
 		else if((GET_MODE(FileAttrib) & IPMSG_FILE_DIR)  == IPMSG_FILE_DIR)
 		{
@@ -317,11 +322,18 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		while(m != 0);
 		
 		printf("Done! Expected byte: %i Read byte: %i\n",FileSize,n);
+
+		// Write to file
+		fwrite(buffer, sizeof(buffer[0]), FileSize,fpWrite);
+		
+		// Close file
+		fclose(fpWrite);
 				
 		// Close tcp client
 		tcp_CloseClient(data);	
 		
 		// Free buffer pointer
+		bzero(buffer, FileSize + 1);
 		free(buffer);
 	}
 	
