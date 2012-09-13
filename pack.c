@@ -35,7 +35,7 @@ void pack_UnpackExtended(struct RecvClientData* p_Data, struct FileInfo_Packet* 
 
 	// Token will point to Get FileID
 	p_FileInfo->FileID = strtok(p_Data->dServerInfo.Extended, search);
-		
+			
 	// Token will point to Get FileName
 	p_FileInfo->FileName = strtok(NULL, search);
 		
@@ -50,6 +50,6 @@ void pack_UnpackExtended(struct RecvClientData* p_Data, struct FileInfo_Packet* 
 	
 	
 	// Update original string
-	p_Data->dServerInfo.Extended = p_FileInfo->FileAttrib + strlen(p_FileInfo->FileAttrib) + 1;
+	p_Data->dServerInfo.Extended = p_FileInfo->FileAttrib + strlen(p_FileInfo->FileAttrib) + 2;
 }
 
