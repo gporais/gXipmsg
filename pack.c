@@ -17,9 +17,13 @@ char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostna
 	// Compose the full packet
 	sprintf(PACK_Full_Packet, "%s:%lu:%s:%s:%lu:%s", PACK_IPMSG_VERSION, PACK_Packet_No, p_username, p_hostname, PACK_Flags, p_handlename);
 
-	printf("pack: %s %i %i\n",PACK_Full_Packet,len , strlen(PACK_Full_Packet));
-	
 	return PACK_Full_Packet;
+}
+
+
+void pack_CleanPacketBuffer(void)
+{
+	free(PACK_Full_Packet);
 }
 
 

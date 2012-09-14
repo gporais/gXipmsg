@@ -124,15 +124,25 @@ int udp_InitSocket(int* p_Socket)
 void udp_BroadcastEntry(void)
 {
 	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	pack_CleanPacketBuffer();		
+	
 	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_ENTRY, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	pack_CleanPacketBuffer();		
 }
 
 void udp_BroadcastExit(void)
 {
 	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	pack_CleanPacketBuffer();
+		
 	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_EXIT, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	pack_CleanPacketBuffer();
+			
 	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_NOOPERATION, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	pack_CleanPacketBuffer();		
+	
 	udp_BroadcastString((char*)pack_PackBroadcast(IPMSG_BR_EXIT, GXIM_Local_Username, GXIM_Local_Hostname, GXIM_Local_Handlename));
+	pack_CleanPacketBuffer();
 }
 
 int udp_BroadcastString(char* p_String)
@@ -185,6 +195,9 @@ int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags)
 		printf("error: sendto()\n");		
 		return -1;
 	}
+	
+	// Clean packed packet buffer
+	pack_CleanPacketBuffer();
 	
 	return 0;
 }
