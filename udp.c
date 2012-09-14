@@ -75,7 +75,8 @@ void udp_GetInfo(int* p_Socket)
 
 int udp_InitSocket(int* p_Socket)
 {
-	int broadcast = 1;	
+	int broadcast = 1;
+	int buffsize;
 	
 	// Create socket
 	if((*p_Socket = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
@@ -115,6 +116,39 @@ int udp_InitSocket(int* p_Socket)
 	UDP_AddrTo.sin_port = htons(UDP_DEFAULT_PORT);		
 		
 	UDP_LocalSocket = p_Socket;
+	
+	// Set UDP recieve buffer max size
+	buffsize = _MSG_BUF_SIZE;
+	if((setsockopt(*p_Socket, SOL_SOCKET, SO_RCVBUF, (void*)&buffsize, sizeof(int))) == -1)
+	{
+		printf("error: setsockopt(udp, SOL_SOCKET, RECVMAXSIZE)");
+		return -1;
+	}
+	
+	// Set UDP recieve buffer min size
+	buffsize = _MSG_BUF_MIN_SIZE;
+	if((setsockopt(*p_Socket, SOL_SOCKET, SO_RCVBUF, (void*)&buffsize, sizeof(int))) == -1)
+	{
+		printf("error: setsockopt(udp, SOL_SOCKET, RECVMINSIZE)");
+		return -1;
+	}
+	
+	
+	// Set UDP send buffer max size
+	buffsize = _MSG_BUF_SIZE;
+	if((setsockopt(*p_Socket, SOL_SOCKET, SO_SNDBUF, (void*)&buffsize, sizeof(int))) == -1)
+	{
+		printf("error: setsockopt(udp, SOL_SOCKET, SENDMAXSIZE)");
+		return -1;
+	}
+	
+	// Set UDP send buffer min size
+	buffsize = _MSG_BUF_MIN_SIZE;
+	if((setsockopt(*p_Socket, SOL_SOCKET, SO_SNDBUF, (void*)&buffsize, sizeof(int))) == -1)
+	{
+		printf("error: setsockopt(udp, SOL_SOCKET, SENDMINSIZE)");
+		return -1;
+	}		   
 	
 	udp_BroadcastEntry();
 		
@@ -206,15 +240,18 @@ void udp_InquirePackets(void)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
 	char str_Reply[12];
-	char UDP_Buffer[PACKET_MAXLEN];
+	char* UDP_Buffer;
+	
+	// Allocate mem for buffer
+	UDP_Buffer = malloc(_MSG_BUF_SIZE);
 	
 	while(recvfromTimeOutUDP(*UDP_LocalSocket, 0, 0) > 0)
-	{	
+	{		
 		// Clear buffer
-		memset(UDP_Buffer,'\0',PACKET_MAXLEN);
-		
+		memset(UDP_Buffer,'\0',_MSG_BUF_SIZE);
+			
 		// Ok the data is ready, call recvfrom() to get it then
-	    recvfrom(*UDP_LocalSocket, UDP_Buffer, PACKET_MAXLEN, 0, (struct sockaddr*)&UDP_AddrFrom, &m_AddrLen);
+	    recvfrom(*UDP_LocalSocket, UDP_Buffer, _MSG_BUF_SIZE, 0, (struct sockaddr*)&UDP_AddrFrom, &m_AddrLen);
 	    
 	    pack_UnpackBroadcast(UDP_Buffer, &UDP_DataFrom);
 	    strcpy(UDP_DataFrom.IP_Address, inet_ntoa(UDP_AddrFrom.sin_addr));
@@ -253,9 +290,11 @@ void udp_InquirePackets(void)
 				
 			default:
 				printf("unknown command: %s\n", UDP_Buffer);
-		}	  	    				
-	    
+		}	    
 	}	
+	
+	// Release buffer memory
+	free(UDP_Buffer);
 }
 
 void udp_CloseSocket(void)
