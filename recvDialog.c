@@ -307,6 +307,8 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		if(n!= strlen(strRequestPacket))
 			printf("error: sent bytes %i not equal\n",n);
 		
+		// Cleanup packet buffer
+		
 //		XtVaSetValues(widget, XtVaTypedArg, XmNlabelString, str, NULL);	
 						
 		n = 0;

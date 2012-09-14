@@ -9,9 +9,8 @@
 
 
 // Variable declerations
-char PACK_Full_Packet[PACKET_MAXLEN];
-unsigned long PACK_Packet_No;
-unsigned long PACK_Flags;
+char* PACK_Full_Packet;
+
 
 // Function declerations
 char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostname, char* p_handlename);

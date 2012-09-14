@@ -4,13 +4,20 @@
 char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostname, char* p_handlename)
 {
 	// Prepare the flags
-	PACK_Flags = m_Flags;	
+	unsigned long PACK_Flags = m_Flags;	
 	
 	// Prepare the packet no
-	PACK_Packet_No = time(NULL);	
+	unsigned long PACK_Packet_No = time(NULL);	
+	
+	int len = (strlen(PACK_IPMSG_VERSION) + 1) + 11 + (strlen(p_username) + 1) + (strlen(p_hostname) + 1) + 11 +(strlen(p_handlename) + 1);
+	
+	// Prepare PACK_Full_Packet
+	PACK_Full_Packet = malloc(len);
 	
 	// Compose the full packet
 	sprintf(PACK_Full_Packet, "%s:%lu:%s:%s:%lu:%s", PACK_IPMSG_VERSION, PACK_Packet_No, p_username, p_hostname, PACK_Flags, p_handlename);
+
+	printf("pack: %s %i %i\n",PACK_Full_Packet,len , strlen(PACK_Full_Packet));
 	
 	return PACK_Full_Packet;
 }
