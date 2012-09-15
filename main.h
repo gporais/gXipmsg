@@ -49,9 +49,9 @@
 #define TCP_FILE_BUFSIZ      (8192)
 
 
-#define	USERNAME_MAXLEN			50
-#define	HOSTNAME_MAXLEN			50
-#define	HANDLENAME_MAXLEN		50
+#define	USERNAME_MAXLEN			100
+#define	HOSTNAME_MAXLEN			100
+#define	HANDLENAME_MAXLEN		100
 
 
 struct FileInfo_Packet {
