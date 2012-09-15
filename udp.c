@@ -76,7 +76,8 @@ void udp_GetInfo(int* p_Socket)
 int udp_InitSocket(int* p_Socket)
 {
 	int broadcast = 1;
-	int buffsize;
+	int buff_size;
+	int buff_minsize;
 	
 	// Create socket
 	if((*p_Socket = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
@@ -117,39 +118,24 @@ int udp_InitSocket(int* p_Socket)
 		
 	UDP_LocalSocket = p_Socket;
 	
-	// Set UDP recieve buffer max size
-	buffsize = _MSG_BUF_SIZE;
-	if((setsockopt(*p_Socket, SOL_SOCKET, SO_RCVBUF, (void*)&buffsize, sizeof(int))) == -1)
+	// Set UDP send buffer size
+	buff_size = _MSG_BUF_SIZE;
+	buff_minsize = _MSG_BUF_MIN_SIZE;
+	if((setsockopt(*p_Socket, SOL_SOCKET, SO_SNDBUF, (void*)&buff_size, sizeof(int))) != 0 && (setsockopt(*p_Socket, SOL_SOCKET, SO_SNDBUF, (void*)&buff_minsize, sizeof(int))) != 0)
 	{
-		printf("error: setsockopt(udp, SOL_SOCKET, RECVMAXSIZE)");
+		printf("error: setsockopt(udp, SOL_SOCKET, SENDSIZE)");
 		return -1;
 	}
-	
-	// Set UDP recieve buffer min size
-	buffsize = _MSG_BUF_MIN_SIZE;
-	if((setsockopt(*p_Socket, SOL_SOCKET, SO_RCVBUF, (void*)&buffsize, sizeof(int))) == -1)
+		 
+	// Set UDP recv buffer size
+	buff_size = _MSG_BUF_SIZE;
+	buff_minsize = _MSG_BUF_MIN_SIZE;
+	if((setsockopt(*p_Socket, SOL_SOCKET, SO_RCVBUF, (void*)&buff_size, sizeof(int))) != 0 && (setsockopt(*p_Socket, SOL_SOCKET, SO_RCVBUF, (void*)&buff_minsize, sizeof(int))) != 0)
 	{
-		printf("error: setsockopt(udp, SOL_SOCKET, RECVMINSIZE)");
+		printf("error: setsockopt(udp, SOL_SOCKET, RECVSIZE)");
 		return -1;
 	}
-	
-	
-	// Set UDP send buffer max size
-	buffsize = _MSG_BUF_SIZE;
-	if((setsockopt(*p_Socket, SOL_SOCKET, SO_SNDBUF, (void*)&buffsize, sizeof(int))) == -1)
-	{
-		printf("error: setsockopt(udp, SOL_SOCKET, SENDMAXSIZE)");
-		return -1;
-	}
-	
-	// Set UDP send buffer min size
-	buffsize = _MSG_BUF_MIN_SIZE;
-	if((setsockopt(*p_Socket, SOL_SOCKET, SO_SNDBUF, (void*)&buffsize, sizeof(int))) == -1)
-	{
-		printf("error: setsockopt(udp, SOL_SOCKET, SENDMINSIZE)");
-		return -1;
-	}		   
-	
+		
 	udp_BroadcastEntry();
 		
 	return 0;
@@ -239,7 +225,6 @@ int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags)
 void udp_InquirePackets(void)
 {
 	int m_AddrLen = sizeof(UDP_AddrFrom);
-	char str_Reply[12];
 	char* UDP_Buffer;
 	
 	// Allocate mem for buffer
@@ -276,12 +261,12 @@ void udp_InquirePackets(void)
 				break;
 				
 			case IPMSG_SENDMSG:
+				printf("IPMSG_SENDMSG: %s\n", UDP_Buffer);
 				// Pop message
 				appIcon_RecieveDialog(&UDP_DataFrom);
 								
 				// Confirm send
-				sprintf(str_Reply, "%lu", UDP_DataFrom.UNIX_Time);
-				udp_SendToString(UDP_DataFrom.IP_Address, str_Reply, IPMSG_RECVMSG);
+				udp_SendToString(UDP_DataFrom.IP_Address, UDP_DataFrom.UNIX_Time, IPMSG_RECVMSG);
 				break;
 				
 			case IPMSG_RECVMSG:

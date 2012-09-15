@@ -69,15 +69,16 @@ struct FileInfo_Packet {
 };
 
 struct Broadcast_Packet {
-	unsigned long UNIX_Time;
 	unsigned long IP_Flags;
-	char IP_Ver[IPVER_MAXLEN];
-	char IP_Address[IPADDRESS_MAXLEN];
-	char Username[USERNAME_MAXLEN];
-	char Hostname[HOSTNAME_MAXLEN];
-	char Handlename[MESSAGE_MAXLEN];
+	char* UNIX_Time;	
+	char* IP_Flags_Str;
+	char* IP_Ver;
+	char* IP_Address;
+	char* Username;
+	char* Hostname;
+	char* Handlename;
 	char* Extended;
-	char* ExtendedAddr;
+//	char* ExtendedAddr;
 };
 
 struct SendClientData{

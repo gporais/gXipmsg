@@ -255,6 +255,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	unsigned long FileID = 0;
 	unsigned long FileAttrib = 0;
 	unsigned long FileSize = 0;
+	unsigned long PacketID = 0;
 		
 	char strExtended[50];
 	char* strRequestPacket;
@@ -277,6 +278,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		pack_UnpackExtended(data, &RecvdFileInfos);
 		
 		// Prepare File infos
+		sscanf(data->dServerInfo.UNIX_Time, "%lu", &PacketID);
 		sscanf(RecvdFileInfos.FileID, "%lu", &FileID);
 		sscanf(RecvdFileInfos.FileSize, "%x", &FileSize);
 		buffer = malloc(FileSize + 1);
@@ -287,7 +289,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 				
 		if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
 		{
-			sprintf(strExtended, "%x:%x:0", data->dServerInfo.UNIX_Time, FileID);
+			sprintf(strExtended, "%x:%x:0", PacketID, FileID);
 			strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
 			
 			// Create file
@@ -295,7 +297,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		}
 		else if((GET_MODE(FileAttrib) & IPMSG_FILE_DIR)  == IPMSG_FILE_DIR)
 		{
-			sprintf(strExtended, "%x:%x", data->dServerInfo.UNIX_Time, FileID);
+			sprintf(strExtended, "%x:%x", PacketID, FileID);
 			strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETDIRFILES, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
 		}
 		else
@@ -341,7 +343,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	}
 	
 	// Free Extended Address pointer
-	free(data->dServerInfo.ExtendedAddr);	
+//	free(data->dServerInfo.ExtendedAddr);	
 		
 	// Hide download button
 	XtUnmanageChild (widget);	

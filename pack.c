@@ -29,14 +29,42 @@ void pack_CleanPacketBuffer(void)
 
 void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPacket)
 {
-	int n = 0;
-	sscanf(p_Packet, "%[^':']:%lu:%[^':']:%[^':']:%lu:%n", p_RestoredPacket->IP_Ver, &p_RestoredPacket->UNIX_Time, p_RestoredPacket->Username, p_RestoredPacket->Hostname, &p_RestoredPacket->IP_Flags, &n);
-	strcpy(p_RestoredPacket->Handlename, (p_Packet+n));	
-	n += strlen(p_RestoredPacket->Handlename)+1;
+//	int n = 0;
+//	sscanf(p_Packet, "%[^':']:%[^':']:%[^':']:%[^':']:%[^':']:%n", p_RestoredPacket->IP_Ver, &p_RestoredPacket->UNIX_Time, p_RestoredPacket->Username, p_RestoredPacket->Hostname, &p_RestoredPacket->IP_Flags_Str, &n);
+//	strcpy(p_RestoredPacket->Handlename, (p_Packet+n));	
+//	n += strlen(p_RestoredPacket->Handlename)+1;
+//	
+//	sscanf(p_RestoredPacket->IP_Flags_Str, "%lu", &p_RestoredPacket->IP_Flags);
+//	
+//	p_RestoredPacket->Extended = malloc(strlen(p_Packet + n) + 1);
+//	p_RestoredPacket->ExtendedAddr = p_RestoredPacket->Extended;
+//	strcpy(p_RestoredPacket->Extended, (p_Packet + n));	
 	
-	p_RestoredPacket->Extended = malloc(strlen(p_Packet + n) + 1);
-	p_RestoredPacket->ExtendedAddr = p_RestoredPacket->Extended;
-	strcpy(p_RestoredPacket->Extended, (p_Packet + n));	
+	
+	char* search = ":";
+
+	// Token will point to Get FileID
+	p_RestoredPacket->IP_Ver = strtok(p_Packet, search);
+			
+	// Token will point to Get FileName
+	p_RestoredPacket->UNIX_Time = strtok(NULL, search);
+		
+	// Token will point to Get FileSize
+	p_RestoredPacket->Username = strtok(NULL, search);
+		
+	// Token will point to Get FileTime
+	p_RestoredPacket->Hostname = strtok(NULL, search);
+	
+	// Token will point to Get FileAttrib
+	p_RestoredPacket->IP_Flags_Str = strtok(NULL, search);
+	sscanf(p_RestoredPacket->IP_Flags_Str, "%lu", &p_RestoredPacket->IP_Flags);
+	
+	// Token will point to Get FileTime
+	p_RestoredPacket->Handlename = strtok(NULL, search);
+	
+	// Token will point to Get FileAttrib
+	p_RestoredPacket->Extended = strtok(NULL, search);
+	
 }
 
 
