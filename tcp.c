@@ -4,7 +4,9 @@
 
 int tcp_InitClient(struct RecvClientData* data)
 {
-	int reuse = 1;	
+	int reuse = 1;
+	int buff_size;
+	int buff_minsize;
 	
 	// Create socket
 	if((data->dSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
@@ -36,6 +38,24 @@ int tcp_InitClient(struct RecvClientData* data)
 	if ((data->dSocket != -1) && setsockopt(data->dSocket, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) != 0)
 	{
 		printf("error: setsockopt(tcp, reuseaddr)");
+		return -1;
+	}
+	
+	// Set TCP send buffer size
+	buff_size = _TCP_BUF_SIZE;
+	buff_minsize = _TCP_BUF_MIN_SIZE;
+	if((setsockopt(data->dSocket, SOL_SOCKET, SO_SNDBUF, (void*)&buff_size, sizeof(int))) != 0 && (setsockopt(data->dSocket, SOL_SOCKET, SO_SNDBUF, (void*)&buff_minsize, sizeof(int))) != 0)
+	{
+		printf("error: setsockopt(udp, SOL_SOCKET, SENDSIZE)");
+		return -1;
+	}
+		 
+	// Set TCP recv buffer size
+	buff_size = _TCP_BUF_SIZE;
+	buff_minsize = _TCP_BUF_MIN_SIZE;
+	if((setsockopt(data->dSocket, SOL_SOCKET, SO_RCVBUF, (void*)&buff_size, sizeof(int))) != 0 && (setsockopt(data->dSocket, SOL_SOCKET, SO_RCVBUF, (void*)&buff_minsize, sizeof(int))) != 0)
+	{
+		printf("error: setsockopt(udp, SOL_SOCKET, RECVSIZE)");
 		return -1;
 	}
 					

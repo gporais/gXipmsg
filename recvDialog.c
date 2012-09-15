@@ -257,13 +257,13 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	unsigned long FileSize = 0;
 			
 	char strExtended[22];
-	char* strRequestPacket;
-	char* buffer;	
+	char* strRequestPacket = NULL;
+	char* buffer = NULL;	
 	char* strDownloadPath = "/etc/gXipmsg/Downloads/";
-	char* strPath;
+	char* strPath = NULL;
 	int n, m;	
 	
-	FILE *fpWrite;		
+	FILE* fpWrite = NULL;		
 	
 	struct stat st;
 	
@@ -300,8 +300,8 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		// Prepare File infos
 		sscanf(RecvdFileInfos.FileID, "%lu", &FileID);
 		sscanf(RecvdFileInfos.FileSize, "%x", &FileSize);
-		buffer = malloc(FileSize + 1);
-		bzero(buffer, FileSize + 1);
+		buffer = malloc(TCP_FILE_BUFSIZ);
+		bzero(buffer, TCP_FILE_BUFSIZ);
 		
 		// Check if file or directory
 		sscanf(RecvdFileInfos.FileAttrib, "%x", &FileAttrib);
@@ -334,26 +334,26 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 			printf("error: sent bytes %i not equal\n",n);
 		
 		// Cleanup packet buffer
-		pack_CleanPacketBuffer();
-			
-//		XtVaSetValues(widget, XtVaTypedArg, XmNlabelString, str, NULL);	
+		pack_CleanPacketBuffer();		
 						
 		n = 0;
 		do
 		{
-			m = tcp_Read(data,&buffer[n],FileSize);
-			n += m;			
+			m = tcp_Read(data,buffer,TCP_FILE_BUFSIZ);
+			n += m;	
+			if(fpWrite != NULL)
+			{
+				fwrite(buffer, sizeof(buffer[0]), m,fpWrite);
+			}
+			
 //			printf("DL... Expected byte: %i Read byte: %i\n",FileSize,n);
 			if(n == FileSize)
 				break;		
 		}
 		while(m != 0);
 		
-		if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
-		{
-			// Write to file
-			fwrite(buffer, sizeof(buffer[0]), FileSize,fpWrite);
-			
+		if(fpWrite != NULL)
+		{			
 			// Close file
 			fclose(fpWrite);
 		}
@@ -362,7 +362,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		tcp_CloseClient(data);	
 		
 		// Free buffer pointer
-		bzero(buffer, FileSize + 1);
+		bzero(buffer, TCP_FILE_BUFSIZ);
 		free(buffer);
 	}
 	
