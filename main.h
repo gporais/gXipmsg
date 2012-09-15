@@ -64,6 +64,7 @@ struct FileInfo_Packet {
 
 struct Broadcast_Packet {
 	unsigned long IP_Flags;
+	unsigned long PacketID;
 	char* IP_Ver;
 	char* UNIX_Time;
 	char* Username;

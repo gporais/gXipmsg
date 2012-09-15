@@ -41,6 +41,7 @@ void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPac
 			
 	// Token will point to Get UNIX_Time
 	p_RestoredPacket->UNIX_Time = strtok(NULL, search);
+	sscanf(p_RestoredPacket->UNIX_Time, "%lu", &p_RestoredPacket->PacketID);
 		
 	// Token will point to Get Username
 	p_RestoredPacket->Username = strtok(NULL, search);
@@ -64,7 +65,6 @@ void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPac
 		p_RestoredPacket->ExtendedAddr = temp + strlen(temp) + 2;
 	}
 	
-//	printf("start%send\n",p_RestoredPacket->ExtendedAddr);
 	if(p_RestoredPacket->ExtendedAddr != NULL)
 	{
 		p_RestoredPacket->Extended = malloc(strlen(p_RestoredPacket->ExtendedAddr) + 1);
@@ -77,7 +77,7 @@ void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPac
 void pack_UnpackExtended(struct RecvClientData* p_Data, struct FileInfo_Packet* p_FileInfo)
 {
 	char* search = ":";
-
+	
 	// Token will point to Get FileID
 	p_FileInfo->FileID = strtok(p_Data->dServerInfo.Extended, search);
 			
