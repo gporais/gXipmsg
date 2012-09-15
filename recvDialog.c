@@ -264,7 +264,8 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	
 	FILE *fpWrite;
 		
-	
+	printf("start%send\n",data->dServerInfo.Extended);
+	/*
 	while(strlen(data->dServerInfo.Extended) > 1)
 	{		
 		// Clean all variables
@@ -348,7 +349,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		free(data->dServerInfo.ExtendedAddr);
 		data->dServerInfo.ExtendedAddr = NULL;
 	}
-		
+		*/
 	// Hide download button
 	XtUnmanageChild (widget);	
 }

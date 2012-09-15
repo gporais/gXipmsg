@@ -65,6 +65,12 @@ void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPac
 	// Token will point to Get FileTime
 	p_RestoredPacket->Handlename = strtok(NULL, search);
 	
+	
+	p_RestoredPacket->Extended = strtok(NULL, search);
+//	strcpy(p_RestoredPacket->Extended,strtok(NULL, search));
+	printf("start%send\n",p_RestoredPacket->Extended);
+//	if()
+		
 //	temp = p_RestoredPacket->Handlename + strlen(p_RestoredPacket->Handlename) + 1;
 //	printf("len %i s: %send\n ",strlen(temp),temp);
 	// Token will point to Get FileAttrib

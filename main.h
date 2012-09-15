@@ -70,7 +70,7 @@ struct Broadcast_Packet {
 	char* Hostname;	
 	char* Handlename;
 	char* Extended;
-	char* ExtendedAddr;
+//	char* ExtendedAddr;
 	char IP_Address[20];
 };
 
