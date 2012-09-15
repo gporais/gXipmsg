@@ -256,12 +256,33 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	unsigned long FileAttrib = 0;
 	unsigned long FileSize = 0;
 			
-	char strExtended[100];
+	char strExtended[22];
 	char* strRequestPacket;
 	char* buffer;	
+	char* strDownloadPath = "/etc/gXipmsg/Downloads/";
+	char* strPath;
 	int n, m;	
 	
 	FILE *fpWrite;		
+	
+	struct stat st;
+	
+	// Check if Download dir exist, if not then create
+	if(stat(strDownloadPath,&st) != 0)
+	{
+		if(mkdir("/etc/gXipmsg/", S_IRWXU) != 0)
+		{
+			printf("error: cannot create /etc/gXipmsg/");
+			return;
+		}
+		
+		if(mkdir(strDownloadPath, S_IRWXU) != 0)
+		{
+			printf("error: cannot create %s", strDownloadPath);
+			return;
+		}
+	}
+		
 	
 	
 	while(strlen(data->dServerInfo.Extended) > 1)
@@ -291,7 +312,12 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 			strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
 			
 			// Create file
-			fpWrite = fopen(RecvdFileInfos.FileName, "wb");
+			strPath = malloc(strlen(RecvdFileInfos.FileName) + strlen(strDownloadPath) + 1);
+			strcpy(strPath, strDownloadPath);
+			strcat(strPath,RecvdFileInfos.FileName);
+			fpWrite = fopen(strPath, "wb");
+			free(strPath);
+			strPath = NULL;
 		}
 		else if((GET_MODE(FileAttrib) & IPMSG_FILE_DIR)  == IPMSG_FILE_DIR)
 		{
@@ -302,8 +328,6 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		{
 			printf("error: unknown attachment\n");
 		}
-		
-		printf("req:%send\n",strExtended);
 				
 		n = tcp_Write(data,strRequestPacket,strlen(strRequestPacket));
 		if(n!= strlen(strRequestPacket))

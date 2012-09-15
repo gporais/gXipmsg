@@ -11,6 +11,7 @@
 
 #include <unistd.h>
 #include <sys/time.h> /* setitimer() */
+#include <sys/stat.h>
 
 /* includes below are order dependent */
 #include <sys/param.h> /* htons() */
