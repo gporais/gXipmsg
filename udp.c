@@ -261,7 +261,6 @@ void udp_InquirePackets(void)
 				break;
 				
 			case IPMSG_SENDMSG:
-				printf("IPMSG_SENDMSG: %s\n", UDP_Buffer);
 				// Pop message
 				appIcon_RecieveDialog(&UDP_DataFrom);
 								

@@ -49,15 +49,9 @@
 #define TCP_FILE_BUFSIZ      (8192)
 
 
-
-#define	IPVER_MAXLEN			2
-#define	UNIXTIME_MAXLEN			12
-#define	IPFLAGS_MAXLEN			12
-#define	IPADDRESS_MAXLEN		16
 #define	USERNAME_MAXLEN			50
 #define	HOSTNAME_MAXLEN			50
 #define	HANDLENAME_MAXLEN		50
-#define	MESSAGE_MAXLEN			500
 
 
 struct FileInfo_Packet {
@@ -70,15 +64,14 @@ struct FileInfo_Packet {
 
 struct Broadcast_Packet {
 	unsigned long IP_Flags;
-	char* UNIX_Time;	
-	char* IP_Flags_Str;
 	char* IP_Ver;
-	char* IP_Address;
+	char* UNIX_Time;
 	char* Username;
-	char* Hostname;
+	char* Hostname;	
 	char* Handlename;
 	char* Extended;
-//	char* ExtendedAddr;
+	char* ExtendedAddr;
+	char IP_Address[20];
 };
 
 struct SendClientData{

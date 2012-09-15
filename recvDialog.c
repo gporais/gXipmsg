@@ -264,9 +264,9 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	
 	FILE *fpWrite;
 		
-
+	
 	while(strlen(data->dServerInfo.Extended) > 1)
-	{
+	{		
 		// Clean all variables
 		n = 0;
 		m = 0;		
@@ -343,7 +343,11 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	}
 	
 	// Free Extended Address pointer
-//	free(data->dServerInfo.ExtendedAddr);	
+	if(data->dServerInfo.ExtendedAddr != NULL)
+	{
+		free(data->dServerInfo.ExtendedAddr);
+		data->dServerInfo.ExtendedAddr = NULL;
+	}
 		
 	// Hide download button
 	XtUnmanageChild (widget);	
