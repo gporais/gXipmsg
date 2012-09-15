@@ -257,7 +257,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	unsigned long FileSize = 0;
 	unsigned long PacketID = 0;
 		
-	char strExtended[50];
+	char strExtended[100];
 	char* strRequestPacket;
 	char* buffer;	
 	int n, m;	
@@ -265,7 +265,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	FILE *fpWrite;
 		
 	printf("start%send\n",data->dServerInfo.Extended);
-	/*
+	
 	while(strlen(data->dServerInfo.Extended) > 1)
 	{		
 		// Clean all variables
@@ -305,6 +305,8 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		{
 			printf("error: unknown attachment\n");
 		}
+		
+		printf("req:%send\n",strExtended);
 				
 		n = tcp_Write(data,strRequestPacket,strlen(strRequestPacket));
 		if(n!= strlen(strRequestPacket))
@@ -349,7 +351,7 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		free(data->dServerInfo.ExtendedAddr);
 		data->dServerInfo.ExtendedAddr = NULL;
 	}
-		*/
+		
 	// Hide download button
 	XtUnmanageChild (widget);	
 }
