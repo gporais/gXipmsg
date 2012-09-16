@@ -7,18 +7,28 @@ This project taught me a lot about Motif and TCP/UDP. The goal was to design an 
 on all *nix platforms with as much as possible no need of modifiyng anything, as inspired by the O'Reilly book and sample codes.
 
 The main goal for this project is to utilize the fast and easy file transfer on any *nix system between other platforms without
-setting up NFS,SAMBA or other client-server apps for this purpose. Current release is ALPHA.
+setting up NFS,FTP,SAMBA or other client-server apps for this purpose. 
 
-APLHA release: (done)
+
+Release history:
+	
+BETA 1.0:
+	* Very fast download of multiple files
+	* Optimized memory handling
+	* Optimized widget handling
+	* Optimized UDP/TCP handling
+
+ALPHA 1.0:
+	* More stable and bug fixes
+	* Enhanced GUI
+	* Enhance architecture to support all UNIX flavors
+
+APLHA:
 	* Messaging thru UDP protocol
 	* Can broadcast message to specific people
 
-BETA release: (next)
-	* File/folder transfer thru TCP
-
-
+	
 gXipmsg was tested on the following:
-
 1. Intel x86: 
 	* Windows XP through Cygwin
 	* Solaris 10 through VMWare
@@ -32,11 +42,21 @@ If you have any chance to try this on other platform, i'll be delighted to hear 
 You can contact me via email: orais.georgephillip@gmail.com
 
 To try, please download the Windows version on your Windows box.
-Then build using make or GNU make with Makefile.
-PLease note, BSD and SUN has its own Makefile, please use this with -f option.
+Then build gXipmsg using make or GNU make with Makefile.
+Please note, BSD and SUN has its own Makefile, please use this with -f option.
+General step is:
+	make
+	make install
+	
+Binary file will be copied to /usr/bin/
+Folder structure will be consturcerd under /etc/
+	/etc
+		/gXipmsg
+			ipmsg.xpm
+			/Downloads
+			
+To run: gXipmsg <handlename>	(eg. gXipmsg geo)
+If no handlename specified, your login name is automatically used.
+	
 
 Hope you enjoy trying this as much i enjoyed coding this, thanks!!!
-
-
-
-
