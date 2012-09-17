@@ -17,4 +17,6 @@ void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 void recvDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_data);
 
+void recvDialog_ComposeFilenames(char *strDest, char *strSrc);
+
 #endif /*RECVDIALOG_H_*/

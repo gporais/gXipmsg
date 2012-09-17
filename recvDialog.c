@@ -1,6 +1,27 @@
 // created by: geo (April 2012)
 #include "recvDialog.h"
 
+void recvDialog_ComposeFilenames(char *strDest, char *strSrc)
+{
+	int n = 0;
+	char* temp;
+	char cat[100];
+	
+	*strDest = '\0';
+				
+	while(strSrc[0] >= 0x30 & strSrc[0] <= 0x39)
+	{
+		sscanf(strSrc,"%[^':']:%[^':']:%[^':']:%[^':']:%[^':']:%n",temp,cat,temp,temp,temp,&n);
+		strcat(strDest,cat);
+		strcat(strDest," ");
+		strSrc += n + 1;
+		
+		if(strlen(strDest) >= 54)
+			break;
+	}
+	strDest[54] = '\0';	
+}
+
 
 void recvDialog_Destroy (Widget dialog, XtPointer client_data, XtPointer call_data)
 {
@@ -130,12 +151,21 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtSetArg (args[n], XmNtopOffset, 7); n++; 
 	XtSetArg (args[n], XmNleftOffset, 5); n++; 
 	XtSetArg (args[n], XmNrightOffset, 5); n++; 
+	XtSetArg (args[n], XmNalignment, XmALIGNMENT_BEGINNING); n++;
 	RECVDIALOG_BtnG_Download = XmCreatePushButtonGadget (RECVDIALOG_Form_Lower, "Download", args, n);
 	XtAddCallback (RECVDIALOG_BtnG_Download, XmNactivateCallback, recvDialog_DownloadCallBack, (XtPointer)data);
 	
 	if((GET_OPT(p_Item->IP_Flags) & IPMSG_FILEATTACHOPT)  == IPMSG_FILEATTACHOPT)
 	{
+		// Prepare filenames for button display
+		text = malloc(strlen(p_Item->Extended));
+		recvDialog_ComposeFilenames(text, p_Item->Extended);
+		
+		xstr_Buff = XmStringCreateLocalized (text);
+		XtVaSetValues (RECVDIALOG_BtnG_Download, XmNlabelString, xstr_Buff, NULL);		
+		
 		XtManageChild (RECVDIALOG_BtnG_Download);
+		free(text);
 	}
 	
 	// Create reply button
