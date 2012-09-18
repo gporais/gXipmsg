@@ -56,10 +56,10 @@ static int gXipmsg_main (int argc, char* argv[])
 		exit(1);
 	}
 	
-	appIcon_Init(&GXIM_App, &GXIM_TopLevel, argc, argv);
+	appIcon_Init(&GXIM_TopLevel, argc, argv);
 	appIcon_SetupClose(&GXIM_TopLevel, gXipmsg_AtExit);
-	appIcon_SetupTimeout(&GXIM_App, gXipmsg_CheckData);
-	appIcon_Run(&GXIM_App);
+	appIcon_SetupTimeout(gXipmsg_CheckData);
+	appIcon_Run();
 			
 
 	return 0;
@@ -81,7 +81,7 @@ void gXipmsg_CheckData(XtPointer xp_Client_data, XtIntervalId* id)
 {
 	udp_InquirePackets();
 	
-	appIcon_SetupTimeout(&GXIM_App, gXipmsg_CheckData);	
+	appIcon_SetupTimeout(gXipmsg_CheckData);	
 }
 
 void gXipmsg_MapDialog(Widget dialog, XtPointer client_data, XtPointer call_data)

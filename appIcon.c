@@ -1,7 +1,7 @@
 // created by: geo (April 2012)
 #include "appIcon.h"
 
-void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* argv[])
+void appIcon_Init(Widget* w_TopLevel, int argc, char* argv[])
 {	
 	Position x, y;
 	Dimension w, h;
@@ -12,7 +12,7 @@ void appIcon_Init(XtAppContext* xac_App, Widget* w_TopLevel, int argc, char* arg
 	
 	
 	XtSetLanguageProc (NULL, NULL, NULL);
-	*w_TopLevel = XtVaOpenApplication (xac_App, "gXipmsg", NULL, 0, &argc, argv, NULL,sessionShellWidgetClass, NULL);
+	*w_TopLevel = XtVaOpenApplication (&GXIM_App, "gXipmsg", NULL, 0, &argc, argv, NULL,sessionShellWidgetClass, NULL);
 
 	APPICON_Form = XmCreateForm (*w_TopLevel, "ipmsgForm", NULL, 0);
 	
@@ -71,15 +71,15 @@ void appIcon_SetupClose(Widget* w_TopLevel, XtCallbackProc xcp_CloseProc)
 }
 
 
-void appIcon_SetupTimeout(XtAppContext* xac_App, XtTimerCallbackProc xcp_TOProc)
+void appIcon_SetupTimeout(XtTimerCallbackProc xcp_TOProc)
 {
-	XtAppAddTimeOut(*xac_App, 500, xcp_TOProc, *xac_App);	
+	XtAppAddTimeOut(GXIM_App, 500, xcp_TOProc, GXIM_App);	
 }
 
 
-void appIcon_Run(XtAppContext* xac_App)
+void appIcon_Run(void)
 {
-	XtAppMainLoop (*xac_App);
+	XtAppMainLoop (GXIM_App);
 }
 
 
