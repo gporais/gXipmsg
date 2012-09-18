@@ -291,7 +291,8 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	char* buffer = NULL;	
 	char* strDownloadPath = "/etc/gXipmsg/Downloads/";
 	char* strPath = NULL;
-	int n, m;	
+	int tcpRet;
+	unsigned long calcSize;	
 	
 	FILE* fpWrite = NULL;		
 	
@@ -318,8 +319,8 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 	while(strlen(data->dServerInfo.Extended) > 1)
 	{		
 		// Clean all variables
-		n = 0;
-		m = 0;		
+		tcpRet = 0;
+		calcSize = 0;		
 		
 		// Init tcp client	
 		tcp_InitClient(data);
@@ -359,28 +360,28 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 			printf("error: unknown attachment\n");
 		}
 				
-		n = tcp_Write(data,strRequestPacket,strlen(strRequestPacket));
-		if(n!= strlen(strRequestPacket))
+		tcpRet = tcp_Write(data,strRequestPacket,strlen(strRequestPacket));
+		if(tcpRet != strlen(strRequestPacket))
 			printf("error: sent bytes %i not equal\n",n);
 		
 		// Cleanup packet buffer
-		pack_CleanPacketBuffer();		
+		pack_CleanPacketBuffer();	
 						
-		n = 0;
+		
 		do
 		{
-			m = tcp_Read(data,buffer,TCP_FILE_BUFSIZ);
-			n += m;	
+			tcpRet = tcp_Read(data,buffer,TCP_FILE_BUFSIZ);
+			calcSize += tcpRet;	
 			if(fpWrite != NULL)
 			{
-				fwrite(buffer, sizeof(buffer[0]), m,fpWrite);
+				fwrite(buffer, sizeof(buffer[0]), tcpRet, fpWrite);
 			}
 			
 //			printf("DL... Expected byte: %i Read byte: %i\n",FileSize,n);
-			if(n == FileSize)
+			if(calcSize == FileSize)
 				break;		
 		}
-		while(m != 0);
+		while(tcpRet != 0);
 		
 		if(fpWrite != NULL)
 		{			
