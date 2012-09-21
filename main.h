@@ -88,7 +88,18 @@ struct RecvClientData{
 	Widget dText;	
 	Widget dCheck;	
 	struct Broadcast_Packet dServerInfo;
+	
+	char dLevel;
+	unsigned long dFileSize;
+	unsigned long dCalcSize;
+	XtWorkProcId dWorkID;
+	Widget dButton;
+	FILE* fpWrite;
+	char* dBuffer;
+	char* dFilename;
 };
+
+
 	
 extern Position posX, posY;
 extern int n;

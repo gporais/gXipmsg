@@ -83,6 +83,7 @@ void pack_UnpackExtended(struct RecvClientData* p_Data, struct FileInfo_Packet* 
 			
 	// Token will point to Get FileName
 	p_FileInfo->FileName = strtok(NULL, search);
+	p_Data->dFilename = p_FileInfo->FileName;
 		
 	// Token will point to Get FileSize
 	p_FileInfo->FileSize = strtok(NULL, search);

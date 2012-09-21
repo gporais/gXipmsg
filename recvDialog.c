@@ -1,7 +1,14 @@
 // created by: geo (April 2012)
 #include "recvDialog.h"
 
-void recvDialog_ComposeFilenames(char *strDest, char *strSrc)
+void recvDialog_UpdateBtnLabel(Widget widget, char* strLabel)
+{
+	XmString xstrBuff = XmStringCreateLocalized (strLabel);
+	XtVaSetValues (widget, XmNlabelString, xstrBuff, NULL);
+	XmStringFree (xstrBuff);
+}
+
+void recvDialog_ComposeFilenames(char* strDest, char* strSrc)
 {
 	int n = 0;
 	char* temp;
@@ -57,7 +64,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	char* text;	
 	char* test;
 	time_t clock = time(NULL);
-	struct RecvClientData* data = XtNew (struct RecvClientData);
+	struct RecvClientData* data = XtNew (struct RecvClientData);	
 	
 	// Get the current entries (and number of entries) from the List
 	XtVaGetValues (*w_List, XmNitemCount, &mCount,	XmNitems, &xstr_list, NULL);
@@ -161,8 +168,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 		text = malloc(strlen(p_Item->Extended));
 		recvDialog_ComposeFilenames(text, p_Item->Extended);
 		
-		xstr_Buff = XmStringCreateLocalized (text);
-		XtVaSetValues (RECVDIALOG_BtnG_Download, XmNlabelString, xstr_Buff, NULL);		
+		recvDialog_UpdateBtnLabel(RECVDIALOG_BtnG_Download, text);
 		
 		XtManageChild (RECVDIALOG_BtnG_Download);
 		free(text);
@@ -280,21 +286,26 @@ void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
 	struct RecvClientData* data = (struct RecvClientData*) client_data;
-	struct FileInfo_Packet RecvdFileInfos;
 	
-	unsigned long FileID = 0;
-	unsigned long FileAttrib = 0;
-	unsigned long FileSize = 0;
-			
-	char strExtended[22];
-	char* strRequestPacket = NULL;
-	char* buffer = NULL;	
+	
+	
+	
+	
+//	struct FileInfo_Packet RecvdFileInfos;
+//	
+//	unsigned long FileID = 0;
+//	unsigned long FileAttrib = 0;
+//	unsigned long FileSize = 0;
+//			
+//	char strExtended[22];
+//	char* strRequestPacket = NULL;
+//	char* buffer = NULL;	
 	char* strDownloadPath = "/etc/gXipmsg/Downloads/";
-	char* strPath = NULL;
-	int tcpRet;
-	unsigned long calcSize;	
-	
-	FILE* fpWrite = NULL;		
+//	char* strPath = NULL;
+//	int tcpRet;
+//	unsigned long calcSize;	
+//	
+//	FILE* fpWrite = NULL;		
 	
 	struct stat st;
 	
@@ -314,98 +325,264 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		}
 	}
 		
+	// Set procedure level 0
+	data->dLevel = 0;
+	data->dWorkID = XtAppAddWorkProc(GXIM_App, recvDialog_DLProcedure, client_data);
+	data->dButton = widget;
+		
 	
 	
-	while(strlen(data->dServerInfo.Extended) > 1)
-	{		
-		// Clean all variables
-		tcpRet = 0;
-		calcSize = 0;		
-		
-		// Init tcp client	
-		tcp_InitClient(data);
-				
-		// Unpack extended data which contains file infos
-		pack_UnpackExtended(data, &RecvdFileInfos);
-		
-		// Prepare File infos
-		sscanf(RecvdFileInfos.FileID, "%lu", &FileID);
-		sscanf(RecvdFileInfos.FileSize, "%x", &FileSize);
-		buffer = malloc(TCP_FILE_BUFSIZ);
-		bzero(buffer, TCP_FILE_BUFSIZ);
-		
-		// Check if file or directory
-		sscanf(RecvdFileInfos.FileAttrib, "%x", &FileAttrib);
-				
-		if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
-		{
-			sprintf(strExtended, "%x:%x:0", data->dServerInfo.PacketID, FileID);
-			strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
+//	while(strlen(data->dServerInfo.Extended) > 1)
+//	{		
+//		// Clean all variables
+//		tcpRet = 0;
+//		calcSize = 0;		
+//		
+//		// Init tcp client	
+//		tcp_InitClient(data);
+//				
+//		// Unpack extended data which contains file infos
+//		pack_UnpackExtended(data, &RecvdFileInfos);
+//		
+//		// Prepare File infos
+//		sscanf(RecvdFileInfos.FileID, "%lu", &FileID);
+//		sscanf(RecvdFileInfos.FileSize, "%x", &FileSize);
+//		buffer = malloc(TCP_FILE_BUFSIZ);
+//		bzero(buffer, TCP_FILE_BUFSIZ);
+//		
+//		// Check if file or directory
+//		sscanf(RecvdFileInfos.FileAttrib, "%x", &FileAttrib);
+//				
+//		if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
+//		{
+//			sprintf(strExtended, "%x:%x:0", data->dServerInfo.PacketID, FileID);
+//			strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
+//			
+//			// Create file
+//			strPath = malloc(strlen(RecvdFileInfos.FileName) + strlen(strDownloadPath) + 1);
+//			strcpy(strPath, strDownloadPath);
+//			strcat(strPath,RecvdFileInfos.FileName);
+//			fpWrite = fopen(strPath, "wb");
+//			free(strPath);
+//			strPath = NULL;
+//		}
+//		else if((GET_MODE(FileAttrib) & IPMSG_FILE_DIR)  == IPMSG_FILE_DIR)
+//		{
+//			sprintf(strExtended, "%x:%x", data->dServerInfo.PacketID, FileID);
+//			strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETDIRFILES, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
+//		}
+//		else
+//		{
+//			printf("error: unknown attachment\n");
+//		}
+//				
+//		tcpRet = tcp_Write(data,strRequestPacket,strlen(strRequestPacket));
+//		if(tcpRet != strlen(strRequestPacket))
+//			printf("error: sent bytes %i not equal\n",n);
+//		
+//		// Cleanup packet buffer
+//		pack_CleanPacketBuffer();	
+//						
+//		
+//		do
+//		{
+//			tcpRet = tcp_Read(data,buffer,TCP_FILE_BUFSIZ);
+//			calcSize += tcpRet;	
+//			if(fpWrite != NULL)
+//			{
+//				fwrite(buffer, sizeof(buffer[0]), tcpRet, fpWrite);
+//			}
+//			
+////			printf("DL... Expected byte: %i Read byte: %i\n",FileSize,n);
+//			if(calcSize == FileSize)
+//				break;		
+//		}
+//		while(tcpRet != 0);
+//		
+//		if(fpWrite != NULL)
+//		{			
+//			// Close file
+//			fclose(fpWrite);
+//		}
+//				
+//		// Close tcp client
+//		tcp_CloseClient(data);	
+//		
+//		// Free buffer pointer
+//		bzero(buffer, TCP_FILE_BUFSIZ);
+//		free(buffer);
+//	}
+//	
+//	// Free Extended Address pointer
+//	if(data->dServerInfo.ExtendedAddr != NULL)
+//	{
+//		free(data->dServerInfo.ExtendedAddr);
+//		data->dServerInfo.ExtendedAddr = NULL;
+//	}
+//		
+//	// Hide download button
+//	XtUnmanageChild (widget);	
+}
+
+Boolean recvDialog_DLProcedure(XtPointer client_data)
+{	
+	struct RecvClientData* data = (struct RecvClientData*) client_data;
+	struct FileInfo_Packet RecvdFileInfos;
+	Boolean bRet = False;
+	char strExtended[22];
+	char* strRequestPacket = NULL;
+	char* strPath = NULL;
+	char* strDownloadPath = "/etc/gXipmsg/Downloads/";
+	
+	unsigned long FileID = 0;
+	unsigned long FileAttrib = 0;
+	
+	
+	int tcpRet;
+	struct stat st;
+	
+	switch(data->dLevel)
+	{
+		case 0:
 			
-			// Create file
-			strPath = malloc(strlen(RecvdFileInfos.FileName) + strlen(strDownloadPath) + 1);
-			strcpy(strPath, strDownloadPath);
-			strcat(strPath,RecvdFileInfos.FileName);
-			fpWrite = fopen(strPath, "wb");
-			free(strPath);
-			strPath = NULL;
-		}
-		else if((GET_MODE(FileAttrib) & IPMSG_FILE_DIR)  == IPMSG_FILE_DIR)
-		{
-			sprintf(strExtended, "%x:%x", data->dServerInfo.PacketID, FileID);
-			strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETDIRFILES, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
-		}
-		else
-		{
-			printf("error: unknown attachment\n");
-		}
+			// Check if still have
+			if(strlen(data->dServerInfo.Extended) > 1)
+			{				
+				data->dLevel = 1;				
+				data->dCalcSize = 0;
+				tcpRet = 0;
 				
-		tcpRet = tcp_Write(data,strRequestPacket,strlen(strRequestPacket));
-		if(tcpRet != strlen(strRequestPacket))
-			printf("error: sent bytes %i not equal\n",n);
-		
-		// Cleanup packet buffer
-		pack_CleanPacketBuffer();	
+				// Init tcp client	
+				tcp_InitClient(data);
 						
-		
-		do
-		{
-			tcpRet = tcp_Read(data,buffer,TCP_FILE_BUFSIZ);
-			calcSize += tcpRet;	
-			if(fpWrite != NULL)
+				// Unpack extended data which contains file infos
+				pack_UnpackExtended(data, &RecvdFileInfos);
+				
+				// Prepare File infos
+				sscanf(RecvdFileInfos.FileID, "%lu", &FileID);
+				sscanf(RecvdFileInfos.FileSize, "%x", &data->dFileSize);
+				data->dBuffer = malloc(TCP_FILE_BUFSIZ);
+				bzero(data->dBuffer, TCP_FILE_BUFSIZ);
+				
+				// Check if file or directory
+				sscanf(RecvdFileInfos.FileAttrib, "%x", &FileAttrib);
+				
+				if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
+				{
+					sprintf(strExtended, "%x:%x:0", data->dServerInfo.PacketID, FileID);
+					strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
+					
+					// Create file
+					strPath = malloc(strlen(RecvdFileInfos.FileName) + strlen(strDownloadPath) + 1);
+					strcpy(strPath, strDownloadPath);
+					strcat(strPath,RecvdFileInfos.FileName);
+					data->fpWrite = fopen(strPath, "wb");
+					free(strPath);
+					strPath = NULL;
+				}
+				else if((GET_MODE(FileAttrib) & IPMSG_FILE_DIR)  == IPMSG_FILE_DIR)
+				{
+					sprintf(strExtended, "%x:%x", data->dServerInfo.PacketID, FileID);
+					strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETDIRFILES, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
+				}
+				else
+				{
+					printf("error: unknown attachment\n");
+				}
+						
+				tcpRet = tcp_Write(data,strRequestPacket,strlen(strRequestPacket));
+				if(tcpRet != strlen(strRequestPacket))
+					printf("error: sent bytes %i not equal\n",n);
+				
+				// Cleanup packet buffer
+				pack_CleanPacketBuffer();
+				
+				
+				tcpRet = tcp_Read(data,data->dBuffer,TCP_FILE_BUFSIZ);
+				data->dCalcSize += tcpRet;	
+				if(data->fpWrite != NULL)
+				{
+					fwrite(data->dBuffer, sizeof(data->dBuffer[0]), tcpRet, data->fpWrite);
+				}
+				
+				strPath = malloc(strlen(data->dFilename) + 20 + 24);
+				sprintf(strPath,"%s: %i bytes of %i bytes",data->dFilename, data->dCalcSize, data->dFileSize);
+				recvDialog_UpdateBtnLabel(data->dButton, strPath);
+				free(strPath);
+				strPath = NULL;
+				
+				if(tcpRet == 0 || data->dCalcSize == data->dFileSize)
+				{
+					data->dLevel = 0;
+					
+					if(data->fpWrite != NULL)
+					{			
+						// Close file
+						fclose(data->fpWrite);
+					}
+							
+					// Close tcp client
+					tcp_CloseClient(data);	
+					
+					// Free buffer pointer
+					bzero(data->dBuffer, TCP_FILE_BUFSIZ);
+					free(data->dBuffer);
+				}
+				
+				
+			}
+			else
 			{
-				fwrite(buffer, sizeof(buffer[0]), tcpRet, fpWrite);
+				// Done
+				XtRemoveWorkProc(data->dWorkID);
+				// Free Extended Address pointer
+				if(data->dServerInfo.ExtendedAddr != NULL)
+				{
+					free(data->dServerInfo.ExtendedAddr);
+					data->dServerInfo.ExtendedAddr = NULL;
+				}
+				XtUnmanageChild(data->dButton);
+				bRet = True;
+			}			
+			break;
+			
+		case 1:
+			
+			tcpRet = tcp_Read(data,data->dBuffer,TCP_FILE_BUFSIZ);
+			data->dCalcSize += tcpRet;	
+			if(data->fpWrite != NULL)
+			{
+				fwrite(data->dBuffer, sizeof(data->dBuffer[0]), tcpRet, data->fpWrite);
 			}
 			
-//			printf("DL... Expected byte: %i Read byte: %i\n",FileSize,n);
-			if(calcSize == FileSize)
-				break;		
-		}
-		while(tcpRet != 0);
-		
-		if(fpWrite != NULL)
-		{			
-			// Close file
-			fclose(fpWrite);
-		}
+			strPath = malloc(strlen(data->dFilename) + 20 + 24);
+			sprintf(strPath,"%s: %i bytes of %i bytes",data->dFilename, data->dCalcSize, data->dFileSize);
+			recvDialog_UpdateBtnLabel(data->dButton, strPath);
+			free(strPath);
+			strPath = NULL;
+			
+			if(tcpRet == 0 || data->dCalcSize == data->dFileSize)
+			{
+				data->dLevel = 0;
 				
-		// Close tcp client
-		tcp_CloseClient(data);	
-		
-		// Free buffer pointer
-		bzero(buffer, TCP_FILE_BUFSIZ);
-		free(buffer);
+				if(data->fpWrite != NULL)
+				{			
+					// Close file
+					fclose(data->fpWrite);
+				}
+						
+				// Close tcp client
+				tcp_CloseClient(data);	
+				
+				// Free buffer pointer
+				bzero(data->dBuffer, TCP_FILE_BUFSIZ);
+				free(data->dBuffer);
+			}
+			break;		
 	}
 	
-	// Free Extended Address pointer
-	if(data->dServerInfo.ExtendedAddr != NULL)
-	{
-		free(data->dServerInfo.ExtendedAddr);
-		data->dServerInfo.ExtendedAddr = NULL;
-	}
-		
-	// Hide download button
-	XtUnmanageChild (widget);	
+	return bRet;
 }
+
 
 
