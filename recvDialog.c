@@ -366,6 +366,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 			{				
 				data->dLevel = 1;				
 				data->dCalcSize = 0;
+				data->dProgress = 0;
 				tcpRet = 0;
 				
 				// Init tcp client	
@@ -469,11 +470,22 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 			
 		case 1:
 			
+			data->dProgress++;
+			
 			tcpRet = tcp_Read(data,data->dBuffer,TCP_FILE_BUFSIZ);
 			data->dCalcSize += tcpRet;	
 			if(data->fpWrite != NULL)
 			{
 				fwrite(data->dBuffer, sizeof(data->dBuffer[0]), tcpRet, data->fpWrite);
+			}		
+			
+			if((data->dProgress % 3000) == 0)
+			{
+				strPath = malloc(strlen(data->dFilename) + 14 + 20);
+				sprintf(strPath,"downloading %s %i bytes",data->dFilename, data->dCalcSize);
+				recvDialog_UpdateBtnLabel(data->dButton, strPath);
+				free(strPath);
+				strPath = NULL;
 			}			
 			
 			if(tcpRet == 0 || data->dCalcSize == data->dFileSize)

@@ -92,6 +92,7 @@ struct RecvClientData{
 	char dLevel;
 	unsigned long dFileSize;
 	unsigned long dCalcSize;
+	unsigned long dProgress;
 	XtWorkProcId dWorkID;
 	Widget dButton;
 	FILE* fpWrite;
