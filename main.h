@@ -117,6 +117,8 @@ extern struct passwd* GXIM_Passwd;
 extern XtAppContext GXIM_App;
 extern Widget GXIM_TopLevel;
 
+extern int DLProcedures;
+
 extern void gXipmsg_MapDialog(Widget dialog, XtPointer client_data, XtPointer call_data);
 void gXipmsg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data);
 void gXipmsg_CheckData(XtPointer xp_Client_data, XtIntervalId* id);

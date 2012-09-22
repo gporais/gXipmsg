@@ -15,10 +15,12 @@ int GXIM_UDP_Socket;
 struct passwd* GXIM_Passwd;
 XtAppContext GXIM_App;
 Widget GXIM_TopLevel;
-
+int DLProcedures;
 
 static int gXipmsg_main (int argc, char* argv[])
 {	
+	DLProcedures = 0;
+	
 	// Get local hostname
 	if((gethostname(GXIM_Local_Hostname, HOSTNAME_MAXLEN)) == -1)
 	{
@@ -72,9 +74,12 @@ int main(int argc, char* argv[])
 
 void gXipmsg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data)
 {	
-	udp_BroadcastExit();
-	udp_CloseSocket();	
-	exit(1);
+	if(DLProcedures == 0)
+	{
+		udp_BroadcastExit();
+		udp_CloseSocket();	
+		exit(1);
+	}
 }
 
 void gXipmsg_CheckData(XtPointer xp_Client_data, XtIntervalId* id)

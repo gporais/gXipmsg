@@ -333,10 +333,11 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 			}
 		}
 			
-		// Create work procedure	
+		// Create work procedure
+		DLProcedures++;
 		data->dLevel = 0;
 		data->dWorkID = XtAppAddWorkProc(GXIM_App, recvDialog_DLProcedure, client_data);
-		data->dButton = widget;
+		data->dButton = widget;		
 	}
 }
 
@@ -465,6 +466,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				
 				// Set level to -1
 				data->dLevel = -1;
+				DLProcedures--;
 			}			
 			break;
 			
