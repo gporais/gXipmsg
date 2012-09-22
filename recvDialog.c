@@ -1,6 +1,17 @@
 // created by: geo (April 2012)
 #include "recvDialog.h"
 
+void recvDialog_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data)
+{	
+	struct RecvClientData* data = (struct RecvClientData*) xp_Client_data;
+	
+	// Check if level -1
+	if(data->dLevel == -1)
+	{
+		XtDestroyWidget(w_Widget);
+	}
+}
+
 void recvDialog_UpdateBtnLabel(Widget widget, char* strLabel)
 {
 	XmString xstrBuff = XmStringCreateLocalized (strLabel);
@@ -254,6 +265,8 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	data->dServerInfo = *p_Item;
 	
 	XmStringFree (xstr_Buff);
+	
+	appIcon_SetupClose(&RECVDIALOG_Dialog, recvDialog_AtExit, (XtPointer)data);
 }
 
 

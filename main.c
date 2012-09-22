@@ -57,7 +57,7 @@ static int gXipmsg_main (int argc, char* argv[])
 	}
 	
 	appIcon_Init(&GXIM_TopLevel, argc, argv);
-	appIcon_SetupClose(&GXIM_TopLevel, gXipmsg_AtExit);
+	appIcon_SetupClose(&GXIM_TopLevel, gXipmsg_AtExit, NULL);
 	appIcon_SetupTimeout(gXipmsg_CheckData);
 	appIcon_Run();
 			
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 }
 
 void gXipmsg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data)
-{		
+{	
 	udp_BroadcastExit();
 	udp_CloseSocket();	
 	exit(1);

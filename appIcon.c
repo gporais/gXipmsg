@@ -58,7 +58,7 @@ void appIcon_Init(Widget* w_TopLevel, int argc, char* argv[])
 }
 
 
-void appIcon_SetupClose(Widget* w_TopLevel, XtCallbackProc xcp_CloseProc)
+void appIcon_SetupClose(Widget* w_TopLevel, XtCallbackProc xcp_CloseProc, XtPointer client_data)
 {
 	/* get window manager delete protocol atom */
 	APPICON_DelWin_protocol = XmInternAtom(XtDisplay(*w_TopLevel), "WM_DELETE_WINDOW", True);
@@ -67,7 +67,7 @@ void appIcon_SetupClose(Widget* w_TopLevel, XtCallbackProc xcp_CloseProc)
     XtVaSetValues( *w_TopLevel, XmNdeleteResponse, XmDO_NOTHING, NULL);
     
     /* add callback for window manager delete protocol */
-    XmAddWMProtocolCallback(*w_TopLevel, APPICON_DelWin_protocol, xcp_CloseProc, NULL);
+    XmAddWMProtocolCallback(*w_TopLevel, APPICON_DelWin_protocol, xcp_CloseProc, client_data);
 }
 
 

@@ -27,7 +27,7 @@ Atom APPICON_DelWin_protocol;
 
 // Function declerations
 void appIcon_Init(Widget* w_TopLevel, int argc, char* argv[]);
-void appIcon_SetupClose(Widget* w_TopLevel, XtCallbackProc xcp_CloseProc);
+void appIcon_SetupClose(Widget* w_TopLevel, XtCallbackProc xcp_CloseProc, XtPointer client_data);
 void appIcon_SetupTimeout(XtTimerCallbackProc xcp_TOProc);
 void appIcon_Run(void);
 void appIcon_IconCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
