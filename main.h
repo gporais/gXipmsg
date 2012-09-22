@@ -89,7 +89,7 @@ struct RecvClientData{
 	Widget dCheck;	
 	struct Broadcast_Packet dServerInfo;
 	
-	char dLevel;
+	int dLevel;
 	unsigned long dFileSize;
 	unsigned long dCalcSize;
 	unsigned long dProgress;

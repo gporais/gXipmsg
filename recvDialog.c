@@ -22,7 +22,7 @@ void recvDialog_UpdateBtnLabel(Widget widget, char* strLabel)
 void recvDialog_ComposeFilenames(char* strDest, char* strSrc)
 {
 	int n = 0;
-	char* temp;
+	char temp[100];
 	char cat[100];
 	
 	*strDest = '\0';
@@ -356,7 +356,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 	
 	
 	int tcpRet;
-	struct stat st;
+	
 	
 	switch(data->dLevel)
 	{
@@ -409,7 +409,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				}
 				
 				strPath = malloc(strlen(data->dFilename) + 14);
-				sprintf(strPath,"downloading %s",data->dFilename);
+				sprintf(strPath,"%s",data->dFilename);
 				recvDialog_UpdateBtnLabel(data->dButton, strPath);
 				free(strPath);
 				strPath = NULL;
@@ -483,8 +483,8 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 			
 			if((data->dProgress % 3000) == 0)
 			{
-				strPath = malloc(strlen(data->dFilename) + 14 + 20);
-				sprintf(strPath,"downloading %s %i bytes",data->dFilename, data->dCalcSize);
+				strPath = malloc(strlen(data->dFilename) + 8 + 20);
+				sprintf(strPath,"%s %i bytes",data->dFilename, data->dCalcSize);
 				recvDialog_UpdateBtnLabel(data->dButton, strPath);
 				free(strPath);
 				strPath = NULL;
