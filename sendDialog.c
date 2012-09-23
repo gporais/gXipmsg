@@ -136,8 +136,10 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	XtSetArg (args[n], XmNleftOffset, 5); n++; 
 	XtSetArg (args[n], XmNtopOffset, 3); n++; 
 	XtSetArg (args[n], XmNrightOffset, 5); n++; 
-	SENDDIALOG_BtnG_Attach = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Upload", args, n);
-//	XtManageChild (SENDDIALOG_BtnG_Attach);
+	SENDDIALOG_BtnG_Attach = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Attach", args, n);
+	XtAddCallback (SENDDIALOG_BtnG_Attach, XmNactivateCallback, sendDialog_AttachCallBack, NULL);
+	
+	XtManageChild (SENDDIALOG_BtnG_Attach);
 	
 	
 	// Create send button
@@ -280,6 +282,13 @@ void sendDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 	SENDDIALOG_Dialog = XtParent(SENDDIALOG_Dialog);
 		
 	XtDestroyWidget(SENDDIALOG_Dialog);
+}
+
+void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	Widget dialog;
+	dialog = XmCreateFileSelectionDialog (widget, "Files", NULL, 0);
+	XtManageChild (dialog);
 }
 
 

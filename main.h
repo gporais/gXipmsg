@@ -28,7 +28,7 @@
 #include <Xm/LabelG.h>
 #include <Xm/ToggleBG.h>
 #include <Xm/MessageB.h>
-
+#include <Xm/FileSB.h>
 #include <Xm/Frame.h>
 #include <Xm/Form.h>
 #include <Xm/List.h>

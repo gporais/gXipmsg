@@ -408,7 +408,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 					printf("error: unknown attachment\n");
 				}
 				
-				strPath = malloc(strlen(data->dFilename) + 14);
+				strPath = malloc(strlen(data->dFilename) + 2);
 				sprintf(strPath,"%s",data->dFilename);
 				recvDialog_UpdateBtnLabel(data->dButton, strPath);
 				free(strPath);
