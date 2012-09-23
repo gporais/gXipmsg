@@ -238,28 +238,6 @@ void appIcon_UpdateLists(struct NODE *llist, struct Broadcast_Packet* p_Item, ch
 	}	
 }
 
-int appIcon_CountNodes(struct NODE *llist)
-{
-	int mCnt = 0;
-	
-	while(llist->next != NULL)
-	{
-		if(llist->ptrData != NULL)
-		{
-			mCnt++;
-		}
-		llist = llist->next;
-	}
-
-	if(llist->ptrData != NULL)
-	{
-		mCnt++;
-	}
-	return mCnt;
-}
-
-
-
 
 void append_node(struct NODE *llist, struct SendClientData* num) {
  while(llist->next != NULL)
