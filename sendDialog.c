@@ -31,6 +31,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 		
 	int m_Count;	
 	char str_Count[4];	
+	char* strText;
 	XmStringTable xstr_list;	
 	
 	struct SendClientData* data = XtNew (struct SendClientData);
@@ -204,10 +205,12 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 				}
 				n++;
 			}
+			
+			strText = XmTextGetString(SENDDIALOG_Text);
+			strcat(strText,"\n");
+			XmTextSetString(SENDDIALOG_Text, strText);
 		}
-	}
-
-	
+	}	
 	
 	// Materialize major widgets
 	XtManageChild (SENDDIALOG_Form_Upper);
