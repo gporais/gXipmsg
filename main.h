@@ -47,7 +47,7 @@
 
 #define _TCP_BUF_SIZE (0x40000)
 #define _TCP_BUF_MIN_SIZE (_TCP_BUF_SIZE/2)
-#define TCP_FILE_BUFSIZ      (8192)
+#define TCP_FILE_BUFSIZ (0x5000)
 
 
 #define	USERNAME_MAXLEN			100
@@ -93,7 +93,7 @@ struct RecvClientData{
 	unsigned long dFileSize;
 	unsigned long dCalcSize;
 	unsigned long dProgress;
-	XtWorkProcId dWorkID;
+	XtIntervalId dWorkID;
 	Widget dButton;
 	FILE* fpWrite;
 	char* dBuffer;

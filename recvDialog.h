@@ -18,8 +18,8 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 void recvDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_data);
 
 void recvDialog_ComposeFilenames(char* strDest, char* strSrc);
-Boolean recvDialog_DLProcedure(XtPointer client_data);
 void recvDialog_UpdateBtnLabel(Widget widget, char* strLabel);
 void recvDialog_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data);
+void recvDialog_DLProcedure(XtPointer xp_Client_data, XtIntervalId* id);
 
 #endif /*RECVDIALOG_H_*/
