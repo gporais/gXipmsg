@@ -336,17 +336,16 @@ void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer
 		// Create work procedure
 		DLProcedures++;
 		data->dLevel = 0;
-		data->dButton = widget;		
-		data->dWorkID = XtAppAddTimeOut(GXIM_App, 1, recvDialog_DLProcedure, client_data);
+		data->dButton = widget;
+		data->dWorkID = XtAppAddWorkProc(GXIM_App, recvDialog_DLProcedure, client_data);			
 	}
 }
 
-
-void recvDialog_DLProcedure(XtPointer client_data, XtIntervalId* id)
+Boolean recvDialog_DLProcedure(XtPointer client_data)
 {	
 	struct RecvClientData* data = (struct RecvClientData*) client_data;
 	struct FileInfo_Packet RecvdFileInfos;
-	Boolean bDone = False;
+	Boolean bRet = False;
 	char strExtended[22];
 	char* strRequestPacket = NULL;
 	char* strPath = NULL;
@@ -430,8 +429,6 @@ void recvDialog_DLProcedure(XtPointer client_data, XtIntervalId* id)
 					fwrite(data->dBuffer, sizeof(data->dBuffer[0]), tcpRet, data->fpWrite);
 				}
 				
-				if(tcpRet<TCP_FILE_BUFSIZ)
-					printf("tcpRet %i: %i\n",data->dProgress,tcpRet);
 				
 				if(tcpRet == 0 || data->dCalcSize == data->dFileSize)
 				{
@@ -456,6 +453,8 @@ void recvDialog_DLProcedure(XtPointer client_data, XtIntervalId* id)
 			}
 			else
 			{
+				// Done
+				XtRemoveWorkProc(data->dWorkID);
 				// Free Extended Address pointer
 				if(data->dServerInfo.ExtendedAddr != NULL)
 				{
@@ -463,7 +462,7 @@ void recvDialog_DLProcedure(XtPointer client_data, XtIntervalId* id)
 					data->dServerInfo.ExtendedAddr = NULL;
 				}
 				XtUnmanageChild(data->dButton);
-				bDone = True;
+				bRet = True;
 				
 				// Set level to -1
 				data->dLevel = -1;
@@ -482,17 +481,14 @@ void recvDialog_DLProcedure(XtPointer client_data, XtIntervalId* id)
 				fwrite(data->dBuffer, sizeof(data->dBuffer[0]), tcpRet, data->fpWrite);
 			}		
 			
-			if((data->dProgress % 100) == 0)
+			if((data->dProgress % 3000) == 0)
 			{
 				strPath = malloc(strlen(data->dFilename) + 8 + 20);
-				sprintf(strPath,"%s %i bytes",data->dFilename, tcpRet);
+				sprintf(strPath,"%s %i bytes",data->dFilename, data->dCalcSize);
 				recvDialog_UpdateBtnLabel(data->dButton, strPath);
 				free(strPath);
-				strPath = NULL;					
-			}	
-			
-			if(tcpRet<TCP_FILE_BUFSIZ)
-				printf("tcpRet %i: %i\n",data->dProgress,tcpRet);
+				strPath = NULL;
+			}			
 			
 			if(tcpRet == 0 || data->dCalcSize == data->dFileSize)
 			{
@@ -514,10 +510,7 @@ void recvDialog_DLProcedure(XtPointer client_data, XtIntervalId* id)
 			break;		
 	}
 	
-	if(!bDone)
-		data->dWorkID = XtAppAddTimeOut(GXIM_App, 1, recvDialog_DLProcedure, client_data);
-	else
-		XtRemoveTimeOut (data->dWorkID);
+	return bRet;
 }
 
 
