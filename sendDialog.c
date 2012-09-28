@@ -286,9 +286,53 @@ void sendDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 
 void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget dialog;
-	dialog = XmCreateFileSelectionDialog (widget, "Files", NULL, 0);
-	XtManageChild (dialog);
+	Widget dialog = XmCreateSelectionDialog (widget, "Attachments", NULL, 0);
+	Widget add_button;
+	XmString xstr_item = XmStringCreateLocalized("Attachments");
+	XmString xstr_apply = XmStringCreateLocalized("Delete");
+	XmString xstr_cancel = XmStringCreateLocalized("Close");
+
+	XtVaSetValues(dialog, 
+				XmNdialogStyle, XmDIALOG_FULL_APPLICATION_MODAL,
+				XmNautoUnmanage, False,
+				XmNlistLabelString, xstr_item,
+				XmNapplyLabelString, xstr_apply,
+				XmNcancelLabelString, xstr_cancel,
+				NULL);
+		
+	XtUnmanageChild(XtNameToWidget(dialog, "Selection"));
+	XtUnmanageChild(XtNameToWidget(dialog, "Text"));
+	XtUnmanageChild(XtNameToWidget(dialog, "OK"));
+	XtUnmanageChild(XtNameToWidget(dialog, "Help"));
+//	XtAddCallback (dialog, XmNapplyCallback, sendDialog_AddFilesCallBack, NULL);
+	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CloseAttachCallBack, dialog);
+	
+	XmCreatePushButtonGadget(dialog, "Unmanaged", NULL, 0);
+	add_button = XmCreatePushButtonGadget(dialog, "Add Files", NULL, 0);
+	XtAddCallback (add_button, XmNactivateCallback, sendDialog_AddFilesCallBack, NULL);
+	XtManageChild(add_button);
+	XtManageChild(dialog);
+	
+	XmStringFree(xstr_apply);
+	XmStringFree(xstr_item);
 }
 
+void sendDialog_AddFilesCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	Widget dialog = XmCreateFileSelectionDialog (widget, "Files", NULL, 0);
+	
+	XtVaSetValues(dialog, 
+				XmNdialogStyle, XmDIALOG_FULL_APPLICATION_MODAL, 
+				NULL);
+	
+	XtVaSetValues(XtNameToWidget(dialog, "*ItemsList"),	XmNselectionPolicy, XmEXTENDED_SELECT, NULL);	
+	XtManageChild(dialog);	
+}
+
+void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	Widget dialog = (Widget) client_data;
+	
+	XtUnmanageChild(dialog);
+}
 
