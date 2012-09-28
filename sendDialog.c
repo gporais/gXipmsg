@@ -331,9 +331,6 @@ void sendDialog_AddFilesCallBack(Widget widget, XtPointer client_data, XtPointer
 	XtVaSetValues(XtNameToWidget(dialog, "*ItemsList"),	XmNselectionPolicy, XmEXTENDED_SELECT, NULL);	
 	
 
-	XtSetSensitive(XtNameToWidget(dialog, "Selection"), False);
-	XtSetSensitive(XtNameToWidget(dialog, "Text"), False);
-	XtSetSensitive(XtNameToWidget(dialog, "Apply"), False);
 	XtSetSensitive(XtNameToWidget(dialog, "Help"), False);
 	XtAddCallback (dialog, XmNokCallback, sendDialog_AddFileCallBack, NULL);
 	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CancelAddCallBack, dialog);
