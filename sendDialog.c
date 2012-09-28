@@ -299,12 +299,13 @@ void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer c
 				XmNapplyLabelString, xstr_apply,
 				XmNcancelLabelString, xstr_cancel,
 				NULL);
+	XtAddCallback(dialog, XmNfocusCallback, sendDialog_MapAttachments, NULL);
 		
 	XtUnmanageChild(XtNameToWidget(dialog, "Selection"));
 	XtUnmanageChild(XtNameToWidget(dialog, "Text"));
 	XtUnmanageChild(XtNameToWidget(dialog, "OK"));
 	XtUnmanageChild(XtNameToWidget(dialog, "Help"));
-//	XtAddCallback (dialog, XmNapplyCallback, sendDialog_AddFilesCallBack, NULL);
+	XtAddCallback (dialog, XmNapplyCallback, sendDialog_DeleteItemCallBack, NULL);
 	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CloseAttachCallBack, dialog);
 	
 	XmCreatePushButtonGadget(dialog, "Unmanaged", NULL, 0);
@@ -313,23 +314,65 @@ void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer c
 	XtManageChild(add_button);
 	XtManageChild(dialog);
 	
+	XmStringFree(xstr_cancel);
 	XmStringFree(xstr_apply);
 	XmStringFree(xstr_item);
 }
 
 void sendDialog_AddFilesCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget dialog = XmCreateFileSelectionDialog (widget, "Files", NULL, 0);
+	Widget dialog = XmCreateFileSelectionDialog (widget, "File Add", NULL, 0);
+	XmString xstr_ok = XmStringCreateLocalized("Open");
 	
 	XtVaSetValues(dialog, 
 				XmNdialogStyle, XmDIALOG_FULL_APPLICATION_MODAL, 
+				XmNokLabelString, xstr_ok,				
 				NULL);
+	XtAddCallback(dialog, XmNfocusCallback, sendDialog_MapFileAdd, NULL);
 	
 	XtVaSetValues(XtNameToWidget(dialog, "*ItemsList"),	XmNselectionPolicy, XmEXTENDED_SELECT, NULL);	
+	XtVaSetValues(XtNameToWidget(dialog, "FilterText"),	XmNcolumns, 50, NULL);	
+
+	XtUnmanageChild(XtNameToWidget(dialog, "Selection"));
+	XtUnmanageChild(XtNameToWidget(dialog, "Text"));
+	XtUnmanageChild(XtNameToWidget(dialog, "Apply"));
+	XtUnmanageChild(XtNameToWidget(dialog, "Help"));
+	XtAddCallback (dialog, XmNokCallback, sendDialog_AddFileCallBack, NULL);
+	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CancelAddCallBack, dialog);
+		
 	XtManageChild(dialog);	
+	
+	XmStringFree(xstr_ok);
 }
 
 void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	Widget dialog = (Widget) client_data;
+	
+	XtUnmanageChild(dialog);
+}
+
+void sendDialog_DeleteItemCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+		
+}
+
+void sendDialog_MapAttachments(Widget dialog, XtPointer client_data, XtPointer call_data)
+{
+	XtVaSetValues (dialog, XmNwidth, (WidthOfScreen (XtScreen (dialog)) / 4), NULL);	
+}
+
+void sendDialog_MapFileAdd(Widget dialog, XtPointer client_data, XtPointer call_data)
+{
+	XtVaSetValues (dialog, XmNheight, (HeightOfScreen (XtScreen (dialog)) / 3), XmNwidth, (WidthOfScreen (XtScreen (dialog)) / 3), NULL);
+}
+
+void sendDialog_AddFileCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	
+}
+
+void sendDialog_CancelAddCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
 	Widget dialog = (Widget) client_data;
 	
