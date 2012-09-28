@@ -20,6 +20,8 @@ int DLProcedures;
 static int gXipmsg_main (int argc, char* argv[])
 {	
 	DLProcedures = 0;
+	posX = 0;
+	posY = 0;
 	
 	// Get local hostname
 	if((gethostname(GXIM_Local_Hostname, HOSTNAME_MAXLEN)) == -1)

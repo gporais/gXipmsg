@@ -23,9 +23,6 @@ void sendDialog_AddFilesCallBack(Widget widget, XtPointer client_data, XtPointer
 void sendDialog_DeleteItemCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
 
-void sendDialog_MapAttachments(Widget dialog, XtPointer client_data, XtPointer call_data);
-void sendDialog_MapFileAdd(Widget dialog, XtPointer client_data, XtPointer call_data);
-
 void sendDialog_AddFileCallBack(Widget dialog, XtPointer client_data, XtPointer call_data);
 void sendDialog_CancelAddCallBack(Widget dialog, XtPointer client_data, XtPointer call_data);
 

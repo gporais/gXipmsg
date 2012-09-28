@@ -286,7 +286,7 @@ void sendDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 
 void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget dialog = XmCreateSelectionDialog (widget, "Attachments", NULL, 0);
+	Widget dialog = XmCreateSelectionDialog (XtParent (widget), "Attachments", NULL, 0);
 	Widget add_button;
 	XmString xstr_item = XmStringCreateLocalized("Attachments");
 	XmString xstr_apply = XmStringCreateLocalized("Delete");
@@ -298,8 +298,7 @@ void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer c
 				XmNlistLabelString, xstr_item,
 				XmNapplyLabelString, xstr_apply,
 				XmNcancelLabelString, xstr_cancel,
-				NULL);
-	XtAddCallback(dialog, XmNfocusCallback, sendDialog_MapAttachments, NULL);
+				NULL);	
 		
 	XtUnmanageChild(XtNameToWidget(dialog, "Selection"));
 	XtUnmanageChild(XtNameToWidget(dialog, "Text"));
@@ -321,22 +320,21 @@ void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer c
 
 void sendDialog_AddFilesCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget dialog = XmCreateFileSelectionDialog (widget, "File Add", NULL, 0);
+	Widget dialog = XmCreateFileSelectionDialog (XtParent (widget), "File Add", NULL, 0);
 	XmString xstr_ok = XmStringCreateLocalized("Open");
 	
 	XtVaSetValues(dialog, 
 				XmNdialogStyle, XmDIALOG_FULL_APPLICATION_MODAL, 
 				XmNokLabelString, xstr_ok,				
 				NULL);
-	XtAddCallback(dialog, XmNfocusCallback, sendDialog_MapFileAdd, NULL);
-	
+		
 	XtVaSetValues(XtNameToWidget(dialog, "*ItemsList"),	XmNselectionPolicy, XmEXTENDED_SELECT, NULL);	
-	XtVaSetValues(XtNameToWidget(dialog, "FilterText"),	XmNcolumns, 50, NULL);	
+	
 
-	XtUnmanageChild(XtNameToWidget(dialog, "Selection"));
+	/*XtUnmanageChild(XtNameToWidget(dialog, "Selection"));
 	XtUnmanageChild(XtNameToWidget(dialog, "Text"));
 	XtUnmanageChild(XtNameToWidget(dialog, "Apply"));
-	XtUnmanageChild(XtNameToWidget(dialog, "Help"));
+	XtUnmanageChild(XtNameToWidget(dialog, "Help"));*/
 	XtAddCallback (dialog, XmNokCallback, sendDialog_AddFileCallBack, NULL);
 	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CancelAddCallBack, dialog);
 		
@@ -357,15 +355,6 @@ void sendDialog_DeleteItemCallBack(Widget widget, XtPointer client_data, XtPoint
 		
 }
 
-void sendDialog_MapAttachments(Widget dialog, XtPointer client_data, XtPointer call_data)
-{
-	XtVaSetValues (dialog, XmNwidth, (WidthOfScreen (XtScreen (dialog)) / 4), NULL);	
-}
-
-void sendDialog_MapFileAdd(Widget dialog, XtPointer client_data, XtPointer call_data)
-{
-	XtVaSetValues (dialog, XmNheight, (HeightOfScreen (XtScreen (dialog)) / 3), XmNwidth, (WidthOfScreen (XtScreen (dialog)) / 3), NULL);
-}
 
 void sendDialog_AddFileCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
