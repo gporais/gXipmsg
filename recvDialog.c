@@ -378,16 +378,16 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				
 				// Prepare File infos
 				sscanf(RecvdFileInfos.FileID, "%lu", &FileID);
-				sscanf(RecvdFileInfos.FileSize, "%x", &data->dFileSize);
+				sscanf(RecvdFileInfos.FileSize, "%lx", &data->dFileSize);
 				data->dBuffer = malloc(TCP_FILE_BUFSIZ);
 				bzero(data->dBuffer, TCP_FILE_BUFSIZ);
 				
 				// Check if file or directory
-				sscanf(RecvdFileInfos.FileAttrib, "%x", &FileAttrib);
+				sscanf(RecvdFileInfos.FileAttrib, "%lx", &FileAttrib);
 				
 				if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
 				{
-					sprintf(strExtended, "%x:%x:0", data->dServerInfo.PacketID, FileID);
+					sprintf(strExtended, "%lx:%lx:0", data->dServerInfo.PacketID, FileID);
 					strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
 					
 					// Create file
@@ -400,7 +400,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				}
 				else if((GET_MODE(FileAttrib) & IPMSG_FILE_DIR)  == IPMSG_FILE_DIR)
 				{
-					sprintf(strExtended, "%x:%x", data->dServerInfo.PacketID, FileID);
+					sprintf(strExtended, "%lx:%lx", data->dServerInfo.PacketID, FileID);
 					strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETDIRFILES, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
 				}
 				else
@@ -484,7 +484,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 			if((data->dProgress % 3000) == 0)
 			{
 				strPath = malloc(strlen(data->dFilename) + 8 + 20);
-				sprintf(strPath,"%s %i bytes",data->dFilename, data->dCalcSize);
+				sprintf(strPath,"%s %lu bytes",data->dFilename, data->dCalcSize);
 				recvDialog_UpdateBtnLabel(data->dButton, strPath);
 				free(strPath);
 				strPath = NULL;
