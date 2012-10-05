@@ -299,17 +299,19 @@ void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer c
 				XmNapplyLabelString, xstr_apply,
 				XmNcancelLabelString, xstr_cancel,
 				NULL);	
+	
+	XtVaSetValues(XtNameToWidget(dialog, "*ItemsList"),	XmNselectionPolicy, XmEXTENDED_SELECT, NULL);
 		
 	XtUnmanageChild(XtNameToWidget(dialog, "Selection"));
 	XtUnmanageChild(XtNameToWidget(dialog, "Text"));
 	XtUnmanageChild(XtNameToWidget(dialog, "OK"));
 	XtUnmanageChild(XtNameToWidget(dialog, "Help"));
-	XtAddCallback (dialog, XmNapplyCallback, sendDialog_DeleteItemCallBack, NULL);
+	XtAddCallback (dialog, XmNapplyCallback, sendDialog_DeleteItemCallBack, dialog);
 	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CloseAttachCallBack, dialog);
 	
 	XmCreatePushButtonGadget(dialog, "Unmanaged", NULL, 0);
 	add_button = XmCreatePushButtonGadget(dialog, "Add Files", NULL, 0);
-	XtAddCallback (add_button, XmNactivateCallback, sendDialog_AddFilesCallBack, NULL);
+	XtAddCallback (add_button, XmNactivateCallback, sendDialog_AddFilesCallBack, dialog);
 	XtManageChild(add_button);
 	XtManageChild(dialog);
 	
@@ -332,8 +334,8 @@ void sendDialog_AddFilesCallBack(Widget widget, XtPointer client_data, XtPointer
 	
 
 	XtSetSensitive(XtNameToWidget(dialog, "Help"), False);
-	XtAddCallback (dialog, XmNokCallback, sendDialog_AddFileCallBack, NULL);
-	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CancelAddCallBack, dialog);
+	XtAddCallback (dialog, XmNokCallback, sendDialog_AddFileCallBack, client_data);
+	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CancelAddCallBack, NULL);
 		
 	XtManageChild(dialog);	
 	
@@ -349,19 +351,44 @@ void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPoin
 
 void sendDialog_DeleteItemCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
+	Widget attachList = XtNameToWidget((Widget)client_data, "*ItemsList");
+	XmStringTable xstr_list;
+	int m_Count = 0, mIdx = 0;	
 		
+	// Get the selected items (and number of selected) from the List
+	XtVaGetValues (attachList, XmNselectedItemCount, &m_Count, XmNselectedItems, &xstr_list, NULL);
+	
+	for(mIdx = 0; mIdx < m_Count; mIdx++)
+	{
+		XmListDeleteItem (attachList, xstr_list[0]);
+	}	
 }
+
+
+
 
 
 void sendDialog_AddFileCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
+	Widget attachList = XtNameToWidget((Widget)client_data, "*ItemsList");
+	Widget selectedList = XtNameToWidget(widget, "*ItemsList");
+	XmStringTable xstr_list;
+	int m_Count = 0, mIdx = 0;
+		
+	// Get the selected items (and number of selected) from the List
+	XtVaGetValues (selectedList, XmNselectedItemCount, &m_Count, XmNselectedItems, &xstr_list, NULL);
 	
+	for(mIdx = 0; mIdx < m_Count; mIdx++)
+	{
+		if(!XmListItemExists (attachList, xstr_list[mIdx]))
+			XmListAddItemUnselected (attachList, xstr_list[mIdx], 0);	
+	}
+	
+	XtUnmanageChild(widget);	
 }
 
 void sendDialog_CancelAddCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget dialog = (Widget) client_data;
-	
-	XtUnmanageChild(dialog);
+	XtUnmanageChild(widget);
 }
 
