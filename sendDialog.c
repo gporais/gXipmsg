@@ -137,7 +137,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	XtSetArg (args[n], XmNtopOffset, 3); n++; 
 	XtSetArg (args[n], XmNrightOffset, 5); n++; 
 	SENDDIALOG_BtnG_Attach = XmCreatePushButtonGadget (SENDDIALOG_Form_Lower, "Attach", args, n);
-	XtAddCallback (SENDDIALOG_BtnG_Attach, XmNactivateCallback, sendDialog_AttachCallBack, NULL);
+	XtAddCallback (SENDDIALOG_BtnG_Attach, XmNactivateCallback, sendDialog_AttachCallBack, (XtPointer)data);
 	
 	XtManageChild (SENDDIALOG_BtnG_Attach);
 	
@@ -225,6 +225,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	data->dText = SENDDIALOG_Text;
 	data->dLabel = SENDDIALOG_LblG_Count;
 	
+	data->m_Count = 0;
 	return data;
 }
 
@@ -286,11 +287,13 @@ void sendDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 
 void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
+	struct SendClientData* data = (struct SendClientData*) client_data;
 	Widget dialog = XmCreateSelectionDialog (XtParent (widget), "Attachments", NULL, 0);
 	Widget add_button;
 	XmString xstr_item = XmStringCreateLocalized("Attachments");
 	XmString xstr_apply = XmStringCreateLocalized("Delete");
 	XmString xstr_cancel = XmStringCreateLocalized("Close");
+	int mIdx;	
 
 	XtVaSetValues(dialog, 
 				XmNdialogStyle, XmDIALOG_FULL_APPLICATION_MODAL,
@@ -300,18 +303,28 @@ void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer c
 				XmNcancelLabelString, xstr_cancel,
 				NULL);	
 	
-	XtVaSetValues(XtNameToWidget(dialog, "*ItemsList"),	XmNselectionPolicy, XmEXTENDED_SELECT, NULL);
+	XtVaSetValues(XtNameToWidget(dialog, "*ItemsList"),	
+				XmNselectionPolicy, XmEXTENDED_SELECT,
+				NULL);
+	
+	data->dDialog = dialog;
+	
+	for(mIdx = 0; mIdx < data->m_Count; mIdx++)
+	{
+		XmListAddItemUnselected (XtNameToWidget(dialog, "*ItemsList"), data->xstr_list[mIdx], 0);
+	}	
 		
 	XtUnmanageChild(XtNameToWidget(dialog, "Selection"));
 	XtUnmanageChild(XtNameToWidget(dialog, "Text"));
 	XtUnmanageChild(XtNameToWidget(dialog, "OK"));
 	XtUnmanageChild(XtNameToWidget(dialog, "Help"));
-	XtAddCallback (dialog, XmNapplyCallback, sendDialog_DeleteItemCallBack, dialog);
+	XtAddCallback (dialog, XmNapplyCallback, sendDialog_DeleteItemCallBack, (XtPointer)data);
 	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CloseAttachCallBack, dialog);
+	
 	
 	XmCreatePushButtonGadget(dialog, "Unmanaged", NULL, 0);
 	add_button = XmCreatePushButtonGadget(dialog, "Add Files", NULL, 0);
-	XtAddCallback (add_button, XmNactivateCallback, sendDialog_AddFilesCallBack, dialog);
+	XtAddCallback (add_button, XmNactivateCallback, sendDialog_AddFilesCallBack, (XtPointer)data);
 	XtManageChild(add_button);
 	XtManageChild(dialog);
 	
@@ -319,6 +332,7 @@ void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer c
 	XmStringFree(xstr_apply);
 	XmStringFree(xstr_item);
 }
+
 
 void sendDialog_AddFilesCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
@@ -351,7 +365,8 @@ void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPoin
 
 void sendDialog_DeleteItemCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget attachList = XtNameToWidget((Widget)client_data, "*ItemsList");
+	struct SendClientData* data = (struct SendClientData*) client_data;
+	Widget attachList = XtNameToWidget((Widget)data->dDialog, "*ItemsList");
 	XmStringTable xstr_list;
 	int m_Count = 0, mIdx = 0;	
 		
@@ -362,6 +377,8 @@ void sendDialog_DeleteItemCallBack(Widget widget, XtPointer client_data, XtPoint
 	{
 		XmListDeleteItem (attachList, xstr_list[0]);
 	}	
+	
+	XtVaGetValues (attachList, XmNitemCount, &data->m_Count, XmNitems, &data->xstr_list, NULL);
 }
 
 
@@ -370,7 +387,8 @@ void sendDialog_DeleteItemCallBack(Widget widget, XtPointer client_data, XtPoint
 
 void sendDialog_AddFileCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget attachList = XtNameToWidget((Widget)client_data, "*ItemsList");
+	struct SendClientData* data = (struct SendClientData*) client_data;
+	Widget attachList = XtNameToWidget((Widget)data->dDialog, "*ItemsList");
 	Widget selectedList = XtNameToWidget(widget, "*ItemsList");
 	XmStringTable xstr_list;
 	int m_Count = 0, mIdx = 0;
@@ -381,8 +399,10 @@ void sendDialog_AddFileCallBack(Widget widget, XtPointer client_data, XtPointer 
 	for(mIdx = 0; mIdx < m_Count; mIdx++)
 	{
 		if(!XmListItemExists (attachList, xstr_list[mIdx]))
-			XmListAddItemUnselected (attachList, xstr_list[mIdx], 0);	
+			XmListAddItemUnselected (attachList, xstr_list[mIdx], 0);
 	}
+	
+	XtVaGetValues (attachList, XmNitemCount, &data->m_Count, XmNitems, &data->xstr_list, NULL);
 	
 	XtUnmanageChild(widget);	
 }

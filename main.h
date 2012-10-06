@@ -83,6 +83,11 @@ struct SendClientData{
 	Widget dList;
 	Widget dText;	
 	Widget dLabel;	
+	
+	Widget dDialog;
+	char* Extended;
+	int m_Count;
+	XmStringTable xstr_list;
 };
 
 struct RecvClientData{
