@@ -5,6 +5,12 @@
 void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	struct SendClientData* data = (struct SendClientData*) client_data;
+	
+	if(data->Extended != NULL)
+	{
+		free(data->Extended);
+		data->Extended = NULL;
+	}
 		
 	appIcon_Unreg(data);
 	
@@ -361,15 +367,52 @@ void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPoin
 {
 	struct SendClientData* data = (struct SendClientData*) client_data;
 	char strAttachments[30];
-	
+	char* strFilename = NULL;
+	char* strSingleFile = NULL;
+	char* strTemp = NULL;
+	char* strExtended = NULL;
+	int mIdx;
+	struct stat st;
+		
 	if(data->m_Count == 0)
 	{
 		recvDialog_UpdateBtnLabel(data->dAttach, "Attach");
+		data->Extended = NULL;
 	}
 	else
 	{
 		sprintf(strAttachments, "Attachments (%i)", data->m_Count);
 		recvDialog_UpdateBtnLabel(data->dAttach, strAttachments);
+		
+		for(mIdx = 0; mIdx<data->m_Count; mIdx++)
+		{
+			strFilename = (char *) XmStringUnparse (data->xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+			stat(strFilename,&st);
+			
+			strSingleFile = malloc(strlen(strrchr(strFilename, '/')) + 6 + 30);
+			sprintf(strSingleFile, "%i:%s:%lx:%lx:1:", (long)st.st_ino, strrchr(strFilename, '/') + 1, (long)st.st_size, (long)st.st_ctime);
+			
+			if(strExtended != NULL)
+			{
+				strTemp = strExtended;				
+				strExtended = malloc(strlen(strTemp) + strlen(strSingleFile) + 2);
+				strcpy(strExtended, strTemp);
+				free(strTemp);				
+			}
+			else
+			{
+				strExtended = malloc(strlen(strSingleFile) + 2);
+				strExtended[0] = '\0';
+			}
+			
+			strcat(strExtended, strSingleFile);
+			
+			
+			free(strSingleFile);
+			
+			XtFree(strFilename);
+		}		
+		data->Extended = strExtended;		
 	}
 	
 	XtUnmanageChild(widget);
