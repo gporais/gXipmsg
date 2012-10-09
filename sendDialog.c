@@ -308,6 +308,7 @@ void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer c
 				NULL);
 	
 	data->dDialog = dialog;
+	data->dAttach = widget;
 	
 	for(mIdx = 0; mIdx < data->m_Count; mIdx++)
 	{
@@ -319,7 +320,7 @@ void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer c
 	XtUnmanageChild(XtNameToWidget(dialog, "OK"));
 	XtUnmanageChild(XtNameToWidget(dialog, "Help"));
 	XtAddCallback (dialog, XmNapplyCallback, sendDialog_DeleteItemCallBack, (XtPointer)data);
-	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CloseAttachCallBack, dialog);
+	XtAddCallback (dialog, XmNcancelCallback, sendDialog_CloseAttachCallBack, (XtPointer)data);
 	
 	
 	XmCreatePushButtonGadget(dialog, "Unmanaged", NULL, 0);
@@ -358,9 +359,20 @@ void sendDialog_AddFilesCallBack(Widget widget, XtPointer client_data, XtPointer
 
 void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
-	Widget dialog = (Widget) client_data;
+	struct SendClientData* data = (struct SendClientData*) client_data;
+	char strAttachments[30];
 	
-	XtUnmanageChild(dialog);
+	if(data->m_Count == 0)
+	{
+		recvDialog_UpdateBtnLabel(data->dAttach, "Attach");
+	}
+	else
+	{
+		sprintf(strAttachments, "Attachments (%i)", data->m_Count);
+		recvDialog_UpdateBtnLabel(data->dAttach, strAttachments);
+	}
+	
+	XtUnmanageChild(widget);
 }
 
 void sendDialog_DeleteItemCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
