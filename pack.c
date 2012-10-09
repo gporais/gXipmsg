@@ -1,7 +1,7 @@
 // created by: geo (March 2012)
 #include "pack.h"
 
-char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostname, char* p_handlename)
+char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostname, char* p_handlename, char* p_extended)
 {
 	// Prepare the flags
 	unsigned long PACK_Flags = m_Flags;	
@@ -11,11 +11,23 @@ char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostna
 	
 	int len = (strlen(PACK_IPMSG_VERSION) + 1) + 11 + (strlen(p_username) + 1) + (strlen(p_hostname) + 1) + 11 +(strlen(p_handlename) + 1);
 	
+	if(p_extended != NULL)
+	{
+		len += strlen(p_extended);
+	}
+	
 	// Prepare PACK_Full_Packet
 	PACK_Full_Packet = malloc(len);
 	
-	// Compose the full packet
-	sprintf(PACK_Full_Packet, "%s:%lu:%s:%s:%lu:%s", PACK_IPMSG_VERSION, PACK_Packet_No, p_username, p_hostname, PACK_Flags, p_handlename);
+	if(p_extended != NULL)
+	{
+		// Compose the full packet
+		sprintf(PACK_Full_Packet, "%s:%lu:%s:%s:%lu:%s:%s", PACK_IPMSG_VERSION, PACK_Packet_No, p_username, p_hostname, PACK_Flags, p_handlename, p_extended);
+	}
+	else
+	{
+		sprintf(PACK_Full_Packet, "%s:%lu:%s:%s:%lu:%s", PACK_IPMSG_VERSION, PACK_Packet_No, p_username, p_hostname, PACK_Flags, p_handlename);
+	}
 
 	return PACK_Full_Packet;
 }

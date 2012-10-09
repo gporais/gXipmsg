@@ -388,7 +388,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
 				{
 					sprintf(strExtended, "%lx:%lx:0", data->dServerInfo.PacketID, FileID);
-					strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
+					strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended, NULL);
 					
 					// Create file
 					strPath = malloc(strlen(RecvdFileInfos.FileName) + strlen(strDownloadPath) + 1);
@@ -401,7 +401,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				else if((GET_MODE(FileAttrib) & IPMSG_FILE_DIR)  == IPMSG_FILE_DIR)
 				{
 					sprintf(strExtended, "%lx:%lx", data->dServerInfo.PacketID, FileID);
-					strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETDIRFILES, GXIM_Local_Username, GXIM_Local_Hostname, strExtended);
+					strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETDIRFILES, GXIM_Local_Username, GXIM_Local_Hostname, strExtended, NULL);
 				}
 				else
 				{

@@ -13,7 +13,7 @@ char* PACK_Full_Packet;
 
 
 // Function declerations
-char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostname, char* p_handlename);
+char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostname, char* p_handlename, char* p_extended);
 void pack_CleanPacketBuffer(void);
 
 void pack_UnpackBroadcast(char* p_Packet, struct Broadcast_Packet* p_RestoredPacket);

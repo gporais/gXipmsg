@@ -231,6 +231,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	data->dText = SENDDIALOG_Text;
 	data->dLabel = SENDDIALOG_LblG_Count;
 	
+	data->Extended = NULL;
 	data->m_Count = 0;
 	return data;
 }
@@ -271,7 +272,10 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 			str_IP = strtok(NULL, ")");
 			
 			if (text = XmTextGetString (data->dText)) {
-				udp_SendToString(str_IP,text, IPMSG_SENDMSG);		
+				if(data->Extended == NULL)
+					udp_SendToString(str_IP,text, IPMSG_SENDMSG, data->Extended);
+				else
+					udp_SendToString(str_IP,text, IPMSG_SENDMSG | IPMSG_FILEATTACHOPT, data->Extended);
 			}
 			
 			XtFree(text);
