@@ -9,25 +9,40 @@ char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostna
 	// Prepare the packet no
 	unsigned long PACK_Packet_No = time(NULL);	
 	
-	int len = (strlen(PACK_IPMSG_VERSION) + 1) + 11 + (strlen(p_username) + 1) + (strlen(p_hostname) + 1) + 11 +(strlen(p_handlename) + 1);
+	int len = (strlen(PACK_IPMSG_VERSION) + 1) + 11 + (strlen(p_username) + 1) + (strlen(p_hostname) + 1) + 11 + (strlen(p_handlename) + 1);
+	char* pIdx;
 	
 	if(p_extended != NULL)
 	{
-		len += strlen(p_extended);
+		len += (strlen(p_extended) + 1);
 	}
 	
 	// Prepare PACK_Full_Packet
 	PACK_Full_Packet = malloc(len);
 	
+	sprintf(PACK_Full_Packet, "%s:%lu:%s:%s:%lu:%s", PACK_IPMSG_VERSION, PACK_Packet_No, p_username, p_hostname, PACK_Flags, p_handlename);
+	
+	len = strlen(PACK_Full_Packet);
+	
 	if(p_extended != NULL)
 	{
-		// Compose the full packet
-		sprintf(PACK_Full_Packet, "%s:%lu:%s:%s:%lu:%s:%s", PACK_IPMSG_VERSION, PACK_Packet_No, p_username, p_hostname, PACK_Flags, p_handlename, p_extended);
-	}
-	else
-	{
-		sprintf(PACK_Full_Packet, "%s:%lu:%s:%s:%lu:%s", PACK_IPMSG_VERSION, PACK_Packet_No, p_username, p_hostname, PACK_Flags, p_handlename);
-	}
+		// Add exteneded
+		strcat(PACK_Full_Packet, p_extended);
+		
+		pIdx = &PACK_Full_Packet[len];
+		len = 0;
+		
+		while((pIdx = strchr(pIdx, '+')) != NULL)
+		{
+			if(len == 0)
+				*pIdx = 0;
+			else
+				*pIdx = 7;
+			
+			pIdx++;
+			len++;
+		}
+	}	
 
 	return PACK_Full_Packet;
 }

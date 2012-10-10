@@ -193,6 +193,12 @@ int udp_BroadcastString(char* p_String)
 int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags, char* p_extended)
 {
 	char* p_Buffer = (char*)pack_PackBroadcast(m_Flags, GXIM_Local_Username, GXIM_Local_Hostname, p_String, p_extended);
+	int extlen = 0;
+	
+	if(p_extended != NULL)
+	{
+		extlen = strlen(p_extended);
+	}
 	
 #ifdef IP_ONESBCAST
 	
@@ -210,7 +216,7 @@ int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags, char* p_ext
 	}
 		
 	// Send string to address to
-	if((sendto(*UDP_LocalSocket, p_Buffer, strlen(p_Buffer)+1, 0, (struct sockaddr*)&UDP_AddrTo, sizeof(UDP_AddrTo))) == -1)
+	if((sendto(*UDP_LocalSocket, p_Buffer, strlen(p_Buffer) + extlen + 1, 0, (struct sockaddr*)&UDP_AddrTo, sizeof(UDP_AddrTo))) == -1)
 	{
 		printf("error: sendto()\n");		
 		return -1;
