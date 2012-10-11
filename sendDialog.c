@@ -232,7 +232,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	data->dLabel = SENDDIALOG_LblG_Count;
 	
 	data->Extended = NULL;
-	data->m_Count = 0;
+	data->dItemsCount = 0;
 	return data;
 }
 
@@ -320,9 +320,9 @@ void sendDialog_AttachCallBack(Widget widget, XtPointer client_data, XtPointer c
 	data->dDialog = dialog;
 	data->dAttach = widget;
 	
-	for(mIdx = 0; mIdx < data->m_Count; mIdx++)
+	for(mIdx = 0; mIdx < data->dItemsCount; mIdx++)
 	{
-		XmListAddItemUnselected (XtNameToWidget(dialog, "*ItemsList"), data->xstr_list[mIdx], 0);
+		XmListAddItemUnselected (XtNameToWidget(dialog, "*ItemsList"), data->xItemsList[mIdx], 0);
 	}	
 		
 	XtUnmanageChild(XtNameToWidget(dialog, "Selection"));
@@ -378,19 +378,19 @@ void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPoin
 	int mIdx;
 	struct stat st;
 		
-	if(data->m_Count == 0)
+	if(data->dItemsCount == 0)
 	{
 		recvDialog_UpdateBtnLabel(data->dAttach, "Attach");
 		data->Extended = NULL;
 	}
 	else
 	{
-		sprintf(strAttachments, "Attachments (%i)", data->m_Count);
+		sprintf(strAttachments, "Attachments (%i)", data->dItemsCount);
 		recvDialog_UpdateBtnLabel(data->dAttach, strAttachments);
 		
-		for(mIdx = 0; mIdx<data->m_Count; mIdx++)
+		for(mIdx = 0; mIdx<data->dItemsCount; mIdx++)
 		{
-			strFilename = (char *) XmStringUnparse (data->xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+			strFilename = (char *) XmStringUnparse (data->xItemsList[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
 			stat(strFilename,&st);
 			
 			strSingleFile = malloc(strlen(strrchr(strFilename, '/')) + 6 + 30);
@@ -437,7 +437,7 @@ void sendDialog_DeleteItemCallBack(Widget widget, XtPointer client_data, XtPoint
 		XmListDeleteItem (attachList, xstr_list[0]);
 	}	
 	
-	XtVaGetValues (attachList, XmNitemCount, &data->m_Count, XmNitems, &data->xstr_list, NULL);
+	XtVaGetValues (attachList, XmNitemCount, &data->dItemsCount, XmNitems, &data->xItemsList, NULL);
 }
 
 
@@ -461,7 +461,7 @@ void sendDialog_AddFileCallBack(Widget widget, XtPointer client_data, XtPointer 
 			XmListAddItemUnselected (attachList, xstr_list[mIdx], 0);
 	}
 	
-	XtVaGetValues (attachList, XmNitemCount, &data->m_Count, XmNitems, &data->xstr_list, NULL);
+	XtVaGetValues (attachList, XmNitemCount, &data->dItemsCount, XmNitems, &data->xItemsList, NULL);
 	
 	XtUnmanageChild(widget);	
 }

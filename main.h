@@ -87,8 +87,12 @@ struct SendClientData{
 	Widget dDialog;
 	Widget dAttach;
 	char* Extended;
-	int m_Count;
-	XmStringTable xstr_list;
+	
+	int dItemsCount;
+	XmStringTable xItemsList;
+	
+	int dDestCount;
+	XmStringTable xDestList;
 };
 
 struct RecvClientData{
