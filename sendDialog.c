@@ -394,7 +394,7 @@ void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPoin
 			stat(strFilename,&st);
 			
 			strSingleFile = malloc(strlen(strrchr(strFilename, '/')) + 6 + 30);
-			sprintf(strSingleFile, "+%i:%s:%lx:%lx:1:", (long)st.st_ino, strrchr(strFilename, '/') + 1, (long)st.st_size, (long)st.st_ctime);
+			sprintf(strSingleFile, "*%i:%s:%lx:%lx:1:", (long)st.st_ino, strrchr(strFilename, '/') + 1, (long)st.st_size, (long)st.st_ctime);
 			
 			if(strExtended != NULL)
 			{

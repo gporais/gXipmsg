@@ -32,7 +32,7 @@ char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostna
 		pIdx = &PACK_Full_Packet[len];
 		len = 0;
 		
-		while((pIdx = strchr(pIdx, '+')) != NULL)
+		while((pIdx = strchr(pIdx, '*')) != NULL)
 		{
 			if(len == 0)
 				*pIdx = 0;
