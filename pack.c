@@ -1,7 +1,7 @@
 // created by: geo (March 2012)
 #include "pack.h"
 
-char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostname, char* p_handlename, char* p_extended)
+char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostname, char* p_handlename, char* p_extended, unsigned long* p_packetID)
 {
 	// Prepare the flags
 	unsigned long PACK_Flags = m_Flags;	
@@ -11,10 +11,11 @@ char* pack_PackBroadcast(unsigned long m_Flags, char* p_username, char* p_hostna
 	
 	int len = (strlen(PACK_IPMSG_VERSION) + 1) + 11 + (strlen(p_username) + 1) + (strlen(p_hostname) + 1) + 11 + (strlen(p_handlename) + 1);
 	char* pIdx;
-	
+		
 	if(p_extended != NULL)
 	{
 		len += (strlen(p_extended) + 1);
+		*p_packetID = PACK_Packet_No;		
 	}
 	
 	// Prepare PACK_Full_Packet

@@ -87,7 +87,8 @@ struct SendClientData{
 	Widget dDialog;
 	Widget dAttach;
 	char* Extended;
-	
+	char PacketID[16];
+		
 	int dItemsCount;
 	XmStringTable xItemsList;
 	

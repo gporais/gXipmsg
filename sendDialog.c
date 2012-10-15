@@ -9,9 +9,9 @@ void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_dat
 	if(data->Extended != NULL)
 	{
 		free(data->Extended);
-		data->Extended = NULL;
+		data->Extended = NULL;		
 	}
-		
+	
 	appIcon_Unreg(data);
 	
 	XtFree ((char*) data);	
@@ -255,6 +255,8 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 	int mCount = 0;	
 	char* text;
 	char* str_IP;
+	unsigned long temp;
+	
 	
 	Widget SENDDIALOG_Dialog = XtParent(widget);
 	SENDDIALOG_Dialog = XtParent(SENDDIALOG_Dialog);
@@ -271,11 +273,15 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 			str_IP = strtok(text, "(");
 			str_IP = strtok(NULL, ")");
 			
-			if (text = XmTextGetString (data->dText)) {
+			if (text = XmTextGetString (data->dText))
+			{
 				if(data->Extended == NULL)
-					udp_SendToString(str_IP,text, IPMSG_SENDMSG, data->Extended);
+					udp_SendToString(str_IP,text, IPMSG_SENDMSG, data->Extended, &temp);
 				else
-					udp_SendToString(str_IP,text, IPMSG_SENDMSG | IPMSG_FILEATTACHOPT, data->Extended);
+					udp_SendToString(str_IP,text, IPMSG_SENDMSG | IPMSG_FILEATTACHOPT, data->Extended, &temp);
+				
+				if(temp != 0)
+					sprintf(data->PacketID, "%lx", temp);							
 			}
 			
 			XtFree(text);
@@ -381,7 +387,11 @@ void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPoin
 	if(data->dItemsCount == 0)
 	{
 		recvDialog_UpdateBtnLabel(data->dAttach, "Attach");
-		data->Extended = NULL;
+		if(data->Extended != NULL)
+		{
+			free(data->Extended);
+			data->Extended = NULL;
+		}
 	}
 	else
 	{

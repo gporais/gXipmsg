@@ -25,7 +25,7 @@ void udp_GetInfo(int* p_Socket);
 // Function declerations
 int udp_InitSocket(int* p_Socket);
 int udp_BroadcastString(char* p_String);
-int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags, char* p_extended);
+int udp_SendToString(char* p_IPAddress, char* p_String, int m_Flags, char* p_extended, unsigned long* p_packetID);
 void udp_InquirePackets(void);
 void udp_CloseSocket(void);
 
