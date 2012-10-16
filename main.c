@@ -1,6 +1,7 @@
 // created by: geo (March 2012)
 #include "main.h"
 
+
 Position posX, posY;
 int n;
 Arg args[20];
@@ -60,6 +61,12 @@ static int gXipmsg_main (int argc, char* argv[])
 		exit(1);
 	}
 	
+	// Initialize listener socket for TCP
+	if((tcp_InitListener()) == -1)
+	{
+		exit(1);
+	}
+	
 	appIcon_Init(&GXIM_TopLevel, argc, argv);
 	appIcon_SetupClose(&GXIM_TopLevel, gXipmsg_AtExit, NULL);
 	appIcon_SetupTimeout(gXipmsg_CheckData);
@@ -80,6 +87,7 @@ void gXipmsg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call
 	{
 		udp_BroadcastExit();
 		udp_CloseSocket();	
+		tcp_CloseListener();
 		exit(1);
 	}
 }
@@ -87,6 +95,7 @@ void gXipmsg_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call
 void gXipmsg_CheckData(XtPointer xp_Client_data, XtIntervalId* id)
 {
 	udp_InquirePackets();
+	tcp_InquirePackets();
 	
 	appIcon_SetupTimeout(gXipmsg_CheckData);	
 }

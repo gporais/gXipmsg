@@ -26,6 +26,7 @@ void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPoin
 void sendDialog_AddFileCallBack(Widget dialog, XtPointer client_data, XtPointer call_data);
 void sendDialog_CancelAddCallBack(Widget dialog, XtPointer client_data, XtPointer call_data);
 
+Boolean sendDialog_HaveItemsLeft(XtPointer client_data);
 
 
 #endif /*SENDDIALOG_H_*/

@@ -1,20 +1,51 @@
 // created by: geo (March 2012)
 #include "sendDialog.h"
 
+Boolean sendDialog_HaveItemsLeft(XtPointer client_data)
+{
+	struct SendClientData* data = (struct SendClientData*) client_data;
+	Boolean bRet = False;
+	int mIdx;
+	
+	if(data->dItemsLeft != NULL)
+	{
+		for(mIdx = 0; mIdx<data->dDestCount; mIdx++)
+		{
+			if(data->dItemsLeft[mIdx] > 0)
+			{
+				bRet = True;
+				break;
+			}
+		}
+	}		
+		
+	return bRet;
+}
+
 
 void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	struct SendClientData* data = (struct SendClientData*) client_data;
-	
-	if(data->Extended != NULL)
-	{
-		free(data->Extended);
-		data->Extended = NULL;		
-	}
-	
-	appIcon_Unreg(data);
-	
-	XtFree ((char*) data);	
+		
+//	if(!sendDialog_HaveItemsLeft(client_data))
+//	{	
+		if(data->dItemsLeft != NULL)
+		{
+			free(data->dItemsLeft);
+			data->dItemsLeft = NULL;				
+			
+		}	
+		
+		if(data->Extended != NULL)
+		{
+			free(data->Extended);
+			data->Extended = NULL;		
+		}
+			
+		appIcon_Unreg(data);
+		
+		XtFree ((char*) data);
+//	}
 }
 
 struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPointer xt_Text)
@@ -233,6 +264,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	
 	data->Extended = NULL;
 	data->dItemsCount = 0;
+	data->dItemsLeft = NULL;
 	return data;
 }
 
@@ -264,7 +296,13 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 	
   	// Get the selected items (and number of selected) from the List
 	XtVaGetValues (data->dList, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
-			
+	XtVaGetValues (data->dList, XmNselectedItemCount, &data->dDestCount, XmNselectedItems, &data->xDestList, NULL);
+	
+	if(data->dItemsCount > 0)
+	{
+		data->dItemsLeft = malloc(sizeof(int) * data->dItemsCount);		
+	}
+	
 	if(mCount > 0)
 	{
 		while(mCount>mIdx)
@@ -276,9 +314,14 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 			if (text = XmTextGetString (data->dText))
 			{
 				if(data->Extended == NULL)
+				{
 					udp_SendToString(str_IP,text, IPMSG_SENDMSG, data->Extended, &temp);
+				}
 				else
+				{
 					udp_SendToString(str_IP,text, IPMSG_SENDMSG | IPMSG_FILEATTACHOPT, data->Extended, &temp);
+					data->dItemsLeft[mIdx] = data->dItemsCount;
+				}
 				
 				if(temp != 0)
 					sprintf(data->PacketID, "%lx", temp);							

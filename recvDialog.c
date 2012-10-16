@@ -414,7 +414,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				free(strPath);
 				strPath = NULL;
 						
-				tcpRet = tcp_Write(data,strRequestPacket,strlen(strRequestPacket));
+				tcpRet = tcp_WriteClient(data,strRequestPacket,strlen(strRequestPacket));
 				if(tcpRet != strlen(strRequestPacket))
 					printf("error: sent bytes %i not equal\n",n);
 				
@@ -422,7 +422,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				pack_CleanPacketBuffer();
 				
 				
-				tcpRet = tcp_Read(data,data->dBuffer,TCP_FILE_BUFSIZ);
+				tcpRet = tcp_ReadClient(data,data->dBuffer,TCP_FILE_BUFSIZ);
 				data->dCalcSize += tcpRet;	
 				if(data->fpWrite != NULL)
 				{
@@ -474,7 +474,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 			
 			data->dProgress++;
 			
-			tcpRet = tcp_Read(data,data->dBuffer,TCP_FILE_BUFSIZ);
+			tcpRet = tcp_ReadClient(data,data->dBuffer,TCP_FILE_BUFSIZ);
 			data->dCalcSize += tcpRet;	
 			if(data->fpWrite != NULL)
 			{

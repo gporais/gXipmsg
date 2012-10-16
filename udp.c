@@ -279,7 +279,7 @@ void udp_InquirePackets(void)
 				break;
 				
 			default:
-				printf("unknown command: %s\n", UDP_Buffer);
+				printf("unknown UDP command: %s\n", UDP_Buffer);
 		}	    
 	}	
 	

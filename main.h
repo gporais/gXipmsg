@@ -94,6 +94,7 @@ struct SendClientData{
 	
 	int dDestCount;
 	XmStringTable xDestList;
+	int* dItemsLeft;
 };
 
 struct RecvClientData{
@@ -115,7 +116,6 @@ struct RecvClientData{
 };
 
 
-	
 extern Position posX, posY;
 extern int n;
 extern Arg args[20];
