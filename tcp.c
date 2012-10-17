@@ -191,27 +191,29 @@ void tcp_InquirePackets(void)
 			memset(TCP_Buffer,'\0',TCP_FILE_BUFSIZ);
 				
 			// Ok the data is ready, call recvfrom() to get it then
-			tcp_Read(TCP_SockListener, TCP_Buffer, TCP_FILE_BUFSIZ);
+			tcp_Read(cliSocket, TCP_Buffer, TCP_FILE_BUFSIZ);
+			
+			printf("TCP command: %s\n", TCP_Buffer);
 		    
-//		    pack_UnpackBroadcast(TCP_Buffer, &TCP_DataFrom);
-//		    
-//		    // Decode command
-//		    switch(GET_MODE(TCP_DataFrom.IP_Flags))
-//			{						
-//					
-//				case IPMSG_GETFILEDATA:
-//					printf("TCP IPMSG_GETFILEDATA\n");
-//					break;
-//					
-//				case IPMSG_GETDIRFILES:
-//					printf("TCP IPMSG_GETDIRFILES\n");
-//					break;					
-//				
-//					
-//				default:
-//					printf("unknown TCP command: %s\n", TCP_Buffer);
-//			}
-			printf("accetp\n");
+		    pack_UnpackBroadcast(TCP_Buffer, &TCP_DataFrom);
+		    strcpy(TCP_DataFrom.IP_Address, inet_ntoa(cli_addr.sin_addr));
+		    
+		    // Decode command
+		    switch(GET_MODE(TCP_DataFrom.IP_Flags))
+			{						
+					
+				case IPMSG_GETFILEDATA:
+					printf("TCP IPMSG_GETFILEDATA %s %s\n", TCP_DataFrom.Handlename, TCP_DataFrom.Extended);
+					break;
+					
+				case IPMSG_GETDIRFILES:
+					printf("TCP IPMSG_GETDIRFILES %s\n", TCP_DataFrom.Handlename);
+					break;					
+				
+					
+				default:
+					printf("unknown TCP command: %s\n", TCP_Buffer);
+			}
 			tcp_Close(cliSocket);
 			
 			// Release buffer memory
