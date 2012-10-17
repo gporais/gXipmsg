@@ -27,8 +27,9 @@ void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_dat
 {
 	struct SendClientData* data = (struct SendClientData*) client_data;
 		
-//	if(!sendDialog_HaveItemsLeft(client_data))
-//	{	
+	if(!sendDialog_HaveItemsLeft(client_data))
+	{
+		printf("destroy\n");
 		if(data->dItemsLeft != NULL)
 		{
 			free(data->dItemsLeft);
@@ -45,7 +46,7 @@ void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_dat
 		appIcon_Unreg(data);
 		
 		XtFree ((char*) data);
-//	}
+	}
 }
 
 struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPointer xt_Text)

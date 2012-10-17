@@ -239,6 +239,66 @@ void appIcon_UpdateLists(struct NODE *llist, struct Broadcast_Packet* p_Item, ch
 }
 
 
+Boolean appIcon_SearchList(struct SendClientData* num, char* strPacket) 
+{
+	Boolean bRet = False;
+	
+	while(appLList->next != NULL)
+	{
+		if(appLList->ptrData != NULL)
+		{
+			if(strcmp(appLList->ptrData->PacketID, strPacket) == 0)
+			{
+				memcpy(num, appLList->ptrData, sizeof(struct SendClientData));
+				bRet = True;
+				break;
+			}
+		}
+		appLList = appLList->next;
+	}
+
+	if(appLList->ptrData != NULL)
+	{
+		if(strcmp(appLList->ptrData->PacketID, strPacket) == 0)
+		{
+			memcpy(num, appLList->ptrData, sizeof(struct SendClientData));
+			bRet = True;
+		}
+	}
+	
+	return bRet;
+}
+
+Boolean appIcon_SearchNode(struct SendClientData* num, int* mIdx, char* strHostname)
+{
+	Boolean bRet = False;
+	char* text;
+	
+	while(num->dDestCount > *mIdx)
+	{
+		text = (char *) XmStringUnparse (num->xDestList[*mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+		
+		text = strchr(text,'@') + 1;
+		*(strchr(text,'(') - 1) = '\0';
+		
+		printf("nodesearch: %s\n", text);		
+	
+//		if (strcmp (text, strHostname) == 0)
+//		{
+//			bRet = True;
+//			XtFree(text);
+//			break;
+//		}
+		
+		XtFree(text);
+		*mIdx++;
+	}
+	
+	
+	return bRet;
+}
+
+
 void append_node(struct NODE *llist, struct SendClientData* num) {
  while(llist->next != NULL)
   llist = llist->next;

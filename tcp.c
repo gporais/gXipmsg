@@ -179,6 +179,9 @@ void tcp_InquirePackets(void)
 	struct sockaddr_in cli_addr;
 	socklen_t clilen;
 	
+	struct SendClientData num;
+	int mIdx = 0;
+	
 
 	while(recvfromTimeOutUDP(TCP_SockListener, 0, 0) > 0)
 	{		
@@ -191,19 +194,29 @@ void tcp_InquirePackets(void)
 			memset(TCP_Buffer,'\0',TCP_FILE_BUFSIZ);
 				
 			// Ok the data is ready, call recvfrom() to get it then
-			tcp_Read(cliSocket, TCP_Buffer, TCP_FILE_BUFSIZ);
-			
-			printf("TCP command: %s\n", TCP_Buffer);
+			tcp_Read(cliSocket, TCP_Buffer, TCP_FILE_BUFSIZ);			
+					    
+		    pack_UnpackBroadcast(TCP_Buffer, &TCP_DataFrom);	
 		    
-		    pack_UnpackBroadcast(TCP_Buffer, &TCP_DataFrom);
-		    strcpy(TCP_DataFrom.IP_Address, inet_ntoa(cli_addr.sin_addr));
+		    // Search LList for PacketID
+		    if(appIcon_SearchList(&num, TCP_DataFrom.Handlename))
+		    {
+		    	printf("found: %s\n",num.PacketID);
+		    	
+		    	// Search for node for Hostname
+		    	if(appIcon_SearchNode(&num, &mIdx, TCP_DataFrom.Hostname))
+		    		printf("found: %i\n",mIdx);
+		    }
+		    
+
+	    	
 		    
 		    // Decode command
 		    switch(GET_MODE(TCP_DataFrom.IP_Flags))
 			{						
 					
 				case IPMSG_GETFILEDATA:
-					printf("TCP IPMSG_GETFILEDATA %s %s\n", TCP_DataFrom.Handlename, TCP_DataFrom.Extended);
+					printf("TCP IPMSG_GETFILEDATA %s %s %s\n", TCP_DataFrom.Handlename, TCP_DataFrom.Extended, TCP_DataFrom.Hostname);
 					break;
 					
 				case IPMSG_GETDIRFILES:
