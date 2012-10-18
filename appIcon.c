@@ -273,22 +273,57 @@ Boolean appIcon_SearchNode(struct SendClientData* num, int* mIdx, char* strHostn
 {
 	Boolean bRet = False;
 	char* text;
+	char* test;
+	int mCnt = 0;
+	
+	while(num->dDestCount > mCnt)
+	{
+		text = (char *) XmStringUnparse (num->xDestList[mCnt], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+		
+		printf("node b4: %s\n",text);
+		
+//		test = malloc(strlen(text) + 1);		
+//		strcpy(test, strchr(text,'@') + 1);
+//		*(strchr(test,'(') - 1) = '\0';
+//		
+//		if(strcmp(test, strHostname) == 0)
+//		{
+//			bRet = True;
+//			free(test);
+//			XtFree(text);
+//			break;
+//		}
+//		
+//		printf("node after: %s\n",text);
+//		
+//		free(test);
+		XtFree(text);
+		mCnt++;
+	}
+	
+	
+	return bRet;
+}
+
+Boolean appIcon_SearchItems(struct SendClientData* num, int* mIdx, char* strHostname)
+{
+	Boolean bRet = False;
+	char* text;
+	char* test;
 	
 	while(num->dDestCount > *mIdx)
 	{
 		text = (char *) XmStringUnparse (num->xDestList[*mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
 		
-		text = strchr(text,'@') + 1;
-		*(strchr(text,'(') - 1) = '\0';
+		test = strchr(text,'@') + 1;
+		*(strchr(test,'(') - 1) = '\0';
 		
-		printf("nodesearch: %s\n", text);		
-	
-//		if (strcmp (text, strHostname) == 0)
-//		{
-//			bRet = True;
-//			XtFree(text);
-//			break;
-//		}
+		if(strcmp(test, strHostname) == 0)
+		{
+			bRet = True;
+			XtFree(text);
+			break;
+		}
 		
 		XtFree(text);
 		*mIdx++;

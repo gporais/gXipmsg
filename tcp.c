@@ -180,7 +180,8 @@ void tcp_InquirePackets(void)
 	socklen_t clilen;
 	
 	struct SendClientData num;
-	int mIdx = 0;
+	int mUserIdx = 0;
+	int mItemIdx = 0;
 	
 
 	while(recvfromTimeOutUDP(TCP_SockListener, 0, 0) > 0)
@@ -198,14 +199,23 @@ void tcp_InquirePackets(void)
 					    
 		    pack_UnpackBroadcast(TCP_Buffer, &TCP_DataFrom);	
 		    
-		    // Search LList for PacketID
+		    // Search LList by PacketID
 		    if(appIcon_SearchList(&num, TCP_DataFrom.Handlename))
 		    {
-		    	printf("found: %s\n",num.PacketID);
+		    	printf("found packet: %s\n",num.PacketID);
 		    	
-		    	// Search for node for Hostname
-		    	if(appIcon_SearchNode(&num, &mIdx, TCP_DataFrom.Hostname))
-		    		printf("found: %i\n",mIdx);
+		    	// Search node by Hostname
+		    	if(appIcon_SearchNode(&num, &mUserIdx, TCP_DataFrom.Hostname))
+		    	{
+		    		printf("found user: %i\n",mUserIdx);
+		    		
+		    		// Search file for FileID
+//		    		if(appIcon_SearchItems(&num, &mItemIdx, TCP_DataFrom.Extended))
+//		    		{
+//		    			printf("found item: %i\n",mItemIdx);
+//		    		}
+		    		
+		    	}
 		    }
 		    
 

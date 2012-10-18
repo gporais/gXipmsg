@@ -91,6 +91,7 @@ struct SendClientData{
 		
 	int dItemsCount;
 	XmStringTable xItemsList;
+	int* dFileIDs;
 	
 	int dDestCount;
 	XmStringTable xDestList;

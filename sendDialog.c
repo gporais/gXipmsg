@@ -37,6 +37,12 @@ void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_dat
 			
 		}	
 		
+		if(data->dFileIDs != NULL)
+		{
+			free(data->dFileIDs);
+			data->dFileIDs = NULL;		
+		}
+		
 		if(data->Extended != NULL)
 		{
 			free(data->Extended);
@@ -266,6 +272,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	data->Extended = NULL;
 	data->dItemsCount = 0;
 	data->dItemsLeft = NULL;
+	data->dFileIDs = NULL;
 	return data;
 }
 
@@ -299,9 +306,9 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 	XtVaGetValues (data->dList, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
 	XtVaGetValues (data->dList, XmNselectedItemCount, &data->dDestCount, XmNselectedItems, &data->xDestList, NULL);
 	
-	if(data->dItemsCount > 0)
+	if(data->dDestCount > 0)
 	{
-		data->dItemsLeft = malloc(sizeof(int) * data->dItemsCount);		
+		data->dItemsLeft = malloc(sizeof(int) * data->dDestCount);		
 	}
 	
 	if(mCount > 0)
@@ -431,6 +438,13 @@ void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPoin
 	if(data->dItemsCount == 0)
 	{
 		recvDialog_UpdateBtnLabel(data->dAttach, "Attach");
+		
+		if(data->dFileIDs != NULL)
+		{
+			free(data->dFileIDs);
+			data->dFileIDs = NULL;		
+		}
+		
 		if(data->Extended != NULL)
 		{
 			free(data->Extended);
@@ -442,13 +456,23 @@ void sendDialog_CloseAttachCallBack(Widget widget, XtPointer client_data, XtPoin
 		sprintf(strAttachments, "Attachments (%i)", data->dItemsCount);
 		recvDialog_UpdateBtnLabel(data->dAttach, strAttachments);
 		
+		
+		
+		if(data->dFileIDs != NULL)
+		{
+			free(data->dFileIDs);
+			data->dFileIDs = NULL;		
+		}
+		data->dFileIDs = malloc(sizeof(int) * data->dItemsCount);
+		
 		for(mIdx = 0; mIdx<data->dItemsCount; mIdx++)
 		{
 			strFilename = (char *) XmStringUnparse (data->xItemsList[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
 			stat(strFilename,&st);
 			
 			strSingleFile = malloc(strlen(strrchr(strFilename, '/')) + 6 + 30);
-			sprintf(strSingleFile, "*%i:%s:%lx:%lx:1:", (long)st.st_ino, strrchr(strFilename, '/') + 1, (long)st.st_size, (long)st.st_ctime);
+			sprintf(strSingleFile, "*%i:%s:%lx:%lx:1:", (int)st.st_ino, strrchr(strFilename, '/') + 1, (long)st.st_size, (long)st.st_ctime);
+			data->dFileIDs[mIdx] = (int)st.st_ino;
 			
 			if(strExtended != NULL)
 			{

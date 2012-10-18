@@ -44,6 +44,7 @@ void appIcon_UpdateLists(struct NODE *llist, struct Broadcast_Packet* p_Item, ch
 
 Boolean appIcon_SearchList(struct SendClientData* num, char* strPacket);
 Boolean appIcon_SearchNode(struct SendClientData* num, int* mIdx, char* strHostname);
+Boolean appIcon_SearchItems(struct SendClientData* num, int* mIdx, char* strHostname);
 
 void append_node(struct NODE *llist, struct SendClientData* num);
 void delete_node(struct NODE *llist, struct SendClientData* num);
