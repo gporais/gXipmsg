@@ -239,7 +239,7 @@ void appIcon_UpdateLists(struct NODE *llist, struct Broadcast_Packet* p_Item, ch
 }
 
 
-Boolean appIcon_SearchList(struct SendClientData* num, char* strPacket) 
+Boolean appIcon_SearchList(int* pNum, char* strPacket) 
 {
 	Boolean bRet = False;
 	
@@ -249,10 +249,10 @@ Boolean appIcon_SearchList(struct SendClientData* num, char* strPacket)
 		{
 			if(strcmp(appLList->ptrData->PacketID, strPacket) == 0)
 			{
-				memcpy(num, appLList->ptrData, sizeof(struct SendClientData));
+				*pNum = (int)appLList->ptrData;
 				bRet = True;
-				break;
-			}
+				return bRet;
+			}			
 		}
 		appLList = appLList->next;
 	}
@@ -261,9 +261,9 @@ Boolean appIcon_SearchList(struct SendClientData* num, char* strPacket)
 	{
 		if(strcmp(appLList->ptrData->PacketID, strPacket) == 0)
 		{
-			memcpy(num, appLList->ptrData, sizeof(struct SendClientData));
+			*pNum = (int)appLList->ptrData;
 			bRet = True;
-		}
+		}		
 	}
 	
 	return bRet;
@@ -272,64 +272,55 @@ Boolean appIcon_SearchList(struct SendClientData* num, char* strPacket)
 Boolean appIcon_SearchNode(struct SendClientData* num, int* mIdx, char* strHostname)
 {
 	Boolean bRet = False;
-	char* text;
+	int mCount = 0;
 	char* test;
-	int mCnt = 0;
-	
-	while(num->dDestCount > mCnt)
+		
+	while(num->dDestCount > mCount)
 	{
-		text = (char *) XmStringUnparse (num->xDestList[mCnt], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
-		
-		printf("node b4: %s\n",text);
-		
-//		test = malloc(strlen(text) + 1);		
-//		strcpy(test, strchr(text,'@') + 1);
-//		*(strchr(test,'(') - 1) = '\0';
-//		
-//		if(strcmp(test, strHostname) == 0)
-//		{
-//			bRet = True;
-//			free(test);
-//			XtFree(text);
-//			break;
-//		}
-//		
-//		printf("node after: %s\n",text);
-//		
-//		free(test);
-		XtFree(text);
-		mCnt++;
-	}
-	
-	
-	return bRet;
-}
-
-Boolean appIcon_SearchItems(struct SendClientData* num, int* mIdx, char* strHostname)
-{
-	Boolean bRet = False;
-	char* text;
-	char* test;
-	
-	while(num->dDestCount > *mIdx)
-	{
-		text = (char *) XmStringUnparse (num->xDestList[*mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
-		
-		test = strchr(text,'@') + 1;
+		test = malloc(strlen(num->apDestList[mCount]) + 1);		
+		strcpy(test, strchr(num->apDestList[mCount],'@') + 1);
 		*(strchr(test,'(') - 1) = '\0';
 		
 		if(strcmp(test, strHostname) == 0)
 		{
 			bRet = True;
-			XtFree(text);
+			*mIdx = mCount;
+			free(test);			
 			break;
-		}
+		}		
 		
-		XtFree(text);
-		*mIdx++;
-	}
+		free(test);		
+		mCount++;
+	}	
+	
+	return bRet;
+}
+
+Boolean appIcon_SearchItems(struct SendClientData* num, int* mIdx, char* strFileID)
+{
+	Boolean bRet = False;
+	int mCount = 0;
+	char* temp;
+	char* test = malloc(strlen(strFileID) + 1);
+	strcpy(test,strFileID);
+	*(strchr(test,':')) = '\0';
 	
 	
+	while(num->dItemsCount > mCount)
+	{
+		sprintf(temp,"%lx",num->dFileIDs[mCount]);		
+		
+		if(strcmp(test, temp) == 0)
+		{
+			bRet = True;
+			*mIdx = mCount;
+			break;
+		}		
+		
+		mCount++;
+	}	
+	
+	free(test);
 	return bRet;
 }
 

@@ -42,9 +42,9 @@ void appIcon_ReplyDialog(int mPos, char* qText);
 
 void appIcon_UpdateLists(struct NODE *llist, struct Broadcast_Packet* p_Item, char m_Option);
 
-Boolean appIcon_SearchList(struct SendClientData* num, char* strPacket);
+Boolean appIcon_SearchList(int* pNum, char* strPacket);
 Boolean appIcon_SearchNode(struct SendClientData* num, int* mIdx, char* strHostname);
-Boolean appIcon_SearchItems(struct SendClientData* num, int* mIdx, char* strHostname);
+Boolean appIcon_SearchItems(struct SendClientData* num, int* mIdx, char* strFileID);
 
 void append_node(struct NODE *llist, struct SendClientData* num);
 void delete_node(struct NODE *llist, struct SendClientData* num);

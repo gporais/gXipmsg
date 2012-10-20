@@ -91,10 +91,11 @@ struct SendClientData{
 		
 	int dItemsCount;
 	XmStringTable xItemsList;
+	char** apItemList;
 	int* dFileIDs;
 	
 	int dDestCount;
-	XmStringTable xDestList;
+	char** apDestList;
 	int* dItemsLeft;
 };
 

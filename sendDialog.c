@@ -17,8 +17,8 @@ Boolean sendDialog_HaveItemsLeft(XtPointer client_data)
 				break;
 			}
 		}
-	}		
-		
+	}	
+			
 	return bRet;
 }
 
@@ -26,28 +26,64 @@ Boolean sendDialog_HaveItemsLeft(XtPointer client_data)
 void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	struct SendClientData* data = (struct SendClientData*) client_data;
+	int mIdx;
 		
 	if(!sendDialog_HaveItemsLeft(client_data))
 	{
-		printf("destroy\n");
-		if(data->dItemsLeft != NULL)
-		{
-			free(data->dItemsLeft);
-			data->dItemsLeft = NULL;				
-			
-		}	
-		
-		if(data->dFileIDs != NULL)
-		{
-			free(data->dFileIDs);
-			data->dFileIDs = NULL;		
-		}
+		printf("destroy %i\n", data);
 		
 		if(data->Extended != NULL)
 		{
+			printf("free extended %i\n", data->Extended);
 			free(data->Extended);
 			data->Extended = NULL;		
 		}
+		
+		mIdx = 0;
+		if(data->apItemList != NULL)
+		{
+			printf("free apItemList %i\n", data->apItemList);
+			while(data->dItemsCount > mIdx)
+			{
+				free(data->apItemList[mIdx]);
+				data->apItemList[mIdx] = NULL;				
+				mIdx++;
+			}
+						
+			free(data->apItemList);
+			data->apItemList = NULL;		
+		}
+		
+		
+		
+		if(data->dFileIDs != NULL)
+		{
+			printf("free dFileIDs %i\n", data->dFileIDs);
+			free(data->dFileIDs);
+			data->dFileIDs = NULL;		
+		}	
+		
+		mIdx = 0;
+		if(data->apDestList != NULL)
+		{
+			printf("free apDestList %i\n", data->apDestList);
+			while(data->dDestCount > mIdx)
+			{
+				free(data->apDestList[mIdx]);
+				data->apDestList[mIdx] = NULL;				
+				mIdx++;
+			}
+			
+			free(data->apDestList);
+			data->apDestList = NULL;		
+		}
+		
+		if(data->dItemsLeft != NULL)
+		{
+			printf("free dItemsLeft %i\n", data->dItemsLeft);
+			free(data->dItemsLeft);
+			data->dItemsLeft = NULL;			
+		}	
 			
 		appIcon_Unreg(data);
 		
@@ -79,6 +115,8 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	XmStringTable xstr_list;	
 	
 	struct SendClientData* data = XtNew (struct SendClientData);
+	
+	printf("create: %i\n",data);
 	
 	
 	// Get the current entries (and number of entries) from the List
@@ -273,6 +311,8 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	data->dItemsCount = 0;
 	data->dItemsLeft = NULL;
 	data->dFileIDs = NULL;
+	data->apItemList = NULL;
+	data->apDestList = NULL;
 	return data;
 }
 
@@ -304,9 +344,37 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 	
   	// Get the selected items (and number of selected) from the List
 	XtVaGetValues (data->dList, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
-	XtVaGetValues (data->dList, XmNselectedItemCount, &data->dDestCount, XmNselectedItems, &data->xDestList, NULL);
+	data->dDestCount = mCount;
+	data->apDestList = malloc(data->dDestCount * sizeof (char*));
 	
-	if(data->dDestCount > 0)
+	while(data->dDestCount > mIdx)
+	{
+		text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+				
+		data->apDestList[mIdx] = malloc(strlen(text) + 1);
+		strcpy(data->apDestList[mIdx], text);
+
+		XtFree(text);
+		mIdx++;
+	}
+	
+	mIdx = 0;
+	data->apItemList = malloc(data->dItemsCount * sizeof (char*));
+	
+	while(data->dItemsCount > mIdx)
+	{
+		text = (char *) XmStringUnparse (data->xItemsList[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+				
+		data->apItemList[mIdx] = malloc(strlen(text) + 1);
+		strcpy(data->apItemList[mIdx], text);
+
+		XtFree(text);
+		mIdx++;
+	}
+	
+	mIdx = 0;
+	
+	if(data->dItemsCount > 0)
 	{
 		data->dItemsLeft = malloc(sizeof(int) * data->dDestCount);		
 	}
@@ -317,7 +385,7 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 		{
 			text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
 			str_IP = strtok(text, "(");
-			str_IP = strtok(NULL, ")");
+			str_IP = strtok(NULL, ")");							
 			
 			if (text = XmTextGetString (data->dText))
 			{
@@ -515,7 +583,7 @@ void sendDialog_DeleteItemCallBack(Widget widget, XtPointer client_data, XtPoint
 		XmListDeleteItem (attachList, xstr_list[0]);
 	}	
 	
-	XtVaGetValues (attachList, XmNitemCount, &data->dItemsCount, XmNitems, &data->xItemsList, NULL);
+	XtVaGetValues (attachList, XmNitemCount, &data->dItemsCount, XmNitems, &data->xItemsList, NULL);	
 }
 
 
@@ -539,7 +607,7 @@ void sendDialog_AddFileCallBack(Widget widget, XtPointer client_data, XtPointer 
 			XmListAddItemUnselected (attachList, xstr_list[mIdx], 0);
 	}
 	
-	XtVaGetValues (attachList, XmNitemCount, &data->dItemsCount, XmNitems, &data->xItemsList, NULL);
+	XtVaGetValues (attachList, XmNitemCount, &data->dItemsCount, XmNitems, &data->xItemsList, NULL);	
 	
 	XtUnmanageChild(widget);	
 }

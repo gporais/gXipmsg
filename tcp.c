@@ -179,10 +179,16 @@ void tcp_InquirePackets(void)
 	struct sockaddr_in cli_addr;
 	socklen_t clilen;
 	
-	struct SendClientData num;
+	struct SendClientData* pNum;
+	int addrNum;
 	int mUserIdx = 0;
 	int mItemIdx = 0;
 	
+	struct stat st;
+	FILE* fpRead;
+	int mFileSize = 0;
+	int mProgSize = 0;
+	int mTcpRet = 0;
 
 	while(recvfromTimeOutUDP(TCP_SockListener, 0, 0) > 0)
 	{		
@@ -200,47 +206,68 @@ void tcp_InquirePackets(void)
 		    pack_UnpackBroadcast(TCP_Buffer, &TCP_DataFrom);	
 		    
 		    // Search LList by PacketID
-		    if(appIcon_SearchList(&num, TCP_DataFrom.Handlename))
+		    if(appIcon_SearchList(&addrNum, TCP_DataFrom.Handlename))
 		    {
-		    	printf("found packet: %s\n",num.PacketID);
+		    	pNum = (struct SendClientData*)addrNum;
+		    	printf("found packet: %s\n",pNum->PacketID);
 		    	
 		    	// Search node by Hostname
-		    	if(appIcon_SearchNode(&num, &mUserIdx, TCP_DataFrom.Hostname))
+		    	if(appIcon_SearchNode(pNum, &mUserIdx, TCP_DataFrom.Hostname))
 		    	{
 		    		printf("found user: %i\n",mUserIdx);
 		    		
 		    		// Search file for FileID
-//		    		if(appIcon_SearchItems(&num, &mItemIdx, TCP_DataFrom.Extended))
-//		    		{
-//		    			printf("found item: %i\n",mItemIdx);
-//		    		}
-		    		
+		    		if(appIcon_SearchItems(pNum, &mItemIdx, TCP_DataFrom.Extended))
+		    		{
+		    			printf("found item: %i\n",mItemIdx);
+		    			
+		    			stat(pNum->apItemList[mItemIdx],&st);
+		    			mFileSize = (int)st.st_size;
+		    			mProgSize = 0;
+		    			mTcpRet = 0;
+		    			fpRead = fopen(pNum->apItemList[mItemIdx], "rb");
+		    			
+		    			// Clear buffer
+						memset(TCP_Buffer,'\0',TCP_FILE_BUFSIZ);
+		    			
+		    			// Decode command
+					    switch(GET_MODE(TCP_DataFrom.IP_Flags))
+						{							
+							case IPMSG_GETFILEDATA:
+								
+								while(mFileSize > mProgSize)
+								{
+									mTcpRet = fread(TCP_Buffer, sizeof(TCP_Buffer[0]), TCP_FILE_BUFSIZ, fpRead);									
+									mTcpRet = tcp_Write(cliSocket, TCP_Buffer, mTcpRet);																	
+									mProgSize += mTcpRet;
+									printf("send %s %i bytes\n", pNum->apItemList[mItemIdx], mProgSize);
+								}
+								
+								// Close file
+								fclose(fpRead);
+								break;
+								
+							case IPMSG_GETDIRFILES:
+								
+								break;					
+							
+								
+							default:
+								printf("unknown TCP command: %s\n", TCP_Buffer);
+						}		    			
+		    					    			
+		    			if(pNum->dItemsLeft[mUserIdx] > 0)
+		    				pNum->dItemsLeft[mUserIdx] -= 1;		    			
+		    			sendDialog_Destroy(NULL, (XtPointer) pNum, NULL);
+		    		}		    		
 		    	}
-		    }
-		    
-
-	    	
-		    
-		    // Decode command
-		    switch(GET_MODE(TCP_DataFrom.IP_Flags))
-			{						
-					
-				case IPMSG_GETFILEDATA:
-					printf("TCP IPMSG_GETFILEDATA %s %s %s\n", TCP_DataFrom.Handlename, TCP_DataFrom.Extended, TCP_DataFrom.Hostname);
-					break;
-					
-				case IPMSG_GETDIRFILES:
-					printf("TCP IPMSG_GETDIRFILES %s\n", TCP_DataFrom.Handlename);
-					break;					
-				
-					
-				default:
-					printf("unknown TCP command: %s\n", TCP_Buffer);
-			}
-			tcp_Close(cliSocket);
+		    }		
 			
 			// Release buffer memory
 			free(TCP_Buffer);
+			
+			// Close socket
+			tcp_Close(cliSocket);
 		}		
 	}		
 }
