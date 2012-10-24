@@ -27,14 +27,13 @@ void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_dat
 {
 	struct SendClientData* data = (struct SendClientData*) client_data;
 	int mIdx;
-		
+	
 	if(!sendDialog_HaveItemsLeft(client_data))
 	{
 		printf("destroy %i\n", data);
 		
 		if(data->Extended != NULL)
 		{
-			printf("free extended %i\n", data->Extended);
 			free(data->Extended);
 			data->Extended = NULL;		
 		}
@@ -42,11 +41,13 @@ void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_dat
 		mIdx = 0;
 		if(data->apItemList != NULL)
 		{
-			printf("free apItemList %i\n", data->apItemList);
 			while(data->dItemsCount > mIdx)
 			{
-				free(data->apItemList[mIdx]);
-				data->apItemList[mIdx] = NULL;				
+				if(data->apItemList[mIdx] != NULL)
+				{
+					free(data->apItemList[mIdx]);
+					data->apItemList[mIdx] = NULL;
+				}
 				mIdx++;
 			}
 						
@@ -58,7 +59,6 @@ void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_dat
 		
 		if(data->dFileIDs != NULL)
 		{
-			printf("free dFileIDs %i\n", data->dFileIDs);
 			free(data->dFileIDs);
 			data->dFileIDs = NULL;		
 		}	
@@ -66,11 +66,13 @@ void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_dat
 		mIdx = 0;
 		if(data->apDestList != NULL)
 		{
-			printf("free apDestList %i\n", data->apDestList);
 			while(data->dDestCount > mIdx)
 			{
-				free(data->apDestList[mIdx]);
-				data->apDestList[mIdx] = NULL;				
+				if(data->apDestList[mIdx] != NULL)
+				{
+					free(data->apDestList[mIdx]);
+					data->apDestList[mIdx] = NULL;
+				}
 				mIdx++;
 			}
 			
@@ -80,14 +82,14 @@ void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_dat
 		
 		if(data->dItemsLeft != NULL)
 		{
-			printf("free dItemsLeft %i\n", data->dItemsLeft);
 			free(data->dItemsLeft);
 			data->dItemsLeft = NULL;			
 		}	
 			
 		appIcon_Unreg(data);
 		
-		XtFree ((char*) data);
+		XtFree((char*)data);
+		data = NULL;
 	}
 }
 
@@ -116,9 +118,6 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	
 	struct SendClientData* data = XtNew (struct SendClientData);
 	
-	printf("create: %i\n",data);
-	
-	
 	// Get the current entries (and number of entries) from the List
 	XtVaGetValues (*w_List, XmNitemCount, &m_Count,	XmNitems, &xstr_list, NULL);	
 		
@@ -129,7 +128,7 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 			XmNdeleteResponse, XmDESTROY,			
 			NULL);	
 	XtAddCallback (SENDDIALOG_Dialog, XmNpopupCallback, gXipmsg_MapDialog, NULL);
-	XtAddCallback (SENDDIALOG_Dialog, XmNdestroyCallback, sendDialog_Destroy, data);
+	XtAddCallback (SENDDIALOG_Dialog, XmNdestroyCallback, sendDialog_Destroy, (XtPointer)data);
 
 	// Create paned window
 	SENDDIALOG_Pane_Vertical = XmCreatePanedWindow (SENDDIALOG_Dialog, "Vertical", NULL, 0);
@@ -296,11 +295,15 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 		}
 	}	
 	
+	
+	
 	// Materialize major widgets
 	XtManageChild (SENDDIALOG_Form_Upper);
 	XtManageChild (SENDDIALOG_Form_Lower);
 	XtManageChild (SENDDIALOG_Pane_Vertical);	
 	XtPopup (SENDDIALOG_Dialog, XtGrabNone);
+	
+	
 	
 	/* complete the timeout client data */
 	data->dList = SENDDIALOG_List;
@@ -309,10 +312,11 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	
 	data->Extended = NULL;
 	data->dItemsCount = 0;
+	data->dDestCount = 0;
 	data->dItemsLeft = NULL;
 	data->dFileIDs = NULL;
 	data->apItemList = NULL;
-	data->apDestList = NULL;
+	data->apDestList = NULL;	
 	return data;
 }
 
@@ -345,40 +349,45 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
   	// Get the selected items (and number of selected) from the List
 	XtVaGetValues (data->dList, XmNselectedItemCount, &mCount,	XmNselectedItems, &xstr_list, NULL);
 	data->dDestCount = mCount;
-	data->apDestList = malloc(data->dDestCount * sizeof (char*));
 	
-	while(data->dDestCount > mIdx)
-	{
-		text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
-				
-		data->apDestList[mIdx] = malloc(strlen(text) + 1);
-		strcpy(data->apDestList[mIdx], text);
-
-		XtFree(text);
-		mIdx++;
-	}
+		
 	
-	mIdx = 0;
-	data->apItemList = malloc(data->dItemsCount * sizeof (char*));
-	
-	while(data->dItemsCount > mIdx)
-	{
-		text = (char *) XmStringUnparse (data->xItemsList[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
-				
-		data->apItemList[mIdx] = malloc(strlen(text) + 1);
-		strcpy(data->apItemList[mIdx], text);
-
-		XtFree(text);
-		mIdx++;
-	}
-	
-	mIdx = 0;
 	
 	if(data->dItemsCount > 0)
 	{
-		data->dItemsLeft = malloc(sizeof(int) * data->dDestCount);		
+		data->apDestList = malloc(data->dDestCount * sizeof (char*));
+			
+		while(data->dDestCount > mIdx)
+		{
+			text = (char *) XmStringUnparse (xstr_list[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+					
+			data->apDestList[mIdx] = malloc(strlen(text) + 1);
+			strcpy(data->apDestList[mIdx], text);
+
+			XtFree(text);
+			mIdx++;
+		}
+		
+		
+		mIdx = 0;	
+		data->apItemList = malloc(data->dItemsCount * sizeof (char*));
+		
+		while(data->dItemsCount > mIdx)
+		{
+			text = (char *) XmStringUnparse (data->xItemsList[mIdx], NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+					
+			data->apItemList[mIdx] = malloc(strlen(text) + 1);
+			strcpy(data->apItemList[mIdx], text);
+	
+			XtFree(text);
+			mIdx++;
+		}
+		
+		data->dItemsLeft = malloc(sizeof(int) * data->dDestCount);
 	}
 	
+	mIdx = 0;	
+		
 	if(mCount > 0)
 	{
 		while(mCount>mIdx)

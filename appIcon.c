@@ -242,26 +242,27 @@ void appIcon_UpdateLists(struct NODE *llist, struct Broadcast_Packet* p_Item, ch
 Boolean appIcon_SearchList(int* pNum, char* strPacket) 
 {
 	Boolean bRet = False;
+	struct NODE *llist = appLList;
 	
-	while(appLList->next != NULL)
+	while(llist->next != NULL)
 	{
-		if(appLList->ptrData != NULL)
+		if(llist->ptrData != NULL)
 		{
-			if(strcmp(appLList->ptrData->PacketID, strPacket) == 0)
+			if(strcmp(llist->ptrData->PacketID, strPacket) == 0)
 			{
-				*pNum = (int)appLList->ptrData;
+				*pNum = (int)llist->ptrData;
 				bRet = True;
 				return bRet;
 			}			
 		}
-		appLList = appLList->next;
+		llist = llist->next;
 	}
 
-	if(appLList->ptrData != NULL)
+	if(llist->ptrData != NULL)
 	{
-		if(strcmp(appLList->ptrData->PacketID, strPacket) == 0)
+		if(strcmp(llist->ptrData->PacketID, strPacket) == 0)
 		{
-			*pNum = (int)appLList->ptrData;
+			*pNum = (int)llist->ptrData;
 			bRet = True;
 		}		
 	}
@@ -325,31 +326,40 @@ Boolean appIcon_SearchItems(struct SendClientData* num, int* mIdx, char* strFile
 }
 
 
-void append_node(struct NODE *llist, struct SendClientData* num) {
- while(llist->next != NULL)
-  llist = llist->next;
-
- llist->next = (struct NODE *)malloc(sizeof(struct NODE));
- llist->next->ptrData = num;
- llist->next->next = NULL;
+void append_node(struct NODE *llist, struct SendClientData* num)
+{
+	while(llist->next != NULL)
+	{
+		llist = llist->next;		
+	}
+	
+	llist->next = (struct NODE *)malloc(sizeof(struct NODE));	
+	llist->next->ptrData = num;
+	llist->next->next = NULL;	
 }
 
-void delete_node(struct NODE *llist, struct SendClientData* num) {
- struct NODE *temp;
- temp = (struct NODE *)malloc(sizeof(struct NODE));
+void delete_node(struct NODE *llist, struct SendClientData* num)
+{
+	struct NODE *temp;
+	temp = (struct NODE *)malloc(sizeof(struct NODE));
 
- if(llist->ptrData == num) {
-  /* remove the node */
-  temp = llist->next;
-  free(llist);
-  llist = temp;
- } else {
-  while(llist->next->ptrData != num)
-   llist = llist->next;
+	if(llist->ptrData == num) 
+	{
+		/* remove the node */
+		temp = llist->next;
+		free(llist);
+		llist = temp;
+	} 
+	else 
+	{
+		while(llist->next->ptrData != num)
+		{
+			llist = llist->next;
+		}
 
-  temp = llist->next->next;
-  free(llist->next);
-  llist->next = temp;
- }   
+		temp = llist->next->next;
+		free(llist->next);
+		llist->next = temp;
+	}   
 }
 

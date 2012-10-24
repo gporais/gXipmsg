@@ -117,6 +117,13 @@ struct RecvClientData{
 	char* dFilename;
 };
 
+struct NODE {
+	struct SendClientData* ptrData;
+	struct NODE* next;
+};
+
+struct NODE* appLList;
+
 
 extern Position posX, posY;
 extern int n;
