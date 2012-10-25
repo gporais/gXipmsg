@@ -179,8 +179,8 @@ void tcp_InquirePackets(void)
 	struct sockaddr_in cli_addr;
 	socklen_t clilen;
 	
-	struct SendClientData* pNum;
-	int addrNum;
+	struct SendClientData* pNum = NULL;
+	int addrNum = 0;
 	int mUserIdx = 0;
 	int mItemIdx = 0;
 	
@@ -209,18 +209,13 @@ void tcp_InquirePackets(void)
 		    if(appIcon_SearchList(&addrNum, TCP_DataFrom.Handlename))
 		    {
 		    	pNum = (struct SendClientData*)addrNum;
-		    	printf("found packet: %s\n",pNum->PacketID);
 		    	
 		    	// Search node by Hostname
 		    	if(appIcon_SearchNode(pNum, &mUserIdx, TCP_DataFrom.Hostname))
-		    	{
-		    		printf("found user: %i\n",mUserIdx);
-		    		
+		    	{   		
 		    		// Search file for FileID
 		    		if(appIcon_SearchItems(pNum, &mItemIdx, TCP_DataFrom.Extended))
 		    		{
-		    			printf("found item: %i\n",mItemIdx);
-		    			
 		    			stat(pNum->apItemList[mItemIdx],&st);
 		    			mFileSize = (int)st.st_size;
 		    			mProgSize = 0;
@@ -240,7 +235,6 @@ void tcp_InquirePackets(void)
 									mTcpRet = fread(TCP_Buffer, sizeof(TCP_Buffer[0]), TCP_FILE_BUFSIZ, fpRead);									
 									mTcpRet = tcp_Write(cliSocket, TCP_Buffer, mTcpRet);																	
 									mProgSize += mTcpRet;
-									printf("send %s %i bytes\n", pNum->apItemList[mItemIdx], mProgSize);
 								}
 								
 								// Close file

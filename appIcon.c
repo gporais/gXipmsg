@@ -301,7 +301,7 @@ Boolean appIcon_SearchItems(struct SendClientData* num, int* mIdx, char* strFile
 {
 	Boolean bRet = False;
 	int mCount = 0;
-	char* temp;
+	char temp[50];
 	char* test = malloc(strlen(strFileID) + 1);
 	strcpy(test,strFileID);
 	*(strchr(test,':')) = '\0';
@@ -314,9 +314,9 @@ Boolean appIcon_SearchItems(struct SendClientData* num, int* mIdx, char* strFile
 		if(strcmp(test, temp) == 0)
 		{
 			bRet = True;
-			*mIdx = mCount;
+			*mIdx = mCount;			
 			break;
-		}		
+		}	
 		
 		mCount++;
 	}	
