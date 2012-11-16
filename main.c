@@ -2,6 +2,8 @@
 #include "main.h"
 
 
+struct NODE* appLList;
+
 Position posX, posY;
 int n;
 Arg args[20];

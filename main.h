@@ -122,7 +122,7 @@ struct NODE {
 	struct NODE* next;
 };
 
-struct NODE* appLList;
+extern struct NODE* appLList;
 
 
 extern Position posX, posY;
