@@ -85,6 +85,12 @@ void sendDialog_Destroy(Widget dialog, XtPointer client_data, XtPointer call_dat
 			free(data->dItemsLeft);
 			data->dItemsLeft = NULL;			
 		}	
+		
+		if(data->dTCPData != NULL)
+		{
+			free(data->dTCPData);
+			data->dTCPData = NULL;			
+		}
 			
 		appIcon_Unreg(data);
 		
@@ -117,6 +123,8 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	XmStringTable xstr_list;	
 	
 	struct SendClientData* data = XtNew (struct SendClientData);
+	
+	printf("sendDialog_Create: %i\n", data);
 	
 	// Get the current entries (and number of entries) from the List
 	XtVaGetValues (*w_List, XmNitemCount, &m_Count,	XmNitems, &xstr_list, NULL);	
@@ -314,6 +322,8 @@ struct SendClientData* sendDialog_Create(XtPointer xt_List, int mSelPos, XtPoint
 	data->dItemsCount = 0;
 	data->dDestCount = 0;
 	data->dItemsLeft = NULL;
+	data->dTCPData = NULL;
+	data->dUserIdx = 0;
 	data->dFileIDs = NULL;
 	data->apItemList = NULL;
 	data->apDestList = NULL;	
@@ -384,6 +394,7 @@ void sendDialog_SendCallBack(Widget widget, XtPointer client_data, XtPointer cal
 		}
 		
 		data->dItemsLeft = malloc(sizeof(int) * data->dDestCount);
+		data->dTCPData = malloc(sizeof(struct TCPSendData) * data->dDestCount);
 	}
 	
 	mIdx = 0;	

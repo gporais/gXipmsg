@@ -79,6 +79,16 @@ struct Broadcast_Packet {
 	char IP_Address[20];
 };
 
+struct TCPSendData{
+	XtWorkProcId dWorkID;	
+	int dSocket;
+	int dFileSize;
+	int dProgSize;
+	
+	FILE* dfpRead;
+	char* dBuffer;	
+};
+
 struct SendClientData{
 	Widget dList;
 	Widget dText;	
@@ -97,6 +107,9 @@ struct SendClientData{
 	int dDestCount;
 	char** apDestList;
 	int* dItemsLeft;
+	
+	int dUserIdx;
+	struct TCPSendData* dTCPData;
 };
 
 struct RecvClientData{

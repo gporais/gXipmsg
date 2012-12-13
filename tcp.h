@@ -35,5 +35,6 @@ int tcp_Write(int mSocket, char* ptrBuff, int mSize);
 int tcp_Read(int mSocket, char* ptrBuff, int mSize);
 
 void tcp_InquirePackets(void);
+Boolean tcp_SendProcedure(XtPointer client_data);
 
 #endif /*TCP_H_*/

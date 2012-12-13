@@ -170,8 +170,6 @@ int tcp_Read(int mSocket, char* ptrBuff, int mSize)
 }
 
 
-
-
 void tcp_InquirePackets(void)
 {
 	char* TCP_Buffer;
@@ -182,13 +180,8 @@ void tcp_InquirePackets(void)
 	struct SendClientData* pNum = NULL;
 	int addrNum = 0;
 	int mUserIdx = 0;
-	int mItemIdx = 0;
-	
+	int mItemIdx = 0;	
 	struct stat st;
-	FILE* fpRead;
-	int mFileSize = 0;
-	int mProgSize = 0;
-	int mTcpRet = 0;
 
 	while(recvfromTimeOutUDP(TCP_SockListener, 0, 0) > 0)
 	{		
@@ -208,7 +201,7 @@ void tcp_InquirePackets(void)
 		    // Search LList by PacketID
 		    if(appIcon_SearchList(&addrNum, TCP_DataFrom.Handlename))
 		    {
-		    	pNum = (struct SendClientData*)addrNum;
+		    	pNum = (struct SendClientData*)addrNum;		    	
 		    	
 		    	// Search node by Hostname
 		    	if(appIcon_SearchNode(pNum, &mUserIdx, TCP_DataFrom.Hostname))
@@ -217,28 +210,24 @@ void tcp_InquirePackets(void)
 		    		if(appIcon_SearchItems(pNum, &mItemIdx, TCP_DataFrom.Extended))
 		    		{
 		    			stat(pNum->apItemList[mItemIdx],&st);
-		    			mFileSize = (int)st.st_size;
-		    			mProgSize = 0;
-		    			mTcpRet = 0;
-		    			fpRead = fopen(pNum->apItemList[mItemIdx], "rb");
+		    			
+		    			pNum->dTCPData[mUserIdx].dFileSize = (int)st.st_size;
+						pNum->dTCPData[mUserIdx].dProgSize = 0;
+						pNum->dUserIdx = mUserIdx;
+		    			pNum->dTCPData[mUserIdx].dfpRead = fopen(pNum->apItemList[mItemIdx], "rb");
 		    			
 		    			// Clear buffer
 						memset(TCP_Buffer,'\0',TCP_FILE_BUFSIZ);
+						pNum->dTCPData[mUserIdx].dBuffer = TCP_Buffer;						
+						
+						pNum->dTCPData[mUserIdx].dSocket = cliSocket;						
 		    			
 		    			// Decode command
 					    switch(GET_MODE(TCP_DataFrom.IP_Flags))
 						{							
-							case IPMSG_GETFILEDATA:
+							case IPMSG_GETFILEDATA:								
 								
-								while(mFileSize > mProgSize)
-								{
-									mTcpRet = fread(TCP_Buffer, sizeof(TCP_Buffer[0]), TCP_FILE_BUFSIZ, fpRead);									
-									mTcpRet = tcp_Write(cliSocket, TCP_Buffer, mTcpRet);																	
-									mProgSize += mTcpRet;
-								}
-								
-								// Close file
-								fclose(fpRead);
+								pNum->dTCPData[mUserIdx].dWorkID = XtAppAddWorkProc(GXIM_App, tcp_SendProcedure, (XtPointer)pNum);								
 								break;
 								
 							case IPMSG_GETDIRFILES:
@@ -248,21 +237,46 @@ void tcp_InquirePackets(void)
 								
 							default:
 								printf("unknown TCP command: %s\n", TCP_Buffer);
-						}		    			
-		    					    			
-		    			if(pNum->dItemsLeft[mUserIdx] > 0)
-		    				pNum->dItemsLeft[mUserIdx] -= 1;		    			
-		    			sendDialog_Destroy(NULL, (XtPointer) pNum, NULL);
+						}	
 		    		}		    		
 		    	}
-		    }		
-			
-			// Release buffer memory
-			free(TCP_Buffer);
-			
-			// Close socket
-			tcp_Close(cliSocket);
+		    }
 		}		
+	}		
+}
+
+
+
+Boolean tcp_SendProcedure(XtPointer client_data)
+{
+	struct SendClientData* data = (struct SendClientData*) client_data;
+	int mTcpRet = 0;
+	int mUserIdx = data->dUserIdx;
+	
+	mTcpRet = fread(data->dTCPData[mUserIdx].dBuffer, sizeof(data->dTCPData[mUserIdx].dBuffer[0]), TCP_FILE_BUFSIZ, data->dTCPData[mUserIdx].dfpRead);									
+	mTcpRet = tcp_Write(data->dTCPData[mUserIdx].dSocket, data->dTCPData[mUserIdx].dBuffer, mTcpRet);																	
+	data->dTCPData[mUserIdx].dProgSize += mTcpRet;
+		
+	if(data->dTCPData[mUserIdx].dFileSize <= data->dTCPData[mUserIdx].dProgSize)
+	{
+		// Done
+		XtRemoveWorkProc(data->dTCPData[mUserIdx].dWorkID);
+	
+		// Close file
+		fclose(data->dTCPData[mUserIdx].dfpRead);
+		
+		if(data->dItemsLeft[mUserIdx] > 0)
+		{
+			data->dItemsLeft[mUserIdx] -= 1;
+		}
+		
+		// Release buffer memory
+		free(data->dTCPData[mUserIdx].dBuffer);
+		
+		// Close socket
+		tcp_Close(data->dTCPData[mUserIdx].dSocket);
+		
+		sendDialog_Destroy(NULL, client_data, NULL);
 	}		
 }
 
