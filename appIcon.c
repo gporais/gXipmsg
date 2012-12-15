@@ -46,9 +46,9 @@ void appIcon_Init(Widget* w_TopLevel, int argc, char* argv[])
 	y = y - (h+150);
 	
 	XtVaSetValues (*w_TopLevel,
-		       XmNmwmDecorations, MWM_DECOR_TITLE | MWM_DECOR_MENU,	
+		       XmNmwmDecorations, 0,//MWM_DECOR_BORDER,//MWM_DECOR_TITLE | MWM_DECOR_MENU,	
 		       XmNmwmFunctions, MWM_FUNC_CLOSE | MWM_FUNC_MOVE,
-		       XmNtitle, "gXip",
+//		       XmNtitle, "gXip",
 		       XmNx, x,
 		       XmNy, y,
 		       NULL);	
