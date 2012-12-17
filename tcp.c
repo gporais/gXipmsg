@@ -252,6 +252,7 @@ Boolean tcp_SendProcedure(XtPointer client_data)
 	struct SendClientData* data = (struct SendClientData*) client_data;
 	int mTcpRet = 0;
 	int mUserIdx = data->dUserIdx;
+	Boolean bRet = False;
 	
 	mTcpRet = fread(data->dTCPData[mUserIdx].dBuffer, sizeof(data->dTCPData[mUserIdx].dBuffer[0]), TCP_FILE_BUFSIZ, data->dTCPData[mUserIdx].dfpRead);									
 	mTcpRet = tcp_Write(data->dTCPData[mUserIdx].dSocket, data->dTCPData[mUserIdx].dBuffer, mTcpRet);																	
@@ -261,6 +262,7 @@ Boolean tcp_SendProcedure(XtPointer client_data)
 	{
 		// Done
 		XtRemoveWorkProc(data->dTCPData[mUserIdx].dWorkID);
+		bRet = True;
 	
 		// Close file
 		fclose(data->dTCPData[mUserIdx].dfpRead);
@@ -277,6 +279,8 @@ Boolean tcp_SendProcedure(XtPointer client_data)
 		tcp_Close(data->dTCPData[mUserIdx].dSocket);
 		
 		sendDialog_Destroy(NULL, client_data, NULL);
-	}		
+	}
+	
+	return bRet;
 }
 
