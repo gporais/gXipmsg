@@ -34,8 +34,7 @@ clean :
 
 install :
 	cp gXipmsg $(BINDIR)
-	mkdir $(XPMDIR)
-	mkdir $(XPMDIR)Downloads
+	mkdir $(XPMDIR)	
 	cp ipmsg.xpm $(XPMDIR)
 
 uninstall :

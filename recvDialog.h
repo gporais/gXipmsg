@@ -22,4 +22,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data);
 void recvDialog_UpdateBtnLabel(Widget widget, char* strLabel);
 void recvDialog_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data);
 
+void recvDialog_CancelAddCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
+void recvDialog_SaveFileCallBack(Widget widget, XtPointer client_data, XtPointer call_data);
+
 #endif /*RECVDIALOG_H_*/

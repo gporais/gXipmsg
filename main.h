@@ -127,7 +127,8 @@ struct RecvClientData{
 	Widget dButton;
 	FILE* fpWrite;
 	char* dBuffer;
-	char* dFilename;
+	char* dFilename;	
+	char* strDownloadPath;
 };
 
 struct NODE {

@@ -4,12 +4,12 @@
 void recvDialog_AtExit(Widget w_Widget, XtPointer xp_Client_data, XtPointer xp_Call_data)
 {	
 	struct RecvClientData* data = (struct RecvClientData*) xp_Client_data;
-	
+		
 	// Check if level -1
 	if(data->dLevel == -1)
-	{
-		XtDestroyWidget(w_Widget);
-	}
+	{	
+		XtDestroyWidget(w_Widget);			
+	}	
 }
 
 void recvDialog_UpdateBtnLabel(Widget widget, char* strLabel)
@@ -44,8 +44,8 @@ void recvDialog_ComposeFilenames(char* strDest, char* strSrc)
 void recvDialog_Destroy (Widget dialog, XtPointer client_data, XtPointer call_data)
 {
 	struct RecvClientData* data = (struct RecvClientData*) client_data;
-		
-	XtFree ((char*) data);	
+	
+	XtFree ((char*) data);		
 }
 
 void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
@@ -255,7 +255,7 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	XtManageChild (RECVDIALOG_Form_Upper);
 	XtManageChild (RECVDIALOG_Form_Lower);
 	XtManageChild (RECVDIALOG_MainForm);
-	XtPopup (RECVDIALOG_Dialog, XtGrabNone);
+	XtPopup (RECVDIALOG_Dialog, XtGrabNone);	
 	
 	/* complete the timeout client data */
 	data->dPos = mIdx;
@@ -263,7 +263,8 @@ void recvDialog_Create(XtPointer xt_List, struct Broadcast_Packet* p_Item)
 	data->dCheck = RECVDIALOG_TglG_Quote;
 	data->dSocket = mClientSocket;
 	data->dServerInfo = *p_Item;
-	
+	data->dButton = RECVDIALOG_BtnG_Download;
+		
 	XmStringFree (xstr_Buff);
 	
 	appIcon_SetupClose(&RECVDIALOG_Dialog, recvDialog_AtExit, (XtPointer)data);
@@ -302,7 +303,7 @@ void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 	// Check if level -1
 	if(data->dLevel == -1)
 	{
-		XtDestroyWidget(RECVDIALOG_Dialog);
+		XtDestroyWidget(RECVDIALOG_Dialog);		
 	}
 }
 
@@ -310,35 +311,63 @@ void recvDialog_CloseCallBack(Widget widget, XtPointer client_data, XtPointer ca
 void recvDialog_DownloadCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
 {
 	struct RecvClientData* data = (struct RecvClientData*) client_data;
-	char* strDownloadPath = "/etc/gXipmsg/Downloads/";
+	Widget dialog = XmCreateFileSelectionDialog (XtParent (widget), "Save File", NULL, 0);
+	XmString xstr_ok = XmStringCreateLocalized("Save");
+	
+//	data->dButton = widget;
+	
+	
+	XtVaSetValues(dialog, 
+				XmNdialogStyle, XmDIALOG_FULL_APPLICATION_MODAL, 
+				XmNokLabelString, xstr_ok,				
+				NULL);
+	
+
+	XtSetSensitive(XtNameToWidget(dialog, "Help"), False);
+	XtAddCallback (dialog, XmNokCallback, recvDialog_SaveFileCallBack, client_data);
+	XtAddCallback (dialog, XmNcancelCallback, recvDialog_CancelAddCallBack, NULL);
+		
+	XtManageChild(dialog);	
+	
+	XmStringFree(xstr_ok);
+}
+
+void recvDialog_SaveFileCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	struct RecvClientData* data = (struct RecvClientData*) client_data;
+	XmString xstr_item;
 	
 	struct stat st;
 	
 	// Check if level -1
 	if(data->dLevel == -1)
 	{
+		XtVaGetValues (widget, XmNdirectory, &xstr_item, NULL);
+		data->strDownloadPath = (char *) XmStringUnparse (xstr_item, NULL,XmCHARSET_TEXT, XmCHARSET_TEXT,NULL, 0, XmOUTPUT_ALL);
+				
 		// Check if Download dir exist, if not then create
-		if(stat(strDownloadPath,&st) != 0)
+		if(stat(data->strDownloadPath,&st) != 0)
 		{
-			if(mkdir("/etc/gXipmsg/", S_IRWXU) != 0)
+			if(mkdir(data->strDownloadPath, S_IRWXU) != 0)
 			{
-				printf("error: cannot create /etc/gXipmsg/");
-				return;
-			}
-			
-			if(mkdir(strDownloadPath, S_IRWXU) != 0)
-			{
-				printf("error: cannot create %s", strDownloadPath);
+				printf("error: cannot create %s", data->strDownloadPath);
 				return;
 			}
 		}
-			
+		
+		XmStringFree (xstr_item);
+		XtUnmanageChild(widget);	
+		
 		// Create work procedure
 		DLProcedures++;
-		data->dLevel = 0;
-		data->dButton = widget;
-		data->dWorkID = XtAppAddWorkProc(GXIM_App, recvDialog_DLProcedure, client_data);			
+		data->dLevel = 0;		
+		data->dWorkID = XtAppAddWorkProc(GXIM_App, recvDialog_DLProcedure, client_data);
 	}
+}
+
+void recvDialog_CancelAddCallBack(Widget widget, XtPointer client_data, XtPointer call_data)
+{
+	XtUnmanageChild(widget);
 }
 
 Boolean recvDialog_DLProcedure(XtPointer client_data)
@@ -349,13 +378,15 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 	char strExtended[22];
 	char* strRequestPacket = NULL;
 	char* strPath = NULL;
-	char* strDownloadPath = "/etc/gXipmsg/Downloads/";
+
 	
 	unsigned long FileID = 0;
 	unsigned long FileAttrib = 0;
 	
 	
 	int tcpRet;
+	
+
 	
 	
 	switch(data->dLevel)
@@ -384,6 +415,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				
 				// Check if file or directory
 				sscanf(RecvdFileInfos.FileAttrib, "%lx", &FileAttrib);
+			
 				
 				if((GET_MODE(FileAttrib) & IPMSG_FILE_REGULAR)  == IPMSG_FILE_REGULAR)
 				{
@@ -391,12 +423,12 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 					strRequestPacket = (char*)pack_PackBroadcast(IPMSG_GETFILEDATA, GXIM_Local_Username, GXIM_Local_Hostname, strExtended, NULL, NULL);
 					
 					// Create file
-					strPath = malloc(strlen(RecvdFileInfos.FileName) + strlen(strDownloadPath) + 1);
-					strcpy(strPath, strDownloadPath);
-					strcat(strPath,RecvdFileInfos.FileName);
+					strPath = malloc(strlen(RecvdFileInfos.FileName) + strlen(data->strDownloadPath) + 1);					
+					strcpy(strPath, data->strDownloadPath);					
+					strcat(strPath,RecvdFileInfos.FileName);					
 					data->fpWrite = fopen(strPath, "wb");
 					free(strPath);
-					strPath = NULL;
+					strPath = NULL;					
 				}
 				else if((GET_MODE(FileAttrib) & IPMSG_FILE_DIR)  == IPMSG_FILE_DIR)
 				{
@@ -411,8 +443,11 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				strPath = malloc(strlen(data->dFilename) + 2);
 				sprintf(strPath,"%s",data->dFilename);
 				recvDialog_UpdateBtnLabel(data->dButton, strPath);
+				
 				free(strPath);
 				strPath = NULL;
+				
+				
 						
 				tcpRet = tcp_WriteClient(data,strRequestPacket,strlen(strRequestPacket));
 				if(tcpRet != strlen(strRequestPacket))
@@ -446,10 +481,8 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 					
 					// Free buffer pointer
 					bzero(data->dBuffer, TCP_FILE_BUFSIZ);
-					free(data->dBuffer);
-				}
-				
-				
+					free(data->dBuffer);					
+				}				
 			}
 			else
 			{
@@ -474,6 +507,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 			
 			data->dProgress++;
 			
+			
 			tcpRet = tcp_ReadClient(data,data->dBuffer,TCP_FILE_BUFSIZ);
 			data->dCalcSize += tcpRet;	
 			if(data->fpWrite != NULL)
@@ -488,7 +522,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				recvDialog_UpdateBtnLabel(data->dButton, strPath);
 				free(strPath);
 				strPath = NULL;
-			}			
+			}	
 			
 			if(tcpRet == 0 || data->dCalcSize == data->dFileSize)
 			{
@@ -505,7 +539,7 @@ Boolean recvDialog_DLProcedure(XtPointer client_data)
 				
 				// Free buffer pointer
 				bzero(data->dBuffer, TCP_FILE_BUFSIZ);
-				free(data->dBuffer);
+				free(data->dBuffer);				
 			}
 			break;		
 	}
